@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="vi" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HÀBU ORDER - Order Hàng Hàn Quốc | Busan - Hanoi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', 'sans-serif'],
+          },
+          colors: {
+            habu: {
+              navy: '#181265',
+              blue: '#0284c7',
+              sky: '#38bdf8',
+              light: '#f0f9ff',
+              gold: '#9e7029',
+              sand: '#e6d3a3',
+              sandLight: '#f3e7c4'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+
+    @keyframes swingBox {
+      0%, 100% { transform: rotate(-1.6deg) translateY(0px); }
+      50% { transform: rotate(1.6deg) translateY(6px); }
+    }
+    .crane-swing {
+      transform-origin: top center;
+      animation: swingBox 5s ease-in-out infinite;
+    }
+
+    @keyframes floatPlane {
+      0%, 100% { transform: translateY(0px) rotate(-2deg); }
+      50% { transform: translateY(-10px) rotate(1deg); }
+    }
+    .plane-float {
+      animation: floatPlane 3.6s ease-in-out infinite;
+    }
+
+    .card-gold-texture {
+      background: radial-gradient(circle at center, #f3e6c3 0%, #e4cf9c 65%, #d6bc84 100%);
+    }
+
+    .stage-panel {
+      transition: all 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes highlightPulse {
+      0% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.7); background-color: #e0f2fe; }
+      70% { box-shadow: 0 0 0 12px rgba(2, 132, 199, 0); background-color: #f0f9ff; }
+      100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); }
+    }
+    .deal-added-flash {
+      animation: highlightPulse 1.4s ease-out;
+    }
+  </style>
+</head>
+<body class="selection:bg-sky-500 selection:text-white">
+
+  <!-- ================= REUSABLE HABU LOGO SVG DEFS ================= -->
+  <svg width="0" height="0" class="hidden" aria-hidden="true">
+    <defs>
+      <g id="habu-emblem-def">
+        <!-- Outer Navy Circle (with gap on top-left for Gwangan Bridge) -->
+        <path d="M 108 18 A 96 96 0 1 1 36 172" fill="none" stroke="#181265" stroke-width="6.5" stroke-linecap="round"/>
+
+        <!-- Gwangan Bridge Busan (Gold) extending left -->
+        <g transform="translate(4, 24)">
+          <path d="M 6 95 Q 48 54 74 14 Q 95 62 126 95" fill="none" stroke="#9e7029" stroke-width="3.5"/>
+          <path d="M 0 95 L 132 95" stroke="#9e7029" stroke-width="5"/>
+          <path d="M 4 90 L 128 90" stroke="#9e7029" stroke-width="2"/>
+          <path d="M 71 12 L 67 95 M 77 12 L 81 95" stroke="#9e7029" stroke-width="4"/>
+          <line x1="69" y1="35" x2="79" y2="35" stroke="#9e7029" stroke-width="3"/>
+          <line x1="68" y1="60" x2="80" y2="60" stroke="#9e7029" stroke-width="3"/>
+          <line x1="22" y1="81" x2="22" y2="95" stroke="#9e7029" stroke-width="1.8"/>
+          <line x1="32" y1="71" x2="32" y2="95" stroke="#9e7029" stroke-width="1.8"/>
+          <line x1="42" y1="60" x2="42" y2="95" stroke="#9e7029" stroke-width="1.8"/>
+          <line x1="52" y1="47" x2="52" y2="95" stroke="#9e7029" stroke-width="1.8"/>
+          <line x1="61" y1="32" x2="61" y2="95" stroke="#9e7029" stroke-width="1.8"/>
+          <line x1="87" y1="40" x2="87" y2="95" stroke="#9e7029" stroke-width="1.8"/>
+          <line x1="97" y1="58" x2="97" y2="95" stroke="#9e7029" stroke-width="1.8"/>
+          <line x1="107" y1="72" x2="107" y2="95" stroke="#9e7029" stroke-width="1.8"/>
+        </g>
+
+        <!-- Hand holding Flagpole & Korean Taegeukgi Flag -->
+        <g transform="translate(88, 30)">
+          <line x1="14" y1="4" x2="14" y2="85" stroke="#181265" stroke-width="3.2" stroke-linecap="round"/>
+          <g transform="translate(17, 10) rotate(-6)">
+            <rect x="0" y="0" width="38" height="26" rx="2" fill="#f5e9c9" stroke="#d5c08f" stroke-width="1"/>
+            <path d="M 13 13 A 6 6 0 0 1 25 13 Z" fill="#c8102e"/>
+            <path d="M 13 13 A 6 6 0 0 0 25 13 Z" fill="#003478"/>
+            <line x1="6" y1="5" x2="10" y2="8" stroke="#181265" stroke-width="1.8"/>
+            <line x1="28" y1="5" x2="32" y2="8" stroke="#181265" stroke-width="1.8"/>
+            <line x1="6" y1="21" x2="10" y2="18" stroke="#181265" stroke-width="1.8"/>
+            <line x1="28" y1="21" x2="32" y2="18" stroke="#181265" stroke-width="1.8"/>
+          </g>
+          <path d="M 7 58 C 12 55, 19 56, 20 62 C 20 67, 13 69, 9 67 L 4 85 L 17 85" fill="#e6c699" stroke="#9e7029" stroke-width="2"/>
+        </g>
+
+        <!-- Korean Traditional Two-Tier Palace Roof (Top Right, Navy) -->
+        <g transform="translate(116, 14)">
+          <path d="M 28 24 Q 60 32 92 22 L 104 38 Q 60 46 14 38 Z" fill="#181265"/>
+          <path d="M 35 16 Q 60 24 85 16" fill="none" stroke="#181265" stroke-width="5" stroke-linecap="round"/>
+          <path d="M 34 27 L 26 36 M 46 29 L 40 38 M 58 30 L 56 39 M 70 29 L 72 39 M 82 27 L 90 36" stroke="#e6d3a3" stroke-width="2"/>
+          <rect x="30" y="38" width="58" height="14" fill="#181265"/>
+          <rect x="38" y="41" width="8" height="9" fill="#e6d3a3"/>
+          <rect x="55" y="41" width="10" height="9" fill="#e6d3a3"/>
+          <rect x="73" y="41" width="8" height="9" fill="#e6d3a3"/>
+          <path d="M 8 50 Q 60 60 112 46 L 124 64 Q 60 72 0 64 Z" fill="#181265"/>
+          <path d="M 18 54 L 10 62 M 32 56 L 26 64 M 46 57 L 43 65 M 60 57 L 60 66 M 74 57 L 78 65 M 88 55 L 95 63 M 102 52 L 112 61" stroke="#e6d3a3" stroke-width="2"/>
+          <rect x="18" y="64" width="82" height="32" fill="#181265"/>
+          <rect x="25" y="68" width="9" height="22" fill="#e6d3a3"/>
+          <rect x="41" y="68" width="12" height="16" fill="#e6d3a3"/>
+          <rect x="61" y="68" width="14" height="22" fill="#e6d3a3"/>
+          <rect x="82" y="68" width="10" height="22" fill="#e6d3a3"/>
+          <line x1="6" y1="96" x2="112" y2="96" stroke="#181265" stroke-width="4"/>
+        </g>
+
+        <!-- Slogan in Center -->
+        <text x="128" y="133" text-anchor="middle" font-family="Be Vietnam Pro, sans-serif" font-weight="800" font-size="13.5" fill="#f5e9c9" stroke="#181265" stroke-width="3.2" paint-order="stroke">
+          Mang cả Hàn Quốc đến tay bạn
+        </text>
+
+        <!-- Hanoi Imperial Citadel Gate (Bottom Center, Navy) -->
+        <g transform="translate(45, 143)">
+          <line x1="0" y1="14" x2="36" y2="14" stroke="#181265" stroke-width="3" stroke-linecap="round"/>
+          <line x1="12" y1="22" x2="34" y2="22" stroke="#181265" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="22" y1="30" x2="36" y2="30" stroke="#181265" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M 65 8 L 93 8 L 98 15 L 60 15 Z" fill="#181265"/>
+          <rect x="70" y="15" width="18" height="8" fill="#181265"/>
+          <rect x="76" y="17" width="6" height="6" fill="#e6d3a3"/>
+          <path d="M 42 23 L 42 18 L 48 18 L 48 23 L 54 23 L 54 18 L 60 18 L 60 23 L 98 23 L 98 18 L 104 18 L 104 23 L 110 23 L 110 18 L 116 18 L 116 23 L 122 23 L 126 52 L 38 52 Z" fill="#181265"/>
+          <line x1="42" y1="31" x2="122" y2="31" stroke="#e6d3a3" stroke-width="1.5"/>
+          <line x1="40" y1="39" x2="124" y2="39" stroke="#e6d3a3" stroke-width="1.5"/>
+          <line x1="39" y1="47" x2="125" y2="47" stroke="#e6d3a3" stroke-width="1.5"/>
+          <path d="M 72 52 L 72 38 A 9 9 0 0 1 90 38 L 90 52 Z" fill="#e6d3a3"/>
+          <path d="M 52 52 L 52 43 A 5 5 0 0 1 62 43 L 62 52 Z" fill="#e6d3a3"/>
+          <path d="M 100 52 L 100 43 A 5 5 0 0 1 110 43 L 110 52 Z" fill="#e6d3a3"/>
+          <line x1="25" y1="53" x2="145" y2="53" stroke="#181265" stroke-width="4" stroke-linecap="round"/>
+        </g>
+      </g>
+    </defs>
+  </svg>
+
+  <!-- ================= TOP BAR ================= -->
+  <div class="bg-habu-navy text-white text-xs py-2 px-4 border-b border-white/10">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 px-2.5 py-0.5 rounded-full font-bold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Đã kết nối Google Sheets Live
+        </span>
+        <span class="font-medium text-sky-100">Tỷ giá KRW: <strong class="text-amber-300">21 VND</strong> | Công mua: <strong class="text-amber-300">30k (&lt;1kg) / 60k (&ge;1kg)</strong></span>
+      </div>
+      <div class="flex items-center gap-4 text-sky-100">
+        <span>📍 Tuyến cố định: <strong class="text-white">Busan ✈️ Hanoi</strong></span>
+        <a href="tel:0383774099" class="hover:text-amber-300 font-bold">📞 0383-774-099</a>
+        <a href="https://www.facebook.com/profile.php?id=61577854719150" target="_blank" rel="noopener noreferrer" class="underline hover:text-amber-300 font-semibold hidden sm:inline">
+          FB: HÀBU ORDER - ĐẶNG TIẾN ĐẠT - THỊNH NGUYỄN
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= NAVBAR ================= -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-sky-100 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-14 h-12 rounded-xl card-gold-texture border-2 border-habu-gold/60 flex items-center justify-center shadow-sm overflow-hidden p-0.5">
+          <svg viewBox="0 0 250 215" class="w-full h-full">
+            <use href="#habu-emblem-def"></use>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl font-black tracking-tight text-habu-navy">HÀBU <span class="text-sky-600">ORDER</span></span>
+            <span class="text-[10px] font-extrabold uppercase px-2 py-0.5 bg-amber-100 text-amber-900 rounded-md border border-amber-300">Busan - Hanoi</span>
+          </div>
+          <p class="text-[11px] text-slate-500 font-semibold">Uy tín - Chính hãng - Chu đáo • Mang cả Hàn Quốc đến tay bạn</p>
+        </div>
+      </a>
+
+      <nav class="hidden lg:flex items-center gap-6 text-sm font-bold text-slate-600">
+        <a href="#gom-order" class="text-rose-600 font-extrabold hover:text-rose-700 transition flex items-center gap-1">
+          <span>🔥 Kèo Gom Order / Đang Sale</span>
+        </a>
+        <a href="#tinh-gia-dat-hang" class="text-sky-600 font-extrabold transition">Công cụ Tính giá & Đặt hàng</a>
+        <a href="#quy-trinh-3d" class="hover:text-sky-600 transition">Hành trình Thùng hàng</a>
+        <a href="#tra-cuu" class="hover:text-sky-600 transition">Tra cứu vận đơn</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5">
+        <a href="#tra-cuu" class="hidden sm:inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-3.5 py-2.5 rounded-xl transition">
+          🔍 Tra mã ORD
+        </a>
+        <a href="#tinh-gia-dat-hang" class="bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-md shadow-sky-500/20 transition flex items-center gap-1.5">
+          <span>+ Tạo đơn hàng mới</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= HERO SECTION ================= -->
+  <section class="relative bg-gradient-to-br from-sky-700 via-sky-600 to-habu-navy text-white overflow-hidden pt-8 pb-16 lg:py-20">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 28px 28px;"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+      <div class="grid lg:grid-cols-12 gap-10 items-center">
+        
+        <!-- Left Column -->
+        <div class="lg:col-span-7 space-y-5">
+          <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/25 px-3.5 py-1.5 rounded-full text-xs font-semibold">
+            <span class="px-2 py-0.5 bg-amber-400 text-slate-950 font-black rounded-full">AIR CARGO</span>
+            <span>Nhận order mọi web Hàn Quốc • Trả hàng tại Hà Nội & Toàn quốc</span>
+          </div>
+
+          <h1 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight">
+            MUA HỘ & VẬN CHUYỂN HÀNG HÀN <br/>
+            <span class="text-amber-300">TỪ BUSAN VỀ TẬN TAY BẠN</span>
+          </h1>
+
+          <p class="text-sky-100 text-sm sm:text-base leading-relaxed max-w-2xl">
+            Chào mừng bạn đến với <strong>HÀBU ORDER (Đặng Tiến Đạt - Thịnh Nguyễn)</strong>. Hệ thống tự động báo giá chuẩn theo tỷ giá <strong>21</strong>, chọn nhanh kèo sale Hàn Quốc và cấp <strong>Mã đơn tự động (ORD-001...)</strong> lưu thẳng vào hệ thống quản lý.
+          </p>
+
+          <div class="flex flex-wrap gap-3 pt-1">
+            <a href="#gom-order" class="bg-amber-400 text-slate-950 hover:bg-amber-300 font-black px-6 py-3.5 rounded-xl shadow-xl transition flex items-center gap-2 text-sm">
+              <span>🔥 Xem Kèo Gom Order Đang Sale</span>
+            </a>
+            <a href="#tinh-gia-dat-hang" class="bg-white text-habu-navy hover:bg-sky-100 font-extrabold px-6 py-3.5 rounded-xl shadow-xl transition flex items-center gap-2 text-sm">
+              <span>🧮 Tự nhập link tính giá</span>
+            </a>
+          </div>
+
+          <!-- EXACT REPLICA OF USER'S GOLD NAMECARD -->
+          <div class="pt-3 max-w-xl">
+            <div class="card-gold-texture text-habu-navy rounded-xl p-4 sm:p-5 shadow-2xl border-2 border-[#b88938] relative overflow-hidden">
+              <div class="absolute top-1.5 left-1.5 w-6 h-6 border-t-2 border-l-2 border-[#9e7029] opacity-75"></div>
+              <div class="absolute top-1.5 right-1.5 w-6 h-6 border-t-2 border-r-2 border-[#9e7029] opacity-75"></div>
+              <div class="absolute bottom-1.5 left-1.5 w-6 h-6 border-b-2 border-l-2 border-[#9e7029] opacity-75"></div>
+              <div class="absolute bottom-1.5 right-1.5 w-6 h-6 border-b-2 border-r-2 border-[#9e7029] opacity-75"></div>
+
+              <div class="grid sm:grid-cols-12 gap-3 items-center relative z-10">
+                <div class="sm:col-span-7 space-y-1">
+                  <h2 class="text-2xl sm:text-3xl font-black tracking-wide text-[#181265]">HÀBU ORDER</h2>
+                  <p class="text-xs sm:text-sm font-bold text-[#181265] pl-1">Order hàng Hàn</p>
+                  <p class="text-xs sm:text-sm font-bold text-[#181265] pb-1.5">Uy tín-Chính hãng-Chu đáo</p>
+
+                  <div class="space-y-1 text-xs sm:text-[13px] font-bold text-[#181265] pt-1 border-t border-[#9e7029]/30">
+                    <div class="flex items-center gap-2">
+                      <span class="w-5 text-center">📱</span>
+                      <a href="tel:0383774099" class="hover:underline">0383-774-099</a>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="w-5 text-center">✉️</span>
+                      <a href="mailto:anhemhabu@gmail.com" class="hover:underline">anhemhabu@gmail.com</a>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="w-5 text-center">🌐</span>
+                      <span>Busan-Hanoi</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="w-5 h-5 rounded-full bg-[#181265] text-[#f3e6c3] inline-flex items-center justify-center text-xs font-black">f</span>
+                      <a href="https://www.facebook.com/profile.php?id=61577854719150" target="_blank" class="hover:underline tracking-tight">HÀBU ORDER - ĐẶNG TIẾN ĐẠT - THỊNH NGUYỄN</a>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Emblem Logo matching the Gold Card -->
+                <div class="sm:col-span-5 flex flex-col items-center justify-center">
+                  <div class="w-44 h-36 flex items-center justify-center">
+                    <svg viewBox="0 0 250 215" class="w-full h-full drop-shadow-sm">
+                      <use href="#habu-emblem-def"></use>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: 3D Hanging HàBu Air Parcel Box -->
+        <div class="lg:col-span-5 flex flex-col items-center justify-center relative">
+          <div class="w-full flex justify-end mb-2 pr-4 pointer-events-none">
+            <div class="plane-float inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/30 text-xs font-bold text-amber-200 shadow-lg">
+              <span>✈️ Chuyến bay Busan (PUS) ➔ Nội Bài (HAN)</span>
+            </div>
+          </div>
+
+          <div class="crane-swing flex flex-col items-center select-none">
+            <div class="w-1.5 h-14 bg-slate-300"></div>
+            <div class="w-12 h-9 bg-amber-400 rounded-lg border-2 border-slate-900 shadow-md flex flex-col items-center justify-center relative">
+              <div class="w-8 h-2 bg-slate-900 rounded-full"></div>
+              <span class="text-[8px] font-black text-slate-900 mt-0.5">HABU</span>
+            </div>
+            <svg class="w-8 h-8 -mt-1 text-slate-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 2v10a4 4 0 1 0 4 4"/>
+            </svg>
+            <svg class="w-64 h-12 -mt-2" viewBox="0 0 260 50" fill="none">
+              <line x1="130" y1="2" x2="22" y2="48" stroke="#e2e8f0" stroke-width="3"/>
+              <line x1="130" y1="2" x2="238" y2="48" stroke="#e2e8f0" stroke-width="3"/>
+            </svg>
+
+            <!-- 3D Cardboard Air Parcel Box -->
+            <div class="relative w-72 sm:w-80 rounded-2xl bg-gradient-to-br from-[#e2b477] via-[#d19b56] to-[#b57c36] border-2 border-[#f6d7a7] shadow-[0_28px_60px_rgba(0,0,0,0.45)] p-5 text-habu-navy">
+              <div class="absolute -top-3 left-1/2 -translate-x-1/2 w-40 h-6 bg-amber-200/80 border border-amber-400/60 rotate-1 flex items-center justify-center text-[10px] font-black tracking-widest text-amber-950">
+                HÀBU AIR PRIORITY
+              </div>
+
+              <div class="flex justify-between items-center border-b border-amber-950/20 pb-2 mb-3">
+                <span class="text-[10px] font-black uppercase tracking-wider bg-habu-navy text-amber-200 px-2 py-0.5 rounded">THÙNG HÀNG ORDER HÀN</span>
+                <span class="text-xs font-extrabold text-amber-950">✈️ PUS ➔ HAN</span>
+              </div>
+
+              <div class="card-gold-texture rounded-xl p-3 border-2 border-[#9e7029] shadow-inner flex items-center justify-between gap-2">
+                <div>
+                  <div class="text-base font-black text-[#181265] leading-tight">HÀBU ORDER</div>
+                  <div class="text-[10px] font-bold text-[#181265]">Uy tín - Chính hãng - Chu đáo</div>
+                  <div class="text-[10px] font-extrabold text-[#9e7029] mt-1">📞 0383-774-099</div>
+                </div>
+                <div class="w-20 h-16 shrink-0">
+                  <svg viewBox="0 0 250 215" class="w-full h-full">
+                    <use href="#habu-emblem-def"></use>
+                  </svg>
+                </div>
+              </div>
+
+              <div class="mt-3 pt-2 border-t border-amber-950/20 flex items-center justify-between text-amber-950">
+                <div class="flex items-center gap-2 text-xs font-bold">
+                  <span title="Hàng dễ vỡ">🍷</span>
+                  <span title="Tránh ẩm">☔</span>
+                  <span title="Hướng lên trên">⬆️</span>
+                </div>
+                <div class="font-mono text-[10px] font-black tracking-widest bg-white/80 px-2 py-0.5 rounded">
+                  || ||| | |||| ||| ORD
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= STEP 5.1: KÈO GOM ORDER / ĐANG SALE TẠI HÀN (GRID WITH IMAGES & ALL-IN PRICE) ================= -->
+  <section id="gom-order" class="py-16 max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-100 text-rose-700 font-extrabold text-xs uppercase tracking-wider">
+          <span>🔥 Săn Sale Trực Tiếp Tại Busan</span>
+        </div>
+        <h2 class="text-2xl sm:text-4xl font-black text-habu-navy mt-2">
+          KÈO GOM ORDER / ĐANG SALE TẠI HÀN
+        </h2>
+        <p class="text-slate-600 text-sm mt-1">
+          Giá hiển thị bên dưới là <strong>Giá về tay trọn gói</strong> (Đã bao gồm Giá Web × 21 + Công mua hộ + Ship Hàn-Việt ước tính). Bấm <strong>"Đặt ngay"</strong> để tự động điền xuống Form!
+        </p>
+      </div>
+
+      <!-- Category Filter Buttons -->
+      <div class="flex flex-wrap gap-2" id="dealCategoryTabs">
+        <button type="button" onclick="filterDeals('all')" data-cat="all" class="deal-tab px-4 py-2 rounded-xl text-xs font-extrabold bg-habu-navy text-white shadow-sm transition">
+          Tất cả kèo hot
+        </button>
+        <button type="button" onclick="filterDeals('Olive Young')" data-cat="Olive Young" class="deal-tab px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-sky-400 transition">
+          💄 Olive Young
+        </button>
+        <button type="button" onclick="filterDeals('Musinsa')" data-cat="Musinsa" class="deal-tab px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-sky-400 transition">
+          👟 Thời trang Musinsa
+        </button>
+        <button type="button" onclick="filterDeals('Coupang')" data-cat="Coupang" class="deal-tab px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-sky-400 transition">
+          🎁 Sâm & Sức khỏe
+        </button>
+      </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" id="dealsGrid">
+      <!-- Populated dynamically by JS -->
+    </div>
+  </section>
+
+  <!-- ================= STEP 2 & 3: PRICE CALCULATOR & MULTI-LINK ORDER FORM ================= -->
+  <section id="tinh-gia-dat-hang" class="py-16 bg-sky-50/60 border-t border-sky-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <span class="px-3.5 py-1 rounded-full bg-sky-100 text-sky-800 font-extrabold text-xs uppercase tracking-wider">
+          Tự động tính tiền VND & Cấp mã đơn ORD-001
+        </span>
+        <h2 class="text-2xl sm:text-4xl font-black text-habu-navy mt-2">
+          CÔNG CỤ TÍNH GIÁ & FORM ĐẶT HÀNG
+        </h2>
+        <p class="text-slate-600 text-sm sm:text-base mt-2">
+          Khi bạn bấm <strong>"Đặt ngay"</strong> ở mục Kèo Gom Order phía trên hoặc tự dán link web Hàn vào đây, hệ thống sẽ tự động tính tiền và gửi thẳng về Google Sheets của HàBu Order.
+        </p>
+      </div>
+
+      <!-- Formula Highlight Cards -->
+      <div class="grid sm:grid-cols-3 gap-4 mb-8">
+        <div class="bg-white p-4 rounded-2xl border border-sky-100 shadow-sm flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-xl bg-sky-100 text-sky-700 font-black flex items-center justify-center text-lg shrink-0">₩</div>
+          <div>
+            <div class="text-xs font-bold text-slate-400 uppercase">Tỷ giá cố định</div>
+            <div class="text-base font-black text-habu-navy">1 KRW = 21 VND</div>
+            <div class="text-[11px] text-slate-500">Nhân tự động theo giá web Hàn</div>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border border-sky-100 shadow-sm flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-xl bg-amber-100 text-amber-800 font-black flex items-center justify-center text-lg shrink-0">🛍️</div>
+          <div>
+            <div class="text-xs font-bold text-slate-400 uppercase">Công mua hộ / sản phẩm</div>
+            <div class="text-base font-black text-habu-navy">30.000đ (&lt;1kg) • 60.000đ (&ge;1kg)</div>
+            <div class="text-[11px] text-slate-500">Cam kết mua đúng link chính hãng</div>
+          </div>
+        </div>
+
+        <div class="bg-white p-4 rounded-2xl border border-sky-100 shadow-sm flex items-center gap-3.5">
+          <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-700 font-black flex items-center justify-center text-lg shrink-0">✈️</div>
+          <div>
+            <div class="text-xs font-bold text-slate-400 uppercase">Phí ship Hàn - Việt</div>
+            <div class="text-base font-black text-habu-navy">150.000đ - 180.000đ / kg</div>
+            <div class="text-[11px] text-slate-500">Tính theo cân thực tế khi hàng về</div>
+          </div>
+        </div>
+      </div>
+
+      <form id="habuOrderForm" onsubmit="handleOrderSubmit(event)" class="grid lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left 8 Cols: Product List + Customer Info -->
+        <div class="lg:col-span-8 space-y-6">
+          
+          <!-- 1. Product Cards Container -->
+          <div class="bg-white rounded-2xl border border-sky-100 shadow-sm p-5 sm:p-6">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-slate-100">
+              <div>
+                <h3 class="text-lg font-black text-habu-navy flex items-center gap-2">
+                  <span class="w-6 h-6 rounded-full bg-sky-600 text-white text-xs inline-flex items-center justify-center">1</span>
+                  <span>Danh sách sản phẩm trong đơn</span>
+                </h3>
+                <p class="text-xs text-slate-500 mt-0.5">Nhập giá Won (KRW) và số lượng để xem ngay tiền VND tạm tính của từng món</p>
+              </div>
+              <button type="button" onclick="addProductRow()" class="bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 font-extrabold text-xs px-3.5 py-2 rounded-xl transition flex items-center gap-1.5">
+                <span>+ Thêm sản phẩm khác</span>
+              </button>
+            </div>
+
+            <div id="productItemsContainer" class="space-y-5">
+              <!-- Dynamic Product Rows rendered here -->
+            </div>
+
+            <div class="mt-5 pt-4 border-t border-dashed border-slate-200 flex flex-wrap items-center justify-between gap-3">
+              <button type="button" onclick="addProductRow()" class="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+                <span class="text-base leading-none">+</span>
+                <span>Thêm sản phẩm khác (Đặt nhiều link trong 1 đơn)</span>
+              </button>
+              <span class="text-xs text-slate-500">💡 Hoặc bấm nút <strong>"Đặt ngay"</strong> trên bảng Kèo Gom Order để tự điền</span>
+            </div>
+          </div>
+
+          <!-- 2. Customer Contact & Delivery Information -->
+          <div class="bg-white rounded-2xl border border-sky-100 shadow-sm p-5 sm:p-6">
+            <div class="pb-4 mb-5 border-b border-slate-100">
+              <h3 class="text-lg font-black text-habu-navy flex items-center gap-2">
+                <span class="w-6 h-6 rounded-full bg-sky-600 text-white text-xs inline-flex items-center justify-center">2</span>
+                <span>Thông tin người nhận hàng</span>
+              </h3>
+              <p class="text-xs text-slate-500 mt-0.5">HàBu Order sẽ liên hệ xác nhận đơn và gửi mã vận đơn qua SĐT / Zalo này</p>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Tên khách hàng <span class="text-rose-500">*</span></label>
+                <input type="text" id="customerName" required placeholder="VD: Nguyễn Minh Anh" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none text-sm font-medium" />
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Số điện thoại / Zalo <span class="text-rose-500">*</span></label>
+                <input type="tel" id="customerPhone" required placeholder="VD: 0987654321" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none text-sm font-medium" />
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Địa chỉ nhận hàng tại Việt Nam <span class="text-rose-500">*</span></label>
+                <input type="text" id="customerAddress" required placeholder="Số nhà, đường, Phường/Xã, Quận/Huyện, Tỉnh/Thành phố..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none text-sm font-medium" />
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-700 mb-1.5">Ghi chú thêm cho HàBu (nếu có)</label>
+                <textarea id="customerNote" rows="2" placeholder="VD: Canh sale giúp mình, bỏ hộp giày để nhẹ cân, hoặc cần hàng gấp..." class="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none text-sm"></textarea>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right 4 Cols: Sticky Live Summary & Submit -->
+        <div class="lg:col-span-4 lg:sticky lg:top-20 space-y-4">
+          <div class="bg-habu-navy text-white rounded-2xl p-6 shadow-xl border border-sky-800 relative overflow-hidden">
+            <div class="flex items-center justify-between border-b border-white/15 pb-3 mb-4">
+              <div>
+                <span class="text-[11px] font-bold uppercase tracking-wider text-sky-300">Bảng tự động tính giá</span>
+                <h3 class="text-lg font-black">TỔNG KẾT ĐƠN HÀNG</h3>
+              </div>
+              <span id="summaryItemCount" class="px-2.5 py-1 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-200 text-xs font-extrabold">
+                1 sản phẩm
+              </span>
+            </div>
+
+            <!-- Breakdown Before Weight -->
+            <div class="space-y-2.5 text-sm">
+              <div class="flex justify-between text-sky-100">
+                <span>Tổng giá web Hàn:</span>
+                <span id="summaryTotalKRW" class="font-bold text-white">0 ₩</span>
+              </div>
+              <div class="flex justify-between text-sky-100">
+                <span>Quy đổi VND (× 21):</span>
+                <span id="summaryConvertedVND" class="font-bold text-white">0 đ</span>
+              </div>
+              <div class="flex justify-between text-sky-100">
+                <span>Tổng công mua hộ:</span>
+                <span id="summaryFeeVND" class="font-bold text-amber-300">0 đ</span>
+              </div>
+            </div>
+
+            <!-- Highlighted Subtotal without weight -->
+            <div class="my-4 p-4 rounded-xl bg-gradient-to-r from-sky-500/25 to-sky-400/15 border border-sky-300/40">
+              <div class="text-xs font-extrabold uppercase tracking-wider text-amber-300">
+                💰 TẠM TÍNH CHƯA GỒM CÂN NẶNG
+              </div>
+              <div id="summarySubtotalNoWeight" class="text-2xl sm:text-3xl font-black text-white mt-1">
+                0 đ
+              </div>
+              <div class="text-[11px] text-sky-200 mt-1">
+                = (Giá KRW × 21) + Công mua hộ (30k/60k)
+              </div>
+            </div>
+
+            <!-- Optional Weight Estimator -->
+            <div class="pt-3 border-t border-white/15 space-y-2.5 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-sky-200 font-semibold">Ước lượng tổng cân nặng:</span>
+                <div class="flex items-center gap-1">
+                  <input type="number" id="estimatedTotalKg" value="0.5" min="0" step="0.1" oninput="recalculateAll()" class="w-16 px-2 py-1 rounded bg-white/10 border border-white/25 text-white font-bold text-right outline-none" />
+                  <span class="font-bold">kg</span>
+                </div>
+              </div>
+
+              <div class="flex justify-between text-sky-200">
+                <span>Phí ship Hàn-Việt (150k - 180k/kg):</span>
+                <span id="summaryShippingRange" class="font-bold text-emerald-300">75.000đ - 90.000đ</span>
+              </div>
+
+              <div class="flex justify-between items-baseline pt-2 border-t border-white/10">
+                <span class="font-bold text-sky-100">Tổng về tay trọn gói:</span>
+                <span id="summaryGrandTotalRange" class="text-sm font-black text-amber-300">0đ</span>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" id="submitOrderBtn" class="mt-6 w-full bg-amber-400 hover:bg-amber-300 text-slate-950 font-black py-3.5 px-5 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-sm">
+              <span>🚀 GỬI ĐƠN HÀNG & NHẬN MÃ ORD</span>
+            </button>
+
+            <p class="text-[11px] text-center text-sky-200/80 mt-3">
+              Đơn hàng sẽ tự động ghi vào Google Sheets của HàBu Order và trả về mã <strong>ORD-001, ORD-002...</strong> ngay lập tức.
+            </p>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </section>
+
+  <!-- ================= 5-STEP INTERACTIVE AIR PARCEL JOURNEY ================= -->
+  <section id="quy-trinh-3d" class="bg-slate-900 text-white py-14 border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="grid lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-5 space-y-4">
+          <div class="inline-flex items-center gap-2 text-sky-400 text-xs font-extrabold uppercase tracking-wider">
+            <span>CÁCH CHÚNG TÔI VẬN HÀNH</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black tracking-tight">
+            HÀNH TRÌNH CỦA MỘT <br/>
+            <span class="text-sky-400">THÙNG HÀNG HÀBU BY AIR</span>
+          </h2>
+          <p class="text-slate-400 text-xs sm:text-sm">
+            Bạn chỉ cần gửi link sản phẩm, đội ngũ HàBu Order tại Busan & Hà Nội sẽ lo trọn gói mọi khâu còn lại. Bấm vào từng chặng để xem mô phỏng:
+          </p>
+
+          <div class="space-y-2 pt-2" id="journeyStepsList">
+            <button onclick="setJourneyStage(1)" data-stage="1" class="journey-btn w-full text-left p-3.5 rounded-xl border border-sky-500 bg-sky-500/10 transition flex items-start gap-3">
+              <span class="text-lg font-black text-sky-400">01</span>
+              <div>
+                <div class="font-bold text-sm text-white">NHẬN ĐƠN & GOM HÀNG TẠI KHO BUSAN</div>
+                <p class="text-xs text-slate-300 mt-0.5">Checkout chính hãng trên Olive Young, Musinsa, Coupang... và kiểm đếm tại kho Busan.</p>
+              </div>
+            </button>
+
+            <button onclick="setJourneyStage(2)" data-stage="2" class="journey-btn w-full text-left p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-800/40 transition flex items-start gap-3">
+              <span class="text-lg font-black text-slate-400">02</span>
+              <div>
+                <div class="font-bold text-sm text-white">ĐÓNG THÙNG CARTON & LÊN PALLET AIR</div>
+                <p class="text-xs text-slate-400 mt-0.5">Bọc chống sốc kỹ lưỡng, dán tem mã đơn ORD và tập kết ra sân bay quốc tế.</p>
+              </div>
+            </button>
+
+            <button onclick="setJourneyStage(3)" data-stage="3" class="journey-btn w-full text-left p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-800/40 transition flex items-start gap-3">
+              <span class="text-lg font-black text-slate-400">03</span>
+              <div>
+                <div class="font-bold text-sm text-white">VẬN CHUYỂN ĐƯỜNG HÀNG KHÔNG (MÁY BAY)</div>
+                <p class="text-xs text-slate-400 mt-0.5">Bay thẳng đường Air từ Hàn Quốc về Hà Nội chỉ trong 3 - 5 ngày làm việc.</p>
+              </div>
+            </button>
+
+            <button onclick="setJourneyStage(4)" data-stage="4" class="journey-btn w-full text-left p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-800/40 transition flex items-start gap-3">
+              <span class="text-lg font-black text-slate-400">04</span>
+              <div>
+                <div class="font-bold text-sm text-white">THÔNG QUAN & CÂN THỰC TẾ TẠI KHO HÀ NỘI</div>
+                <p class="text-xs text-slate-400 mt-0.5">Cân điện tử chính xác (150k - 180k/kg) và cập nhật số tiền lên Google Sheets để khách tra cứu.</p>
+              </div>
+            </button>
+
+            <button onclick="setJourneyStage(5)" data-stage="5" class="journey-btn w-full text-left p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-800/40 transition flex items-start gap-3">
+              <span class="text-lg font-black text-slate-400">05</span>
+              <div>
+                <div class="font-bold text-sm text-white">GIAO TẬN TAY KHÁCH HÀNG TOÀN QUỐC</div>
+                <p class="text-xs text-slate-400 mt-0.5">Ship nội thành Hà Nội siêu tốc hoặc gửi chuyển phát nhanh ViettelPost/GHTK toàn quốc.</p>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7">
+          <div class="relative h-[380px] sm:h-[430px] rounded-2xl bg-gradient-to-b from-slate-800 via-slate-900 to-slate-950 border border-slate-700 overflow-hidden shadow-2xl flex flex-col justify-between p-6">
+            <div class="flex justify-between items-center z-20">
+              <span id="stageBadge" class="px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/40 text-sky-300 text-xs font-extrabold">
+                CHẶNG 01 / 05: KHO BUSAN HÀN QUỐC
+              </span>
+              <button onclick="toggleAutoJourney()" id="autoPlayBtn" class="text-xs font-bold text-slate-300 hover:text-white bg-white/10 px-3 py-1 rounded-lg">
+                ⏸ Đang tự động chạy
+              </button>
+            </div>
+
+            <div id="sceneCanvas" class="relative flex-1 flex items-center justify-center my-2"></div>
+
+            <div class="z-20">
+              <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div id="stageProgress" class="bg-gradient-to-r from-sky-400 to-amber-400 h-full transition-all duration-500" style="width: 20%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= STEP 4: LIVE ORDER TRACKING FROM GOOGLE SHEETS ================= -->
+  <section id="tra-cuu" class="py-16 bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6">
+      <div class="bg-sky-50/70 rounded-2xl border border-sky-200 shadow-sm p-6 sm:p-8">
+        <div class="text-center max-w-2xl mx-auto">
+          <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold uppercase">
+            Đồng bộ trực tiếp với Google Sheets HàBu Order
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-black text-habu-navy mt-2">
+            TRA CỨU HÀNH TRÌNH ĐƠN HÀNG
+          </h2>
+          <p class="text-slate-600 text-xs sm:text-sm mt-1">
+            Nhập <strong>Mã đơn hàng (VD: ORD-001)</strong> hoặc <strong>Số điện thoại đặt hàng</strong> để kiểm tra trạng thái mới nhất từ Google Sheets.
+          </p>
+        </div>
+
+        <div class="mt-6 flex flex-col sm:flex-row gap-3 max-w-xl mx-auto">
+          <input type="text" id="trackingInput" placeholder="Nhập mã đơn (VD: ORD-001) hoặc SĐT của bạn..." class="flex-1 px-4 py-3 rounded-xl border border-slate-300 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none text-sm font-bold uppercase bg-white" />
+          <button type="button" onclick="lookupOrderFromSheet()" id="trackingBtn" class="bg-habu-navy hover:bg-sky-700 text-white font-extrabold px-6 py-3 rounded-xl transition text-sm shrink-0">
+            🔍 Tra cứu ngay
+          </button>
+        </div>
+
+        <div id="trackingResultArea" class="mt-6 hidden"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-habu-navy text-white pt-12 pb-8 border-t-4 border-habu-gold">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-12 gap-8 pb-8 border-b border-white/10">
+      <div class="md:col-span-5 space-y-3">
+        <div class="flex items-center gap-3">
+          <div class="w-14 h-12 rounded-xl card-gold-texture p-0.5 flex items-center justify-center">
+            <svg viewBox="0 0 250 215" class="w-full h-full">
+              <use href="#habu-emblem-def"></use>
+            </svg>
+          </div>
+          <div>
+            <div class="text-xl font-black">HÀBU ORDER</div>
+            <div class="text-xs text-amber-300 font-semibold">Mang cả Hàn Quốc đến tay bạn</div>
+          </div>
+        </div>
+        <p class="text-xs text-sky-100/80 leading-relaxed">
+          Dịch vụ mua hộ, gom order và vận chuyển hàng Hàn Quốc chính hãng 100% tuyến trực tiếp Busan - Hà Nội. Minh bạch tỷ giá, cập nhật mã vận đơn tự động.
+        </p>
+      </div>
+
+      <div class="md:col-span-4 space-y-2 text-xs sm:text-sm">
+        <div class="font-extrabold text-amber-300 uppercase tracking-wider">Thông tin liên hệ chính thức</div>
+        <p>👤 Quản lý: <strong>Đặng Tiến Đạt - Thịnh Nguyễn</strong></p>
+        <p>📱 Điện thoại / Zalo: <a href="tel:0383774099" class="font-bold text-sky-300 hover:underline">0383-774-099</a></p>
+        <p>✉️ Email: <a href="mailto:anhemhabu@gmail.com" class="hover:underline">anhemhabu@gmail.com</a></p>
+        <p>🌐 Tuyến vận chuyển: <strong>Busan ✈️ Hanoi</strong></p>
+      </div>
+
+      <div class="md:col-span-3 space-y-2 text-xs">
+        <div class="font-extrabold text-amber-300 uppercase tracking-wider">Kết nối Fanpage</div>
+        <a href="https://www.facebook.com/profile.php?id=61577854719150" target="_blank" rel="noopener noreferrer" class="block p-3.5 rounded-xl bg-white/10 hover:bg-white/15 border border-white/15 transition">
+          <div class="font-bold text-white">HÀBU ORDER - ĐẶNG TIẾN ĐẠT - THỊNH NGUYỄN</div>
+          <div class="text-sky-300 mt-1">Bấm để mở trang Facebook chính thức →</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-6 flex flex-wrap justify-between items-center text-xs text-sky-200/70 gap-2">
+      <span>© 2026 HÀBU ORDER (Busan - Hanoi). All rights reserved.</span>
+      <span>Hệ thống tự động đồng bộ Google Sheets API</span>
+    </div>
+  </footer>
+
+  <!-- ================= ORDER SUCCESS MODAL ================= -->
+  <div id="orderSuccessModal" class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border-2 border-sky-500 text-center relative">
+      <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl mx-auto font-black">
+        ✓
+      </div>
+      <span class="inline-block mt-3 px-3 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold border border-emerald-200">
+        Đã lưu vào Google Sheets HàBu Order
+      </span>
+      <h3 class="text-2xl font-black text-habu-navy mt-2">ĐẶT HÀNG THÀNH CÔNG!</h3>
+      <p class="text-xs sm:text-sm text-slate-600 mt-1">
+        Vui lòng lưu lại <strong>Mã Đơn Hàng</strong> dưới đây để tra cứu hành trình hàng về:
+      </p>
+
+      <div class="my-5 p-4 rounded-2xl card-gold-texture border-2 border-[#9e7029]">
+        <div class="text-[11px] font-extrabold uppercase text-[#181265]">MÃ ĐƠN HÀNG CỦA BẠN</div>
+        <div id="modalOrderCode" class="text-3xl sm:text-4xl font-black text-[#181265] tracking-wider mt-1">
+          ORD-001
+        </div>
+        <div id="modalOrderTime" class="text-[11px] font-semibold text-[#181265]/80 mt-1"></div>
+      </div>
+
+      <div id="modalSummaryText" class="text-left text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1 text-slate-700 mb-5"></div>
+
+      <div class="grid grid-cols-2 gap-2.5">
+        <button type="button" onclick="copyOrderCode()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 rounded-xl text-xs transition">
+          📋 Sao chép mã đơn
+        </button>
+        <a href="https://zalo.me/0383774099" target="_blank" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 rounded-xl text-xs transition flex items-center justify-center gap-1">
+          💬 Nhắn Zalo chốt đơn
+        </a>
+      </div>
+
+      <button type="button" onclick="closeSuccessModal()" class="mt-4 text-xs font-bold text-slate-400 hover:text-slate-600">
+        Đóng cửa sổ
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    // 1. LINK GOOGLE APPS SCRIPT CHÍNH THỨC CỦA BẠN:
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwkE-4tu_Tu7gb-ofHJJuYjLiRALXp7S8XaeKlSJWH0DzvWg3oBxt0eojeqiBfrr8dh/exec';
+
+    // 2. HẰNG SỐ CÔNG THỨC TÍNH GIÁ HÀBU ORDER
+    const EXCHANGE_RATE = 21;
+    const FEE_UNDER_1KG = 30000;
+    const FEE_OVER_1KG = 60000;
+    const SHIP_MIN_PER_KG = 150000;
+    const SHIP_MAX_PER_KG = 180000;
+
+    // 3. DANH SÁCH 8 KÈO GOM ORDER / ĐANG SALE TẠI HÀN (CÓ ẢNH + GIÁ VỀ TAY TRỌN GÓI)
+    const sampleDeals = [
+      {
+        id: 1,
+        title: 'Set Serum Torriden DIVE-IN Hyaluronic Acid (Bản Olive Young 50ml + Tặng kèm)',
+        platform: 'Olive Young',
+        krw: 26500,
+        oldKrw: 36000,
+        weightClass: 'under1',
+        estKg: 0.25,
+        variant: 'Set 50ml + Refill 50ml',
+        link: 'https://www.oliveyoung.co.kr/',
+        tag: 'Sale 26%',
+        image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=600&q=80'
+      },
+      {
+        id: 2,
+        title: 'Áo Thun Mardi Mercredi Flowermardi Tee (Chính hãng store Hàn)',
+        platform: 'Musinsa',
+        krw: 37800,
+        oldKrw: 42000,
+        weightClass: 'under1',
+        estKg: 0.3,
+        variant: 'Màu Trắng Hoa Xanh - FreeSize',
+        link: 'https://www.musinsa.com/',
+        tag: 'Best Seller',
+        image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80'
+      },
+      {
+        id: 3,
+        title: 'Giày Sneaker MLB Chunky Liner Mid Classic Monogram (Full Box)',
+        platform: 'Musinsa',
+        krw: 129000,
+        oldKrw: 159000,
+        weightClass: 'over1',
+        estKg: 1.2,
+        variant: 'NY Đen Trắng - Size 240 (38.5)',
+        link: 'https://www.musinsa.com/',
+        tag: 'Giảm 30.000₩',
+        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80'
+      },
+      {
+        id: 4,
+        title: 'Kem Dưỡng Phục Hồi Aestura Atobarrier 365 Cream 80ml (Set 1+1)',
+        platform: 'Olive Young',
+        krw: 31900,
+        oldKrw: 45000,
+        weightClass: 'under1',
+        estKg: 0.3,
+        variant: 'Tuýp 80ml + Mini 30ml',
+        link: 'https://www.oliveyoung.co.kr/',
+        tag: 'Olive Young #1',
+        image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80'
+      },
+      {
+        id: 5,
+        title: 'Hộp Tinh Chất Hồng Sâm KGC Jung Kwan Jang Everytime (Hộp 30 gói)',
+        platform: 'Coupang',
+        krw: 84000,
+        oldKrw: 102000,
+        weightClass: 'over1',
+        estKg: 1.0,
+        variant: 'Hộp 10ml x 30 gói (Quà biếu)',
+        link: 'https://www.coupang.com/',
+        tag: 'Quà Biếu VIP',
+        image: 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80'
+      },
+      {
+        id: 6,
+        title: 'Son Tint Bóng Rom&nd Juicy Lasting Tint (Bản Mới Nhất Olive Young)',
+        platform: 'Olive Young',
+        krw: 9900,
+        oldKrw: 13000,
+        weightClass: 'under1',
+        estKg: 0.1,
+        variant: 'Màu #25 Bare Grape',
+        link: 'https://www.oliveyoung.co.kr/',
+        tag: 'Gom chung',
+        image: 'https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80'
+      },
+      {
+        id: 7,
+        title: 'Mũ Bóng Chày Emis Washed Ball Cap Chính Hãng Hàn Quốc',
+        platform: 'Musinsa',
+        krw: 38000,
+        oldKrw: 49000,
+        weightClass: 'under1',
+        estKg: 0.2,
+        variant: 'Màu Xanh Navy / Đỏ',
+        link: 'https://www.musinsa.com/',
+        tag: 'Idol Hàn Đội',
+        image: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=600&q=80'
+      },
+      {
+        id: 8,
+        title: 'Viên Uống Trắng Da & Cấp Ẩm Innerb Aqua Rich DoubleUp (Lọ 56 viên)',
+        platform: 'Coupang',
+        krw: 24500,
+        oldKrw: 35000,
+        weightClass: 'under1',
+        estKg: 0.25,
+        variant: 'Lọ 56 viên (Dùng 4 tuần)',
+        link: 'https://www.coupang.com/',
+        tag: 'Sale 30%',
+        image: 'https://images.unsplash.com/photo-1550572017-edb799252164?auto=format&fit=crop&w=600&q=80'
+      }
+    ];
+
+    let activeCategory = 'all';
+
+    // Tính giá về tay trọn gói của 1 deal (Gồm Giá KRW * 21 + Công mua + Ship ước tính 150k/kg)
+    function calculateAllInDealPrice(deal) {
+      const fee = deal.weightClass === 'over1' ? FEE_OVER_1KG : FEE_UNDER_1KG;
+      const shipEst = (deal.estKg || 0.2) * SHIP_MIN_PER_KG;
+      return Math.round(deal.krw * EXCHANGE_RATE + fee + shipEst);
+    }
+
+    function filterDeals(category) {
+      activeCategory = category;
+      document.querySelectorAll('.deal-tab').forEach(btn => {
+        if (btn.getAttribute('data-cat') === category) {
+          btn.className = 'deal-tab px-4 py-2 rounded-xl text-xs font-extrabold bg-habu-navy text-white shadow-sm transition';
+        } else {
+          btn.className = 'deal-tab px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 hover:border-sky-400 transition';
+        }
+      });
+      renderDeals();
+    }
+
+    function renderDeals() {
+      const grid = document.getElementById('dealsGrid');
+      const filtered = activeCategory === 'all'
+        ? sampleDeals
+        : sampleDeals.filter(d => d.platform === activeCategory);
+
+      grid.innerHTML = filtered.map(deal => {
+        const fee = deal.weightClass === 'over1' ? FEE_OVER_1KG : FEE_UNDER_1KG;
+        const noWeightVND = deal.krw * EXCHANGE_RATE + fee;
+        const allInVND = calculateAllInDealPrice(deal);
+
+        return `
+          <div class="bg-white rounded-2xl border border-slate-200/90 overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-xl hover:-translate-y-1 transition duration-300 group">
+            <div>
+              <!-- Image Container -->
+              <div class="relative h-48 overflow-hidden bg-slate-100">
+                <img src="${deal.image}" alt="${deal.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
+                <div class="absolute top-3 left-3 flex items-center gap-1.5">
+                  <span class="px-2.5 py-1 rounded-lg bg-habu-navy/90 backdrop-blur-sm text-white font-extrabold text-[11px]">
+                    ${deal.platform}
+                  </span>
+                </div>
+                <div class="absolute top-3 right-3">
+                  <span class="px-2.5 py-1 rounded-lg bg-rose-600 text-white font-black text-[11px] shadow">
+                    ${deal.tag}
+                  </span>
+                </div>
+                <div class="absolute bottom-2 right-2 bg-black/65 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded">
+                  ⚖️ Ước tính ~${deal.estKg}kg
+                </div>
+              </div>
+
+              <!-- Content -->
+              <div class="p-4">
+                <h4 class="font-bold text-sm text-habu-navy line-clamp-2 min-h-[40px]" title="${deal.title}">
+                  ${deal.title}
+                </h4>
+                <p class="text-[11px] text-slate-500 mt-1 truncate">Phân loại: ${deal.variant}</p>
+
+                <!-- Price Breakdown Box -->
+                <div class="mt-3 p-3 rounded-xl bg-sky-50/80 border border-sky-100 space-y-1">
+                  <div class="flex items-center justify-between text-xs">
+                    <span class="text-slate-500">Giá sale web Hàn:</span>
+                    <div>
+                      <span class="line-through text-slate-400 text-[11px] mr-1">${formatKRW(deal.oldKrw)}</span>
+                      <strong class="text-slate-800">${formatKRW(deal.krw)}</strong>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between text-[11px] text-slate-500">
+                    <span>Tạm tính chưa cân:</span>
+                    <span class="font-bold text-slate-700">${formatVND(noWeightVND)}</span>
+                  </div>
+                  <div class="pt-1.5 border-t border-sky-200/70 flex items-baseline justify-between">
+                    <span class="text-[11px] font-extrabold text-habu-navy uppercase">Giá về tay trọn gói:</span>
+                    <span class="text-base font-black text-rose-600">${formatVND(allInVND)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Button -->
+            <div class="px-4 pb-4">
+              <button
+                type="button"
+                onclick="orderThisDealNow(${deal.id})"
+                class="w-full bg-habu-navy hover:bg-sky-600 text-white font-extrabold text-xs sm:text-sm py-3 rounded-xl shadow-sm transition flex items-center justify-center gap-2"
+              >
+                <span>🛒 Đặt ngay</span>
+                <span class="text-amber-300 text-xs">(Tự điền xuống Form)</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Khi bấm "Đặt ngay" trên Kèo Gom Order -> Tự điền xuống Form đặt hàng
+    function orderThisDealNow(dealId) {
+      const deal = sampleDeals.find(d => d.id === dealId);
+      if (!deal) return;
+
+      let targetRowId = null;
+
+      // Nếu dòng đầu tiên đang trống link thì ghi đè vào dòng đầu tiên, ngược lại thêm dòng mới
+      if (productRows.length === 1 && !productRows[0].link) {
+        productRows[0].link = deal.link;
+        productRows[0].krw = deal.krw;
+        productRows[0].qty = 1;
+        productRows[0].weightClass = deal.weightClass;
+        productRows[0].variant = `${deal.title} (${deal.variant})`;
+        productRows[0].platform = deal.platform;
+        targetRowId = productRows[0].id;
+        document.getElementById('estimatedTotalKg').value = deal.estKg;
+        renderProductRows();
+      } else {
+        const newId = Date.now() + Math.floor(Math.random() * 1000);
+        targetRowId = newId;
+        productRows.push({
+          id: newId,
+          link: deal.link,
+          krw: deal.krw,
+          qty: 1,
+          weightClass: deal.weightClass,
+          variant: `${deal.title} (${deal.variant})`,
+          platform: deal.platform
+        });
+        const currentKg = Number(document.getElementById('estimatedTotalKg').value) || 0;
+        document.getElementById('estimatedTotalKg').value = (currentKg + (deal.estKg || 0.2)).toFixed(2);
+        renderProductRows();
+      }
+
+      // Cuộn mượt xuống khu vực Form đặt hàng và nháy sáng sản phẩm vừa thêm
+      document.getElementById('tinh-gia-dat-hang').scrollIntoView({ behavior: 'smooth' });
+
+      setTimeout(() => {
+        const rowCard = document.getElementById(`productRowCard-${targetRowId}`);
+        if (rowCard) {
+          rowCard.classList.add('deal-added-flash');
+        }
+        document.getElementById('customerName').focus();
+      }, 650);
+    }
+
+    // 4. QUẢN LÝ DANH SÁCH SẢN PHẨM TRONG FORM
+    let productRows = [
+      {
+        id: Date.now(),
+        link: '',
+        krw: 26500,
+        qty: 1,
+        weightClass: 'under1',
+        variant: '',
+        platform: 'Olive Young'
+      }
+    ];
+
+    function formatVND(num) {
+      return Math.round(num || 0).toLocaleString('vi-VN') + ' đ';
+    }
+
+    function formatKRW(num) {
+      return Math.round(num || 0).toLocaleString('ko-KR') + ' ₩';
+    }
+
+    function detectKoreanPlatform(url) {
+      if (!url) return 'Web Hàn';
+      const u = url.toLowerCase();
+      if (u.includes('oliveyoung')) return 'Olive Young';
+      if (u.includes('musinsa')) return 'Musinsa';
+      if (u.includes('coupang')) return 'Coupang';
+      if (u.includes('naver')) return 'Naver SmartStore';
+      if (u.includes('gmarket')) return 'Gmarket';
+      if (u.includes('kream')) return 'KREAM';
+      return 'Web Hàn Quốc';
+    }
+
+    function renderProductRows() {
+      const container = document.getElementById('productItemsContainer');
+      container.innerHTML = productRows.map((row, index) => {
+        const unitFee = row.weightClass === 'over1' ? FEE_OVER_1KG : FEE_UNDER_1KG;
+        const itemTempVND = ((Number(row.krw) || 0) * EXCHANGE_RATE + unitFee) * (Number(row.qty) || 1);
+
+        return `
+          <div id="productRowCard-${row.id}" class="p-4 sm:p-5 rounded-2xl bg-slate-50/90 border border-slate-200/90 relative transition hover:border-sky-300">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-lg bg-habu-navy text-white font-black text-xs">
+                  Sản phẩm #${index + 1}
+                </span>
+                <span id="platformBadge-${row.id}" class="px-2.5 py-0.5 rounded-lg bg-sky-100 text-sky-800 font-bold text-xs">
+                  ${row.platform || 'Web Hàn'}
+                </span>
+              </div>
+
+              <div class="flex items-center gap-3">
+                <div class="text-right">
+                  <span class="text-[11px] font-bold text-slate-500">Tạm tính món này (chưa cân): </span>
+                  <span id="itemSubtotal-${row.id}" class="text-sm sm:text-base font-black text-sky-700">${formatVND(itemTempVND)}</span>
+                </div>
+                ${productRows.length > 1 ? `
+                  <button type="button" onclick="removeProductRow(${row.id})" class="text-rose-500 hover:bg-rose-50 p-1.5 rounded-lg text-xs font-bold" title="Xóa sản phẩm này">
+                    ✕ Xóa
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+
+            <!-- Row 1: KRW Price, Quantity, Buying Fee Tier -->
+            <div class="grid sm:grid-cols-12 gap-3 mb-3">
+              <div class="sm:col-span-5">
+                <label class="block text-xs font-bold text-slate-700 mb-1">Giá web Hàn (KRW) <span class="text-rose-500">*</span></label>
+                <div class="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    step="100"
+                    required
+                    value="${row.krw}"
+                    oninput="updateProductField(${row.id}, 'krw', this.value)"
+                    placeholder="VD: 25000"
+                    class="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-slate-300 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none text-sm font-extrabold text-habu-navy bg-white"
+                  />
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-black text-slate-400">₩</span>
+                </div>
+              </div>
+
+              <div class="sm:col-span-3">
+                <label class="block text-xs font-bold text-slate-700 mb-1">Số lượng <span class="text-rose-500">*</span></label>
+                <input
+                  type="number"
+                  min="1"
+                  required
+                  value="${row.qty}"
+                  oninput="updateProductField(${row.id}, 'qty', this.value)"
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none text-sm font-extrabold text-habu-navy bg-white"
+                />
+              </div>
+
+              <div class="sm:col-span-4">
+                <label class="block text-xs font-bold text-slate-700 mb-1">Loại sản phẩm (Công mua hộ)</label>
+                <select
+                  onchange="updateProductField(${row.id}, 'weightClass', this.value)"
+                  class="w-full px-3 py-2.5 rounded-xl border border-slate-300 focus:border-sky-500 outline-none text-xs sm:text-sm font-bold text-habu-navy bg-white"
+                >
+                  <option value="under1" ${row.weightClass === 'under1' ? 'selected' : ''}>Nhỏ hơn 1kg (+30.000đ/sp)</option>
+                  <option value="over1" ${row.weightClass === 'over1' ? 'selected' : ''}>Từ 1kg trở lên (+60.000đ/sp)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Row 2: Product Link & Variant (Size/Color) -->
+            <div class="grid sm:grid-cols-12 gap-3">
+              <div class="sm:col-span-6">
+                <label class="block text-xs font-bold text-slate-700 mb-1">Link sản phẩm Hàn Quốc <span class="text-rose-500">*</span></label>
+                <input
+                  type="url"
+                  required
+                  value="${row.link}"
+                  oninput="updateProductField(${row.id}, 'link', this.value)"
+                  placeholder="Dán link Olive Young, Musinsa, Coupang..."
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none text-sm bg-white"
+                />
+              </div>
+
+              <div class="sm:col-span-6">
+                <label class="block text-xs font-bold text-slate-700 mb-1">Tên SP & Phân loại (Size / Màu) <span class="text-rose-500">*</span></label>
+                <input
+                  type="text"
+                  required
+                  value="${row.variant}"
+                  oninput="updateProductField(${row.id}, 'variant', this.value)"
+                  placeholder="VD: Serum Torriden / Màu Đen Size M"
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 outline-none text-sm bg-white"
+                />
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      recalculateAll();
+    }
+
+    function updateProductField(id, field, value) {
+      const item = productRows.find(r => r.id === id);
+      if (!item) return;
+
+      if (field === 'krw' || field === 'qty') {
+        item[field] = Number(value) || 0;
+      } else {
+        item[field] = value;
+      }
+
+      if (field === 'link') {
+        item.platform = detectKoreanPlatform(value);
+        const badge = document.getElementById(`platformBadge-${id}`);
+        if (badge) badge.textContent = item.platform;
+      }
+
+      const unitFee = item.weightClass === 'over1' ? FEE_OVER_1KG : FEE_UNDER_1KG;
+      const itemTempVND = ((Number(item.krw) || 0) * EXCHANGE_RATE + unitFee) * Math.max(1, Number(item.qty) || 1);
+      const subEl = document.getElementById(`itemSubtotal-${id}`);
+      if (subEl) subEl.textContent = formatVND(itemTempVND);
+
+      recalculateAll();
+    }
+
+    function addProductRow(prefill) {
+      productRows.push({
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        link: prefill?.link || '',
+        krw: prefill?.krw || 0,
+        qty: 1,
+        weightClass: prefill?.weightClass || 'under1',
+        variant: prefill?.variant || '',
+        platform: prefill?.platform || 'Web Hàn'
+      });
+      renderProductRows();
+    }
+
+    function removeProductRow(id) {
+      if (productRows.length <= 1) return;
+      productRows = productRows.filter(r => r.id !== id);
+      renderProductRows();
+    }
+
+    function recalculateAll() {
+      let totalKRW = 0;
+      let totalFeeVND = 0;
+      let totalItemsQty = 0;
+
+      productRows.forEach(r => {
+        const qty = Math.max(1, Number(r.qty) || 1);
+        const krw = Math.max(0, Number(r.krw) || 0);
+        const unitFee = r.weightClass === 'over1' ? FEE_OVER_1KG : FEE_UNDER_1KG;
+
+        totalKRW += krw * qty;
+        totalFeeVND += unitFee * qty;
+        totalItemsQty += qty;
+      });
+
+      const convertedVND = totalKRW * EXCHANGE_RATE;
+      const subtotalNoWeight = convertedVND + totalFeeVND;
+
+      const estKg = Math.max(0, Number(document.getElementById('estimatedTotalKg')?.value) || 0);
+      const shipMin = estKg * SHIP_MIN_PER_KG;
+      const shipMax = estKg * SHIP_MAX_PER_KG;
+
+      document.getElementById('summaryItemCount').textContent = `${productRows.length} link (${totalItemsQty} SP)`;
+      document.getElementById('summaryTotalKRW').textContent = formatKRW(totalKRW);
+      document.getElementById('summaryConvertedVND').textContent = formatVND(convertedVND);
+      document.getElementById('summaryFeeVND').textContent = formatVND(totalFeeVND);
+      document.getElementById('summarySubtotalNoWeight').textContent = formatVND(subtotalNoWeight);
+      document.getElementById('summaryShippingRange').textContent = `${ (shipMin/1000).toFixed(0) }k - ${ (shipMax/1000).toFixed(0) }k`;
+      document.getElementById('summaryGrandTotalRange').textContent =
+        `${Math.round(subtotalNoWeight + shipMin).toLocaleString('vi-VN')}đ - ${Math.round(subtotalNoWeight + shipMax).toLocaleString('vi-VN')}đ`;
+
+      return {
+        totalKRW,
+        totalFeeVND,
+        subtotalNoWeight,
+        shippingEstimateVND: `${Math.round(shipMin).toLocaleString('vi-VN')}đ - ${Math.round(shipMax).toLocaleString('vi-VN')}đ (${estKg}kg)`,
+        grandTotalVND: `${Math.round(subtotalNoWeight + shipMin).toLocaleString('vi-VN')}đ - ${Math.round(subtotalNoWeight + shipMax).toLocaleString('vi-VN')}đ`
+      };
+    }
+
+    // 5. GỬI ĐƠN HÀNG LÊN GOOGLE SHEETS & NHẬN MÃ ORD-001
+    async function handleOrderSubmit(e) {
+      e.preventDefault();
+      const totals = recalculateAll();
+      const customerName = document.getElementById('customerName').value.trim();
+      const customerPhone = document.getElementById('customerPhone').value.trim();
+      const customerAddress = document.getElementById('customerAddress').value.trim();
+      const customerNote = document.getElementById('customerNote').value.trim();
+
+      const payload = {
+        customerName,
+        customerPhone,
+        customerAddress,
+        customerNote,
+        items: productRows.map(r => ({
+          platform: r.platform || detectKoreanPlatform(r.link),
+          link: r.link,
+          variant: r.variant,
+          qty: Number(r.qty) || 1,
+          krw: Number(r.krw) || 0,
+          weightClass: r.weightClass
+        })),
+        totalKRW: totals.totalKRW,
+        totalFeeVND: totals.totalFeeVND,
+        subtotalNoWeightVND: totals.subtotalNoWeight,
+        shippingEstimateVND: totals.shippingEstimateVND,
+        grandTotalVND: totals.grandTotalVND
+      };
+
+      const submitBtn = document.getElementById('submitOrderBtn');
+      const originalBtnText = submitBtn.innerHTML;
+
+      try {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '⏳ Đang lưu vào Google Sheets & Tạo mã ORD...';
+
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'success') {
+          showOrderSuccessModal(result.orderId, result.timestamp, payload);
+        } else {
+          alert('Có lỗi khi lưu đơn: ' + (result.message || 'Vui lòng thử lại'));
+        }
+      } catch (err) {
+        console.error('Lỗi gửi đơn:', err);
+        alert('Không thể kết nối tới Google Sheets. Vui lòng kiểm tra kết nối hoặc nhắn Zalo 0383-774-099.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+      }
+    }
+
+    function showOrderSuccessModal(orderId, timestamp, payload) {
+      document.getElementById('modalOrderCode').textContent = orderId;
+      document.getElementById('modalOrderTime').textContent = `Thời gian tạo: ${timestamp || 'Vừa xong'}`;
+      document.getElementById('modalSummaryText').innerHTML = `
+        <div>👤 <strong>Khách hàng:</strong> ${payload.customerName} (${payload.customerPhone})</div>
+        <div>📍 <strong>Nhận tại:</strong> ${payload.customerAddress}</div>
+        <div>🛍️ <strong>Số lượng link:</strong> ${payload.items.length} link sản phẩm</div>
+        <div>💰 <strong>Tạm tính (chưa cân):</strong> <span class="text-sky-700 font-extrabold">${formatVND(payload.subtotalNoWeightVND)}</span></div>
+      `;
+
+      const trackingInput = document.getElementById('trackingInput');
+      if (trackingInput) trackingInput.value = orderId;
+
+      const modal = document.getElementById('orderSuccessModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeSuccessModal() {
+      const modal = document.getElementById('orderSuccessModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function copyOrderCode() {
+      const code = document.getElementById('modalOrderCode').textContent.trim();
+      navigator.clipboard.writeText(code);
+      alert('Đã sao chép mã đơn hàng: ' + code);
+    }
+
+    // 6. TRA CỨU VẬN ĐƠN TRỰC TIẾP TỪ GOOGLE SHEETS
+    async function lookupOrderFromSheet() {
+      const query = document.getElementById('trackingInput').value.trim();
+      const resultArea = document.getElementById('trackingResultArea');
+      const btn = document.getElementById('trackingBtn');
+
+      if (!query) {
+        alert('Vui lòng nhập Mã đơn hàng (VD: ORD-001) hoặc Số điện thoại của bạn!');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '⏳ Đang tìm trong Sheet...';
+      resultArea.classList.remove('hidden');
+      resultArea.innerHTML = `
+        <div class="p-6 text-center text-sm text-slate-500">
+          Đang truy xuất dữ liệu trực tiếp từ Google Sheets HàBu Order...
+        </div>
+      `;
+
+      try {
+        const res = await fetch(`${GOOGLE_SCRIPT_URL}?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+
+        if (data.status === 'success' && Array.isArray(data.orders) && data.orders.length > 0) {
+          resultArea.innerHTML = data.orders.map(order => `
+            <div class="p-5 rounded-2xl bg-white border border-sky-200 mb-3 shadow-sm">
+              <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-sky-100">
+                <div>
+                  <span class="px-3 py-1 rounded-lg bg-habu-navy text-amber-300 font-black text-sm">${order.orderId}</span>
+                  <span class="text-xs text-slate-500 ml-2">Đặt lúc: ${order.timestamp}</span>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs">
+                  📦 Trạng thái: ${order.status || '01 - Đã tiếp nhận đơn'}
+                </span>
+              </div>
+
+              <div class="grid sm:grid-cols-3 gap-3 text-xs sm:text-sm">
+                <div>
+                  <div class="text-slate-400 text-xs font-bold">Khách hàng</div>
+                  <div class="font-bold text-habu-navy">${order.customerName}</div>
+                </div>
+                <div>
+                  <div class="text-slate-400 text-xs font-bold">Tạm tính (chưa cân)</div>
+                  <div class="font-black text-sky-700">${formatVND(order.subtotalNoWeightVND)}</div>
+                </div>
+                <div>
+                  <div class="text-slate-400 text-xs font-bold">Cân nặng thực tế / Thanh toán nốt</div>
+                  <div class="font-bold text-amber-800">${order.actualWeight || 'Chưa cân'} • ${order.remainingBalance || 'Chờ cập nhật'}</div>
+                </div>
+              </div>
+
+              <div class="mt-3 pt-3 border-t border-sky-100 text-xs text-slate-600 whitespace-pre-line font-mono bg-slate-50 p-3 rounded-xl border border-slate-200">
+                ${order.itemsText}
+              </div>
+            </div>
+          `).join('');
+        } else {
+          resultArea.innerHTML = `
+            <div class="p-5 rounded-2xl bg-amber-50 border border-amber-200 text-center text-xs sm:text-sm text-amber-900">
+              Không tìm thấy đơn hàng nào khớp với <strong>"${query}"</strong>. Vui lòng kiểm tra lại Mã đơn (VD: ORD-001) hoặc SĐT đặt hàng.
+            </div>
+          `;
+        }
+      } catch (err) {
+        resultArea.innerHTML = `
+          <div class="p-5 rounded-2xl bg-rose-50 border border-rose-200 text-center text-xs sm:text-sm text-rose-700">
+            Lỗi kết nối khi tra cứu. Vui lòng thử lại sau ít giây!
+          </div>
+        `;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🔍 Tra cứu ngay';
+      }
+    }
+
+    // 7. MÔ PHỎNG 5 CHẶNG HÀNH TRÌNH THÙNG HÀNG HÀBU & MÁY BAY AIR CARGO
+    let currentStage = 1;
+    let autoPlayTimer = null;
+
+    function setJourneyStage(stage) {
+      currentStage = stage;
+      document.querySelectorAll('.journey-btn').forEach(btn => {
+        const s = Number(btn.getAttribute('data-stage'));
+        if (s === stage) {
+          btn.className = 'journey-btn w-full text-left p-3.5 rounded-xl border border-sky-400 bg-sky-500/20 transition flex items-start gap-3';
+        } else {
+          btn.className = 'journey-btn w-full text-left p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-800/40 transition flex items-start gap-3';
+        }
+      });
+
+      const titles = {
+        1: 'CHẶNG 01 / 05: GOM HÀNG & KIỂM ĐẾM TẠI KHO BUSAN',
+        2: 'CHẶNG 02 / 05: ĐÓNG THÙNG CARTON HÀBU & NIÊM PHONG AIR',
+        3: 'CHẶNG 03 / 05: VẬN CHUYỂN BẰNG MÁY BAY (BUSAN ✈️ HANOI)',
+        4: 'CHẶNG 04 / 05: THÔNG QUAN & CÂN ĐIỆN TỬ TẠI KHO HÀ NỘI',
+        5: 'CHẶNG 05 / 05: XE TẢI HÀBU GIAO TẬN NƠI CHO KHÁCH'
+      };
+      document.getElementById('stageBadge').textContent = titles[stage];
+      document.getElementById('stageProgress').style.width = `${stage * 20}%`;
+
+      const canvas = document.getElementById('sceneCanvas');
+      if (stage === 1) {
+        canvas.innerHTML = `
+          <div class="stage-panel text-center space-y-4">
+            <div class="inline-flex items-center gap-4 bg-slate-800/90 p-6 rounded-2xl border border-slate-600 shadow-xl">
+              <div class="w-24 h-24 rounded-xl bg-amber-300/20 border-2 border-amber-400 flex flex-col items-center justify-center">
+                <span class="text-3xl">🛍️</span>
+                <span class="text-[10px] font-black text-amber-300 mt-1">OLIVE YOUNG</span>
+              </div>
+              <span class="text-2xl text-sky-400 font-black">➔</span>
+              <div class="w-32 h-28 rounded-xl bg-gradient-to-br from-[#e2b477] to-[#b57c36] border-2 border-amber-200 p-2 flex flex-col items-center justify-center text-habu-navy shadow-lg">
+                <div class="font-black text-xs">THÙNG HÀBU</div>
+                <div class="text-[10px] font-bold">KHO BUSAN</div>
+                <div class="mt-1 px-2 py-0.5 bg-habu-navy text-amber-300 text-[9px] font-black rounded">ĐÃ GOM ĐỦ</div>
+              </div>
+            </div>
+            <p class="text-xs text-sky-200">Nhân viên HàBu tại Busan kiểm tra đúng mẫu, size, màu trước khi đóng vào thùng hàng.</p>
+          </div>
+        `;
+      } else if (stage === 2) {
+        canvas.innerHTML = `
+          <div class="stage-panel text-center space-y-3">
+            <div class="crane-swing inline-block">
+              <div class="w-1 h-10 bg-amber-400 mx-auto"></div>
+              <div class="w-48 h-32 rounded-2xl bg-gradient-to-br from-[#e2b477] to-[#b57c36] border-2 border-amber-200 p-3 text-habu-navy shadow-2xl mx-auto flex flex-col justify-between">
+                <div class="text-[10px] font-black bg-amber-200 px-2 py-0.5 rounded">NIÊM PHONG AIR CARGO</div>
+                <div class="font-black text-base">HÀBU ORDER</div>
+                <div class="text-[10px] font-mono bg-white/80 rounded px-2 py-0.5">MÃ ĐƠN: ORD-001</div>
+              </div>
+            </div>
+            <p class="text-xs text-sky-200">Cẩu thùng hàng HàBu lên Pallet chuyên dụng chuẩn bị đưa ra sân bay quốc tế Gimhae (Busan).</p>
+          </div>
+        `;
+      } else if (stage === 3) {
+        canvas.innerHTML = `
+          <div class="stage-panel w-full flex flex-col items-center justify-center relative">
+            <div class="plane-float flex flex-col items-center">
+              <svg viewBox="0 0 360 150" class="w-72 sm:w-96 drop-shadow-2xl">
+                <circle cx="50" cy="35" r="14" fill="#38bdf8" opacity="0.25"/>
+                <circle cx="300" cy="110" r="18" fill="#38bdf8" opacity="0.25"/>
+                <path d="M 40 75 Q 50 52 110 52 L 265 52 Q 315 52 332 72 Q 315 90 265 90 L 90 90 Z" fill="#ffffff" stroke="#38bdf8" stroke-width="3"/>
+                <path d="M 45 72 L 22 30 L 58 30 L 82 55 Z" fill="#0284c7"/>
+                <path d="M 150 75 L 115 125 L 160 125 L 215 75 Z" fill="#0284c7"/>
+                <path d="M 285 58 L 312 66 L 285 68 Z" fill="#0f172a"/>
+                <text x="175" y="74" text-anchor="middle" font-weight="900" font-size="13" fill="#181265">HÀBU AIR CARGO ✈️</text>
+              </svg>
+              <div class="px-4 py-1.5 rounded-full bg-amber-400 text-slate-950 font-black text-xs shadow-lg">
+                📦 Thùng hàng đang bay từ Busan (Hàn Quốc) ➔ Hà Nội (Việt Nam)
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (stage === 4) {
+        canvas.innerHTML = `
+          <div class="stage-panel text-center space-y-3">
+            <div class="inline-flex items-end gap-3 bg-slate-800/90 p-5 rounded-2xl border border-emerald-400/50">
+              <div class="w-40 h-28 rounded-xl bg-gradient-to-br from-[#e2b477] to-[#b57c36] border-2 border-amber-200 p-3 text-habu-navy flex flex-col justify-between">
+                <span class="text-[10px] font-black bg-emerald-300 px-2 py-0.5 rounded">ĐÃ THÔNG QUAN</span>
+                <span class="font-black text-sm">HÀBU ORDER</span>
+                <span class="text-[10px] font-bold">Cước: 150k - 180k/kg</span>
+              </div>
+              <div class="bg-slate-950 border border-emerald-400 p-3 rounded-xl text-left font-mono">
+                <div class="text-[10px] text-slate-400">CÂN ĐIỆN TỬ HÀ NỘI</div>
+                <div class="text-xl font-black text-emerald-400">1.25 KG</div>
+                <div class="text-[10px] text-sky-300">Đã đồng bộ Google Sheets</div>
+              </div>
+            </div>
+            <p class="text-xs text-emerald-300">Cân thực tế tại kho Hà Nội và cập nhật ngay lên bảng Google Sheets để khách tự tra cứu.</p>
+          </div>
+        `;
+      } else {
+        canvas.innerHTML = `
+          <div class="stage-panel text-center space-y-3">
+            <div class="inline-flex items-center gap-3 bg-slate-800/90 px-6 py-5 rounded-2xl border border-sky-400/40 shadow-xl">
+              <div class="text-4xl">🚚</div>
+              <div class="text-left">
+                <div class="text-xs font-black text-amber-300 uppercase">XE TẢI GIAO HÀNG HÀBU ORDER</div>
+                <div class="text-base font-black text-white">Giao tận tay tại Hà Nội & Ship COD Toàn Quốc</div>
+                <div class="text-xs text-sky-300">Hotline hỗ trợ nhận hàng: 0383-774-099</div>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function toggleAutoJourney() {
+      const btn = document.getElementById('autoPlayBtn');
+      if (autoPlayTimer) {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
+        btn.textContent = '▶ Tự động chạy';
+      } else {
+        startAutoJourney();
+        btn.textContent = '⏸ Đang tự động chạy';
+      }
+    }
+
+    function startAutoJourney() {
+      if (autoPlayTimer) clearInterval(autoPlayTimer);
+      autoPlayTimer = setInterval(() => {
+        const next = currentStage >= 5 ? 1 : currentStage + 1;
+        setJourneyStage(next);
+      }, 3800);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderDeals();
+      renderProductRows();
+      setJourneyStage(1);
+      startAutoJourney();
+    });
+  </script>
+</body>
+</html>
