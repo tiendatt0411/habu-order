@@ -136,6 +136,11 @@
       background: #7dd3fc;
       border-radius: 9999px;
     }
+    /* ĐẢM BẢO TƯƠNG TÁC CHUỘT KHÔNG BỊ CHẶN */
+    .force-clickable {
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
   </style>
 </head>
 <body class="selection:bg-sky-500 selection:text-white flex flex-col min-h-screen">
@@ -195,19 +200,17 @@
         <a href="https://zalo.me/0383774099" target="_blank" class="hover:text-amber-300">📞 Zalo 1: 0383-774-099</a>
         <a href="https://zalo.me/0973726066" target="_blank" class="hover:text-amber-300">📞 Zalo 2: 0973-726-066</a>
         
-        <button type="button" id="topBarAdminBtn" class="hover:text-amber-300 font-black bg-white/20 hover:bg-white/30 px-3 py-1 rounded text-amber-300 border border-amber-300/60 shadow-sm transition cursor-pointer">
+        <button type="button" id="topBarAdminBtn" onclick="handleAdminLoginClick()" class="force-clickable hover:text-amber-300 font-black bg-white/20 hover:bg-white/30 px-3 py-1 rounded text-amber-300 border border-amber-300/60 shadow-sm transition">
           🔒 Quản trị
         </button>
       </div>
     </div>
   </div>
 
-  <!-- NAVBAR -->
-  <!-- NAVBAR CHUẨN DUY NHẤT (ĐÃ DỌN SẠCH CÁC THẺ NAV THỪA) -->
+  <!-- NAVBAR CHUẨN 4 MỤC -->
   <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-sm px-6">
     <div class="max-w-7xl mx-auto h-16 flex items-center justify-between gap-6">
       
-      <!-- Logo biểu tượng -->
       <a href="javascript:void(0)" onclick="switchPageView('intro')" class="shrink-0 flex items-center group cursor-pointer" title="HàBu Order">
         <div class="w-12 h-12 rounded-full card-gold-texture border-2 border-[#9e7029]/70 flex items-center justify-center p-1 hover:scale-105 transition shadow-md">
           <svg viewBox="0 0 250 215" class="w-full h-full">
@@ -216,13 +219,12 @@
         </div>
       </a>
 
-      <!-- DUY NHẤT 1 THẺ NAV NẰM Ở ĐÂY -->
+      <!-- MENU 4 MỤC CHUẨN -->
       <nav class="hidden md:flex items-center gap-8 text-[14px]">
         <button type="button" id="navBtn-intro" onclick="switchPageView('intro')" class="nav-nike-link active-nav">
           Giới Thiệu
         </button>
 
-        <!-- Menu Hãng -->
         <div class="relative nike-dropdown-parent">
           <button type="button" id="navBtn-brand" onclick="switchPageView('catalog', { filterType: 'all' })" class="nav-nike-link flex items-center gap-1">
             <span>Hãng</span>
@@ -259,7 +261,6 @@
           </div>
         </div>
 
-        <!-- Menu Loại sản phẩm -->
         <div class="relative nike-dropdown-parent">
           <button type="button" id="navBtn-category" onclick="switchPageView('catalog', { filterType: 'all' })" class="nav-nike-link flex items-center gap-1">
             <span>Loại sản phẩm</span>
@@ -295,14 +296,13 @@
           </div>
         </div>
 
-        <!-- Nút Sale -->
         <button type="button" id="navBtn-sale" onclick="switchPageView('catalog', { filterType: 'sale' })" class="nav-nike-link text-rose-600 flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
           <span>Sale</span>
         </button>
       </nav>
 
-      <!-- Khung tìm kiếm, hỏi đáp và giỏ hàng bên phải -->
+      <!-- KHUNG BÊN PHẢI -->
       <div class="flex items-center gap-3 shrink-0">
         <form onsubmit="handleNikeSearch(event)" class="relative w-36 sm:w-52">
           <input
@@ -314,7 +314,7 @@
           <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">🔍</span>
         </form>
 
-        <button type="button" onclick="toggleFloatingAiChat()" class="px-3 py-2 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-extrabold text-xs flex items-center gap-1 shadow-sm transition cursor-pointer">
+        <button type="button" onclick="toggleFloatingAiChat()" class="force-clickable px-3 py-2 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-extrabold text-xs flex items-center gap-1 shadow-sm transition">
           <span>🤖</span>
           <span class="hidden sm:inline">Hỏi Đáp AI</span>
         </button>
@@ -329,13 +329,13 @@
           <span>📸 Gửi ảnh</span>
         </button>
       </div>
-
     </div>
   </header>
+
   <!-- ================= VIEW 1: TRANG GIỚI THIỆU ================= -->
   <main id="view-intro" class="page-view active-view flex-1">
     
-    <!-- 1. BANNER HERO GỐC MUA HỘ & VẬN CHUYỂN HÀNG HÀN -->
+    <!-- BANNER HERO GỐC -->
     <section class="relative bg-gradient-to-r from-[#0369a1] via-[#0284c7] to-[#0c4a6e] text-white py-14 px-6 overflow-hidden">
       <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8 items-center">
         <div class="lg:col-span-7 space-y-4">
@@ -360,7 +360,7 @@
             <button onclick="switchPageView('lens')" class="px-6 py-3.5 rounded-xl bg-white/20 hover:bg-white/30 text-white font-extrabold text-xs sm:text-sm border border-white/30 transition flex items-center gap-1.5 cursor-pointer">
               <span>📸 Gửi Ảnh Báo Giá</span>
             </button>
-            <button onclick="toggleFloatingAiChat()" class="px-5 py-3.5 rounded-xl bg-sky-900/80 hover:bg-sky-900 text-amber-300 font-extrabold text-xs sm:text-sm border border-sky-400/40 transition flex items-center gap-1.5 cursor-pointer">
+            <button onclick="toggleFloatingAiChat()" class="force-clickable px-5 py-3.5 rounded-xl bg-sky-900/80 hover:bg-sky-900 text-amber-300 font-extrabold text-xs sm:text-sm border border-sky-400/40 transition flex items-center gap-1.5">
               <span>🤖 Hỏi Đáp &amp; AI Tư Vấn</span>
             </button>
           </div>
@@ -416,7 +416,7 @@
       </div>
     </section>
 
-    <!-- 2. 4 Ô CHỮ NHẬT LỚN -->
+    <!-- 4 Ô CHỮ NHẬT LỚN -->
     <section class="max-w-7xl mx-auto px-6 py-8">
       <div class="grid sm:grid-cols-2 gap-6">
         <div onclick="switchPageView('catalog', { filterType: 'sale' })" class="relative h-64 sm:h-72 rounded-3xl overflow-hidden cursor-pointer group shadow-md bg-gradient-to-br from-rose-600 via-rose-700 to-rose-900 text-white p-7 flex flex-col justify-end transition hover:-translate-y-1">
@@ -461,7 +461,7 @@
       </div>
     </section>
 
-    <!-- 3. TOP SẢN PHẨM -->
+    <!-- TOP SẢN PHẨM -->
     <section class="max-w-7xl mx-auto px-6 py-8">
       <div class="flex justify-between items-end mb-6 pb-2 border-b border-slate-200">
         <div>
@@ -475,7 +475,7 @@
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" id="introTopProductsGrid"></div>
     </section>
 
-    <!-- 4. HÀNH TRÌNH THÙNG HÀNG AIR - MÔ PHỎNG ĐỒ HỌA 3D ĐẦY ĐỦ 5 BƯỚC -->
+    <!-- HÀNH TRÌNH THÙNG HÀNG AIR - MÔ PHỎNG ĐỒ HỌA 3D ĐẦY ĐỦ 5 BƯỚC -->
     <section class="bg-gradient-to-b from-slate-900 to-slate-950 text-white py-14 px-6 border-y border-slate-800">
       <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8 items-center">
         <div class="lg:col-span-5 space-y-4">
@@ -524,7 +524,6 @@
           </div>
         </div>
 
-        <!-- MÔ HÌNH MÔ PHỎNG ĐỒ HỌA 3D ĐẦY ĐỦ 5 BƯỚC -->
         <div class="lg:col-span-7">
           <div class="h-80 sm:h-96 rounded-3xl bg-slate-950 border border-slate-800 p-6 flex flex-col justify-between shadow-2xl relative">
             <div class="flex justify-between items-center text-xs">
@@ -751,18 +750,18 @@
     </form>
   </main>
 
-  <!-- ================= VIEW 5: TRANG QUẢN TRỊ ADMIN (TRANG RIÊNG ĐỘC LẬP - BẤM ĂN 100%) ================= -->
-  <main id="view-admin" class="page-view flex-1 max-w-4xl mx-auto px-6 py-10 w-full">
+  <!-- ================= VIEW 5: TRANG QUẢN TRỊ ADMIN (TRANG RIÊNG BIỆT 100% ĂN CHUỘT) ================= -->
+  <main id="view-admin" class="page-view flex-1 max-w-4xl mx-auto px-6 py-10 w-full" style="position: relative; z-index: 10000; pointer-events: auto !important;">
     <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200">
       <div>
         <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs uppercase">✓ Đang Đăng Nhập Quản Trị Viên</span>
         <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">BẢNG QUẢN TRỊ KHO HÀNG HÀBU ORDER</h2>
       </div>
       <div class="flex items-center gap-3">
-        <button onclick="switchPageView('intro')" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs cursor-pointer">
+        <button type="button" onclick="switchPageView('intro')" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs cursor-pointer">
           ← Quay lại trang chủ
         </button>
-        <button onclick="logoutAdmin()" class="px-4 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs cursor-pointer">
+        <button type="button" onclick="logoutAdmin()" class="px-4 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs cursor-pointer">
           🔒 Đăng xuất
         </button>
       </div>
@@ -826,53 +825,101 @@
     </div>
   </footer>
 
-  <!-- FLOATING AI WIDGET -->
-  <div class="fixed bottom-5 right-5 z-40 flex flex-col items-end">
-    <div id="floatingAiPanel" class="hidden mb-3 w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border-2 border-sky-600 overflow-hidden">
+  <!-- FLOATING AI WIDGET & QUICK CONTACT ICONS (ĐƯỢC ĐẶT Z-INDEX 999999 VÀ POINTER-EVENTS AUTO) -->
+  <div style="position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 999999; pointer-events: auto !important; display: flex; flex-direction: column; align-items: flex-end; gap: 0.625rem;">
+    
+    <!-- KHUNG CHAT AI TƯ VẤN TOÀN NĂNG -->
+    <div id="floatingAiPanel" class="hidden mb-1 w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border-2 border-sky-600 overflow-hidden" style="pointer-events: auto !important;">
       <div class="bg-gradient-to-r from-sky-700 to-habu-deep text-white p-3.5 flex items-center justify-between">
         <div class="flex items-center gap-2">
           <span class="w-8 h-8 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center font-black text-sm shadow">🤖</span>
           <div>
             <div class="text-xs font-black uppercase text-amber-300">Trợ lý AI &amp; Hỏi Đáp HàBu</div>
-            <div class="text-[10px] text-sky-100">Tư vấn da, chọn size &amp; giải đáp sản phẩm</div>
+            <div class="text-[10px] text-sky-100">Giải đáp sản phẩm, cước phí &amp; lịch bay Air</div>
           </div>
         </div>
         <button type="button" onclick="toggleFloatingAiChat()" class="text-white/80 hover:text-white font-bold text-sm cursor-pointer">✕</button>
       </div>
 
-      <div id="floatingAiMessages" class="p-3.5 h-64 overflow-y-auto space-y-2.5 bg-slate-50 text-xs custom-scrollbar">
+      <div id="floatingAiMessages" class="p-3.5 h-72 overflow-y-auto space-y-2.5 bg-slate-50 text-xs custom-scrollbar">
         <div class="p-3 rounded-2xl bg-white border border-slate-200 text-slate-700 leading-relaxed shadow-sm">
-          Xin chào! Mình là <strong>Trợ lý AI của HàBu Order</strong> 👋. Bạn cần tư vấn chọn vị <strong>Mặt nạ ngủ môi Laneige (Berry, Gummy Bear)</strong>, dòng <strong>Toner Pad Mediheal (PDRN, Madecassoside)</strong> hay <strong>size áo CK / giày Adidas</strong>? Hãy hỏi mình nhé!
+          Xin chào! Mình là <strong>Trợ lý AI HàBu Order</strong> 👋. Bạn có thể hỏi mình bất kỳ câu hỏi nào về:
+          <ul class="mt-1 space-y-0.5 text-slate-600 list-disc list-inside">
+            <li><strong>Thời gian &amp; quy trình:</strong> Hàng bay mấy ngày, lịch bay, cân điện tử.</li>
+            <li><strong>Tư vấn quà tặng / Sản phẩm:</strong> Quà cho bố mẹ, dưỡng ẩm, trị mụn, size áo/giày.</li>
+            <li><strong>Cước phí:</strong> Cách tính giá về tay trọn gói, ship 180k/kg.</li>
+          </ul>
         </div>
       </div>
 
       <div class="px-3 py-2 bg-slate-100 border-t border-slate-200 flex gap-1.5 overflow-x-auto custom-scrollbar text-[11px]">
+        <button type="button" onclick="sendQuickFloatingAi('Đặt hàng thì bao lâu hàng về đến Việt Nam?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-300 font-semibold text-sky-800 whitespace-nowrap hover:bg-sky-50 cursor-pointer">✈️ Mấy ngày hàng về?</button>
+        <button type="button" onclick="sendQuickFloatingAi('Gợi ý sản phẩm quà tặng sức khỏe cho bố mẹ người lớn tuổi?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-300 font-semibold text-sky-800 whitespace-nowrap hover:bg-sky-50 cursor-pointer">🎁 Quà cho bố mẹ</button>
+        <button type="button" onclick="sendQuickFloatingAi('Quy trình kiểm hàng và ship Air từ Busan về thế nào?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-300 font-semibold text-sky-800 whitespace-nowrap hover:bg-sky-50 cursor-pointer">📦 Quy trình vận chuyển</button>
         <button type="button" onclick="sendQuickFloatingAi('Phân biệt các vị mặt nạ ngủ môi Laneige?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-300 font-semibold text-sky-800 whitespace-nowrap hover:bg-sky-50 cursor-pointer">🍓 Mặt nạ môi Laneige</button>
-        <button type="button" onclick="sendQuickFloatingAi('Phân biệt các loại Pad/Mask Mediheal (PDRN, Madecassoside, Collagen)?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-300 font-semibold text-sky-800 whitespace-nowrap hover:bg-sky-50 cursor-pointer">🌿 Chọn loại Pad/Mask</button>
-        <button type="button" onclick="sendQuickFloatingAi('Cách chọn size áo CK và giày Adidas chuẩn Hàn?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-300 font-semibold text-sky-800 whitespace-nowrap hover:bg-sky-50 cursor-pointer">👟 Tư vấn chọn Size</button>
       </div>
 
       <form onsubmit="handleFloatingAiSubmit(event)" class="p-2.5 bg-white border-t border-slate-200 flex gap-1.5">
         <input
           type="text"
           id="floatingAiInput"
-          placeholder="Nhập câu hỏi cần giải đáp..."
+          placeholder="Hỏi về thời gian về, quà tặng, size..."
           class="flex-1 px-3 py-2 rounded-xl border border-slate-300 focus:border-sky-600 outline-none text-xs font-medium"
         />
-        <button type="submit" class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow cursor-pointer">
+        <button type="submit" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow cursor-pointer">
           Gửi
         </button>
       </form>
     </div>
 
-    <button
-      type="button"
-      onclick="toggleFloatingAiChat()"
-      class="bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white font-black text-xs px-4 py-3 rounded-full shadow-2xl border-2 border-amber-300 flex items-center gap-2 transition hover:scale-105 cursor-pointer"
-    >
-      <span class="text-base">🤖</span>
-      <span>Hỏi Đáp &amp; AI Tư Vấn</span>
-    </button>
+    <!-- CỤM NÚT NỔI: ZALO 1, ZALO 2, MESSENGER & HỎI ĐÁP AI -->
+    <div class="flex items-center gap-2" style="pointer-events: auto !important;">
+      <!-- ZALO 1: 0383-774-099 -->
+      <a
+        href="https://zalo.me/0383774099"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Chat Zalo Hotline 1: 0383-774-099"
+        class="w-11 h-11 rounded-full bg-[#0068ff] hover:scale-110 shadow-lg border-2 border-white flex items-center justify-center text-white font-black text-xs transition duration-200 cursor-pointer"
+      >
+        <span class="tracking-tighter text-[11px]">Zalo 1</span>
+      </a>
+
+      <!-- ZALO 2: 0973-726-066 -->
+      <a
+        href="https://zalo.me/0973726066"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Chat Zalo Hotline 2: 0973-726-066"
+        class="w-11 h-11 rounded-full bg-[#008fe5] hover:scale-110 shadow-lg border-2 border-white flex items-center justify-center text-white font-black text-xs transition duration-200 cursor-pointer"
+      >
+        <span class="tracking-tighter text-[11px]">Zalo 2</span>
+      </a>
+
+      <!-- MESSENGER / FACEBOOK -->
+      <a
+        href="https://www.facebook.com/profile.php?id=61577854719150"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Nhắn tin qua Fanpage Facebook HàBu Order"
+        class="w-11 h-11 rounded-full bg-gradient-to-tr from-[#00c6ff] via-[#0078ff] to-[#a033ff] hover:scale-110 shadow-lg border-2 border-white flex items-center justify-center text-white transition duration-200 cursor-pointer"
+      >
+        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+          <path d="M12 2C6.477 2 2 6.145 2 11.258c0 2.91 1.455 5.513 3.736 7.185v3.557l3.418-1.876c.904.25 1.86.386 2.846.386 5.523 0 10-4.145 10-9.252C22 6.145 17.523 2 12 2zm1.042 12.447l-2.613-2.788-5.1 2.788 5.61-5.955 2.678 2.788 5.035-2.788-5.61 5.955z"/>
+        </svg>
+      </a>
+
+      <!-- NÚT MỞ BOX AI TƯ VẤN -->
+      <button
+        type="button"
+        onclick="toggleFloatingAiChat()"
+        class="force-clickable bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white font-black text-xs px-4 py-3 rounded-full shadow-2xl border-2 border-amber-300 flex items-center gap-2 transition hover:scale-105"
+      >
+        <span class="text-base">🤖</span>
+        <span>Hỏi Đáp &amp; AI Tư Vấn</span>
+      </button>
+    </div>
+
   </div>
 
   <!-- MODAL CHI TIẾT SẢN PHẨM -->
@@ -1087,7 +1134,7 @@
     }
 
     // =========================================================================
-    // KHỐI QUẢN TRỊ ADMIN (CHUYỂN THẲNG SANG TRANG VIEW - BẤM ĂN 100%)
+    // KHỐI QUẢN TRỊ ADMIN (MỞ VIEW RIÊNG BIỆT - 100% ĂN CHUỘT)
     // =========================================================================
     function handleAdminLoginClick() {
       if (isAdminLoggedIn) {
@@ -1105,25 +1152,15 @@
     }
 
     function updateAdminStatusUI() {
-      const area = document.getElementById('adminStatusArea');
-      if (!area) return;
-      if (isAdminLoggedIn) {
-        area.innerHTML = `
-          <div class="flex items-center gap-1.5">
-            <button type="button" onclick="openAdminPanel()" class="bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black px-2.5 py-1 rounded text-[11px] shadow cursor-pointer">
-              ⚙️ Vào Quản Trị
-            </button>
-            <button type="button" onclick="logoutAdmin()" class="bg-white/10 hover:bg-white/20 text-sky-200 px-2 py-1 rounded text-[11px] cursor-pointer" title="Đăng xuất">
-              ✕
-            </button>
-          </div>
-        `;
-      } else {
-        area.innerHTML = `
-          <button type="button" onclick="handleAdminLoginClick()" class="hover:text-amber-300 font-bold bg-white/10 px-2.5 py-1 rounded text-amber-200 border border-white/20 transition cursor-pointer">
-            🔒 Quản trị
-          </button>
-        `;
+      const btn = document.getElementById('topBarAdminBtn');
+      if (btn) {
+        if (isAdminLoggedIn) {
+          btn.innerHTML = '⚙️ Vào Quản Trị';
+          btn.className = 'force-clickable font-black bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded text-slate-950 shadow-sm transition';
+        } else {
+          btn.innerHTML = '🔒 Quản trị';
+          btn.className = 'force-clickable hover:text-amber-300 font-black bg-white/20 hover:bg-white/30 px-3 py-1 rounded text-amber-300 border border-amber-300/60 shadow-sm transition';
+        }
       }
       renderCatalogView();
       renderIntroTopProducts();
@@ -1140,13 +1177,9 @@
       }, 100);
     }
 
-    function closeAdminPanel() {
-      switchPageView('intro');
-    }
-
     function logoutAdmin() {
       isAdminLoggedIn = false;
-      closeAdminPanel();
+      switchPageView('intro');
       updateAdminStatusUI();
       alert('Đã đăng xuất khỏi tài khoản Quản trị!');
     }
@@ -1396,7 +1429,7 @@
     }
 
     // =========================================================================
-    // MODAL CHI TIẾT SẢN PHẨM (ĐẢM BẢO HIỂN THỊ ĐỦ THÔNG TIN CÔNG DỤNG CHUẨN)
+    // MODAL CHI TIẾT SẢN PHẨM
     // =========================================================================
     let currentModalProduct = null;
 
@@ -1434,7 +1467,6 @@
               <p class="text-xs text-sky-700 font-semibold mt-0.5">Phân loại: ${item.variant}</p>
             </div>
 
-            <!-- TÓM TẮT & CÔNG DỤNG CHÍNH -->
             <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2">
               <div class="font-extrabold text-slate-900 uppercase text-[11px]">✨ Tóm tắt &amp; Công dụng chính:</div>
               <ul class="space-y-1.5 text-slate-700">
@@ -1513,9 +1545,20 @@
       }
     }
 
-    // AI WIDGET
+    // =========================================================================
+    // AI TƯ VẤN & HỎI ĐÁP TOÀN NĂNG
+    // =========================================================================
     function toggleFloatingAiChat() {
-      document.getElementById('floatingAiPanel').classList.toggle('hidden');
+      const panel = document.getElementById('floatingAiPanel');
+      if (panel) {
+        panel.classList.toggle('hidden');
+        if (!panel.classList.contains('hidden')) {
+          setTimeout(() => {
+            const inp = document.getElementById('floatingAiInput');
+            if (inp) inp.focus();
+          }, 100);
+        }
+      }
     }
 
     function sendQuickFloatingAi(text) {
@@ -1539,20 +1582,81 @@
     }
 
     function generateSmartAiResponse(query, contextItem) {
-      const q = query.toLowerCase();
-      if (q.includes('laneige') || q.includes('môi') || q.includes('lip') || q.includes('berry')) {
-        return `🤖 <strong>AI Tư vấn Mặt nạ ngủ môi Laneige:</strong><br/>• <strong>Vị Berry:</strong> Mùi hương quả mọng kinh điển, làm hồng môi.<br/>• <strong>Vị Gummy Bear:</strong> Ngọt ngào như kẹo dẻo.<br/>• <strong>Vị Apple Lime:</strong> Tươi mát thanh dịu.<br/>Khi đặt bạn chỉ cần ghi tên vị vào ô <em>Mã số sản phẩm</em> nhé!`;
+      const q = query.toLowerCase().trim();
+
+      // 1. THỜI GIAN VẬN CHUYỂN & LỊCH BAY
+      if (q.includes('bao lâu') || q.includes('mấy ngày') || q.includes('thời gian') || q.includes('khi nào') || q.includes('về đến')) {
+        return `✈️ <strong>Thời gian hàng về tận tay:</strong><br/>
+• Sau khi chốt đơn, hàng từ web Hàn (Olive Young, Musinsa...) về kho HàBu tại <strong>Busan mất 1 - 2 ngày</strong>.<br/>
+• Hàng được kiểm tra, cân điện tử và đóng chuyến bay thẳng Air Cargo về Nội Bài (Hà Nội).<br/>
+• <strong>Tổng thời gian từ lúc mua đến khi nhận hàng tại Việt Nam chỉ từ 3 - 5 ngày làm việc</strong>.<br/>
+• Nội thành Hà Nội nhận ngay trong ngày sau khi thông quan; tỉnh khác ship 1-2 ngày.`;
       }
-      if (q.includes('pdrn') || q.includes('madecassoside') || q.includes('pad') || q.includes('mặt nạ')) {
-        return `🤖 <strong>AI Giải đáp Phân loại:</strong><br/>• <strong>Madecassoside:</strong> Chuyên phục hồi mờ thâm mụn.<br/>• <strong>PDRN &amp; Collagen:</strong> Căng bóng da, thu nhỏ lỗ chân lông.<br/>• <strong>Teatree:</strong> Giảm mụn viêm, kiềm dầu.`;
+
+      // 2. GỢI Ý QUÀ TẶNG BỐ MẸ / NGƯỜI LỚN TUỔI
+      if (q.includes('bố mẹ') || q.includes('ba mẹ') || q.includes('người lớn') || q.includes('quà tặng') || q.includes('quà') || q.includes('sức khỏe') || q.includes('ông bà')) {
+        return `🎁 <strong>Gợi ý quà biếu sức khỏe cho bố mẹ:</strong><br/>
+1. <strong>Tinh chất Hồng Sâm Chính Phủ KGC Everytime 30 gói:</strong> Bồi bổ nguyên khí, tăng đề kháng, giảm đau nhức mệt mỏi cho người lớn tuổi.<br/>
+2. <strong>Viên uống Glucosamine / Dầu thông đỏ Hàn Quốc:</strong> Rất tốt cho xương khớp và tim mạch người già.<br/>
+3. <strong>Set mặt nạ phục hồi chuyên sâu hoặc kem dưỡng Collagen/PDRN:</strong> Giúp dưỡng ẩm, chống nứt nẻ khô da cho mẹ.<br/>
+👉 Bạn có thể bấm vào icon <strong>Zalo</strong> hoặc <strong>Messenger</strong> bên cạnh để shop gửi hình set quà kèm túi biếu sang trọng nhé!`;
       }
-      if (q.includes('size') || q.includes('cỡ')) {
-        return `🤖 <strong>AI Tư Vấn Chọn Size:</strong> Áo CK/Adidas: S (48-58kg), M (58-68kg), L (68-78kg). Giày Sneaker: 230 (37), 240 (38.5), 250 (40), 260 (41). Chân bè tăng 0.5 size!`;
+
+      // 3. QUY TRÌNH VẬN CHUYỂN & CÂN ĐO
+      if (q.includes('quy trình') || q.includes('vận chuyển') || q.includes('ship air') || q.includes('cước bay') || q.includes('phí ship')) {
+        return `📦 <strong>Quy trình vận chuyển chuẩn 5 chặng HàBu by Air:</strong><br/>
+• <strong>Chặng 1:</strong> Gom hàng chính hãng tại kho Busan, kiểm tra chuẩn mã, chuẩn màu/size.<br/>
+• <strong>Chặng 2:</strong> Cân điện tử minh bạch cước bay cố định <strong>180.000đ/kg</strong>, bọc chống sốc kỹ lưỡng.<br/>
+• <strong>Chặng 3:</strong> Bay thẳng Air Cargo từ Gimhae (Busan) ✈️ Nội Bài (Hà Nội).<br/>
+• <strong>Chặng 4:</strong> Thông quan chính ngạch tại Nội Bài, phân loại theo mã ORD.<br/>
+• <strong>Chặng 5:</strong> Giao tận tay bạn qua ship hỏa tốc hoặc bưu cục toàn quốc.`;
       }
+
+      // 4. CÁCH TÍNH GIÁ VỀ TAY TRỌN GÓI
+      if (q.includes('tính giá') || q.includes('công thức') || q.includes('tỷ giá') || q.includes('tiền ship') || q.includes('công mua')) {
+        return `💰 <strong>Công thức tính giá trọn gói về tay tại HàBu Order:</strong><br/>
+<strong>Giá về tay = (Giá web Hàn × Tỷ giá 21) + Công mua + Tiền cân (180k/kg)</strong><br/>
+• <em>Công mua:</em> 30k/món (&lt;1kg) hoặc 60k/món (&ge;1kg).<br/>
+• <em>Tỷ giá:</em> Cố định 21 VND / 1 KRW.<br/>
+• <em>Cước bay:</em> 180.000đ/kg cân thực tế khi đóng thùng.`;
+      }
+
+      // 5. TƯ VẤN SẢN PHẨM: MẶT NẠ MÔI LANEIGE
+      if (q.includes('laneige') || q.includes('môi') || q.includes('lip')) {
+        return `🍓 <strong>Mặt nạ ngủ môi Laneige Lip Sleeping Mask (Olive Young Pick):</strong><br/>
+• <strong>Vị Berry (Quả mọng):</strong> Dòng bán chạy nhất, dưỡng hồng môi và mờ thâm viền môi.<br/>
+• <strong>Vị Gummy Bear:</strong> Hương kẹo ngọt mát dễ chịu.<br/>
+• <strong>Vị Apple Lime:</strong> Tươi mát thanh dịu, tẩy tế bào chết nhẹ nhàng.<br/>
+👉 Bản set được tặng kèm 3 hũ mini. Lúc đặt hàng bạn chỉ cần ghi tên vị vào ô <em>Mã số sản phẩm</em> nhé!`;
+      }
+
+      // 6. TƯ VẤN TONER PAD / MẶT NẠ MEDIHEAL
+      if (q.includes('mediheal') || q.includes('pad') || q.includes('mặt nạ') || q.includes('pdrn') || q.includes('madecassoside')) {
+        return `🌿 <strong>Phân loại Pad / Mặt nạ Mediheal:</strong><br/>
+• <strong>Madecassoside (Xanh lam):</strong> Làm dịu da ửng đỏ, mờ thâm sau mụn, phục hồi da nhạy cảm.<br/>
+• <strong>Teatree (Tràm trà):</strong> Kiềm dầu, giảm sưng nốt mụn viêm.<br/>
+• <strong>PDRN & Collagen:</strong> Căng bóng da chuẩn Hàn, thu nhỏ lỗ chân lông.<br/>
+• <em>Hộp Pad:</em> 100 miếng + túi Refill 100 miếng (Tổng 200 miếng siêu tiết kiệm).`;
+      }
+
+      // 7. BẢNG CHỌN SIZE QUẦN ÁO & GIÀY SNEAKER
+      if (q.includes('size') || q.includes('cỡ') || q.includes('chọn size') || q.includes('áo ck') || q.includes('samba')) {
+        return `👟 <strong>Bảng chọn Size chuẩn form Hàn Quốc:</strong><br/>
+• <strong>Áo CK / Hoodie / Mardi:</strong> S (48-58kg), M (58-68kg), L (68-78kg), XL (78-88kg).<br/>
+• <strong>Giày Sneaker (Adidas Samba / MLB):</strong> 230 (size 37), 240 (size 38.5), 250 (size 40), 260 (size 41.5).<br/>
+*(Giày form ôm, chân bè ngang nên tăng 0.5 size).*`;
+      }
+
+      // 8. KHI HỎI TRONG POPUP CỦA SẢN PHẨM CỤ THỂ
       if (contextItem) {
-        return `Sản phẩm <strong>${contextItem.title}</strong> (${contextItem.brand}). ${contextItem.benefit || ''} Bạn có thể nhắn Zalo <strong>0383-774-099</strong> hoặc <strong>0973-726-066</strong> để được tư vấn thêm!`;
+        return `Sản phẩm <strong>${contextItem.title}</strong> thuộc thương hiệu <strong>${contextItem.brand}</strong>.<br/>
+• <em>Công dụng:</em> ${contextItem.benefit || ''}<br/>
+• <em>Phù hợp:</em> ${contextItem.targetAudience || 'Mọi loại da / dáng người.'}<br/>
+👉 Bạn có thể bấm <strong>"Đặt ngay"</strong> hoặc nhắn Zalo để shop hỗ trợ giữ suất sale nhé!`;
       }
-      return `🤖 <strong>AI HàBu Order:</strong> Cảm ơn bạn! Bạn có thể chọn câu hỏi gợi ý phía trên hoặc nhắn Zalo <strong>0383-774-099 / 0973-726-066</strong> để đội ngũ hỗ trợ trực tiếp nhé!`;
+
+      // 9. CÂU TRẢ LỜI MẶC ĐỊNH
+      return `🤖 <strong>AI HàBu Order:</strong> Cảm ơn câu hỏi của bạn! Bạn có thể hỏi mình về <em>"thời gian hàng về"</em>, <em>"quà biếu sức khỏe cho bố mẹ"</em>, <em>"cách chọn size"</em> hoặc chọn nhanh các gợi ý phía trên.<br/>Nếu cần tư vấn riêng, bạn bấm ngay vào icon <strong>Zalo</strong> hoặc <strong>Messenger</strong> bên cạnh để gặp trực tiếp shop nhé!`;
     }
 
     // DỊCH TỰ ĐỘNG
@@ -1855,7 +1959,7 @@
     }
 
     // =========================================================================
-    // KHÔI PHỤC TOÀN DIỆN MÔ HÌNH ĐỒ HỌA 3D 5 CHẶNG HÀNH TRÌNH BAY
+    // MÔ HÌNH ĐỒ HỌA 3D 5 CHẶNG HÀNH TRÌNH BAY
     // =========================================================================
     let currentStage = 1;
     let autoPlayTimer = null;
@@ -1885,7 +1989,6 @@
       if (!canvas) return;
 
       if (stage === 1) {
-        // CHẶNG 1: GOM HÀNG VÀO THÙNG
         canvas.innerHTML = `
           <div class="text-center space-y-4">
             <div class="inline-flex items-center gap-4 bg-slate-800/90 p-5 rounded-2xl border border-slate-700 shadow-xl">
@@ -1904,7 +2007,6 @@
           </div>
         `;
       } else if (stage === 2) {
-        // CHẶNG 2: CÂN ĐIỆN TỬ HIỆN SỐ 180K/KG
         canvas.innerHTML = `
           <div class="text-center space-y-3">
             <div class="inline-flex items-end gap-3 bg-slate-800/90 p-5 rounded-2xl border border-amber-400/60 shadow-xl">
@@ -1923,7 +2025,6 @@
           </div>
         `;
       } else if (stage === 3) {
-        // CHẶNG 3: MÁY BAY HÀNG KHÔNG AIR CARGO BAY
         canvas.innerHTML = `
           <div class="w-full flex flex-col items-center justify-center">
             <div class="plane-float flex flex-col items-center">
@@ -1942,7 +2043,6 @@
           </div>
         `;
       } else if (stage === 4) {
-        // CHẶNG 4: HẢI QUAN THÔNG QUAN CHÍNH NGẠCH
         canvas.innerHTML = `
           <div class="text-center space-y-3">
             <div class="inline-flex items-center gap-3 bg-slate-800/90 p-5 rounded-2xl border border-emerald-400/60 shadow-xl">
@@ -1961,7 +2061,6 @@
           </div>
         `;
       } else {
-        // CHẶNG 5: XE GIAO HÀNG TẬN TAY
         canvas.innerHTML = `
           <div class="text-center space-y-3">
             <div class="inline-flex items-center gap-3 bg-slate-800/90 px-6 py-5 rounded-2xl border border-sky-400/50 shadow-xl">
@@ -1998,12 +2097,7 @@
       }, 3500);
     }
 
-    // GẮN SỰ KIỆN CLICK TRỰC TIẾP SAU KHI TẢI TRANG ĐẢM BẢO 100% ĂN CHUỘT
     window.addEventListener('DOMContentLoaded', () => {
-      const topBtn = document.getElementById('topBarAdminBtn');
-      if (topBtn) {
-        topBtn.addEventListener('click', handleAdminLoginClick);
-      }
       renderIntroTopProducts();
       renderOrderRows();
       recalculateLensVND();
