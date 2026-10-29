@@ -136,7 +136,6 @@
       background: #7dd3fc;
       border-radius: 9999px;
     }
-    /* ĐẢM BẢO TƯƠNG TÁC CHUỘT KHÔNG BỊ CHẶN */
     .force-clickable {
       pointer-events: auto !important;
       cursor: pointer !important;
@@ -230,13 +229,17 @@
             <span>Hãng</span>
           </button>
           <div class="nike-dropdown absolute left-1/2 -translate-x-1/2 top-full w-56 bg-white rounded-2xl border border-sky-100 shadow-2xl p-2.5 space-y-1">
-            <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'Laneige' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
-              <span>🍓 Laneige</span>
-              <span class="text-[10px] text-slate-400">Mặt nạ ngủ môi</span>
+            <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'Medicube' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>🧬 Medicube</span>
+              <span class="text-[10px] text-slate-400">PDRN &amp; Pad</span>
             </button>
             <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'Mediheal' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
               <span>💧 Mediheal</span>
               <span class="text-[10px] text-slate-400">Mask &amp; Pad</span>
+            </button>
+            <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'Laneige' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>🍓 Laneige</span>
+              <span class="text-[10px] text-slate-400">Mặt nạ ngủ môi</span>
             </button>
             <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'Torriden' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
               <span>🧪 Torriden</span>
@@ -246,17 +249,9 @@
               <span>🌿 Dr.G</span>
               <span class="text-[10px] text-slate-400">Kem dưỡng mụn</span>
             </button>
-            <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'd\'Alba' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
-              <span>✨ d'Alba</span>
-              <span class="text-[10px] text-slate-400">Xịt khoáng Ý</span>
-            </button>
-            <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'Calvin Klein' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
-              <span>🖤 Calvin Klein (CK)</span>
-              <span class="text-[10px] text-slate-400">Thời trang</span>
-            </button>
-            <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'Adidas' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
-              <span>👟 Adidas</span>
-              <span class="text-[10px] text-slate-400">Samba / Gazelle</span>
+            <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'Nike' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>✔️ Nike / KREAM</span>
+              <span class="text-[10px] text-slate-400">Air Force / Jacket</span>
             </button>
           </div>
         </div>
@@ -266,31 +261,21 @@
             <span>Loại sản phẩm</span>
           </button>
           <div class="nike-dropdown absolute left-1/2 -translate-x-1/2 top-full w-60 bg-white rounded-2xl border border-sky-100 shadow-2xl p-2.5 space-y-1">
-            <div class="relative nike-sub-parent">
-              <button onclick="switchPageView('catalog', { filterType: 'category', value: 'Mỹ phẩm' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between items-center transition cursor-pointer">
-                <span>💄 Mỹ phẩm &amp; Skincare</span>
-                <span class="text-[10px] text-slate-400">▸</span>
-              </button>
-              <div class="nike-sub-dropdown absolute left-full top-0 ml-1 w-48 bg-white rounded-2xl border border-sky-100 shadow-2xl p-2 space-y-1">
-                <button onclick="switchPageView('catalog', { filterType: 'subCategory', value: 'Mặt nạ' })" class="w-full text-left px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-sky-50 hover:text-sky-700 cursor-pointer">Mặt nạ (Mask/Lip)</button>
-                <button onclick="switchPageView('catalog', { filterType: 'subCategory', value: 'Toner Pad' })" class="w-full text-left px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-sky-50 hover:text-sky-700 cursor-pointer">Toner Pad các loại</button>
-                <button onclick="switchPageView('catalog', { filterType: 'subCategory', value: 'Serum' })" class="w-full text-left px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-sky-50 hover:text-sky-700 cursor-pointer">Serum &amp; Tinh chất</button>
-              </div>
-            </div>
-
-            <button onclick="switchPageView('catalog', { filterType: 'category', value: 'Giày' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
-              <span>👟 Giày / Dép Sneaker</span>
-              <span class="text-[10px] text-slate-400">Adidas / MLB</span>
+            <button onclick="switchPageView('catalog', { filterType: 'category', value: 'Mỹ phẩm' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>💄 Mỹ phẩm &amp; Skincare</span>
+              <span class="text-[10px] text-slate-400">Olive Young</span>
             </button>
-
-            <button onclick="switchPageView('catalog', { filterType: 'category', value: 'Áo' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
-              <span>👕 Quần áo &amp; Thời trang</span>
-              <span class="text-[10px] text-slate-400">CK / Mardi</span>
+            <button onclick="switchPageView('catalog', { filterType: 'subCategory', value: 'Toner Pad' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>🧴 Toner Pad &amp; Serum</span>
+              <span class="text-[10px] text-slate-400">Dưỡng da</span>
             </button>
-
+            <button onclick="switchPageView('catalog', { filterType: 'subCategory', value: 'Mặt nạ' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>🎭 Mặt nạ (Mask &amp; Lip)</span>
+              <span class="text-[10px] text-slate-400">Chăm sóc da</span>
+            </button>
             <div class="border-t border-slate-100 my-1"></div>
             <button onclick="switchPageView('catalog', { filterType: 'sale' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-black text-rose-600 hover:bg-rose-50 flex justify-between transition cursor-pointer">
-              <span>🔥 Hàng đang Sale</span>
+              <span>🔥 Toàn bộ hàng Sale</span>
               <span class="text-[9px] bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded font-black">SALE</span>
             </button>
           </div>
@@ -308,7 +293,7 @@
           <input
             type="text"
             id="nikeSearchInput"
-            placeholder="Tìm kiếm Laneige, CK..."
+            placeholder="Tìm kiếm Medicube, Mediheal..."
             class="w-full pl-8 pr-3 py-2 rounded-full bg-slate-100 hover:bg-slate-200/80 focus:bg-white border border-transparent focus:border-sky-500 outline-none text-xs font-medium text-slate-800 transition"
           />
           <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs">🔍</span>
@@ -350,7 +335,7 @@
           </h1>
 
           <p class="text-sky-100 text-sm max-w-xl leading-relaxed">
-            HàBu Order mua hộ trực tiếp từ Olive Young, Musinsa, Coupang... tự động quy đổi giá trọn gói về tay và ship thẳng đường Air chỉ 3 - 5 ngày.
+            HàBu Order mua hộ trực tiếp từ Olive Young, Musinsa, Coupang, KREAM... tự động quy đổi giá trọn gói về tay và ship thẳng đường Air chỉ 3 - 5 ngày.
           </p>
 
           <div class="pt-2 flex flex-wrap gap-3">
@@ -424,7 +409,7 @@
           <div class="relative z-10 space-y-1.5">
             <span class="px-2.5 py-0.5 rounded-full bg-white text-rose-700 font-black text-[11px] uppercase tracking-wider">Khuyến mãi cực hot</span>
             <h2 class="hero-headline text-4xl sm:text-5xl font-black tracking-tight">SALE</h2>
-            <p class="text-xs text-rose-100 font-medium">Toàn bộ mặt hàng đang giảm giá sốc từ Olive Young, Musinsa...</p>
+            <p class="text-xs text-rose-100 font-medium">Toàn bộ mặt hàng đang giảm giá sốc từ Olive Young, Musinsa, KREAM...</p>
             <span class="inline-block pt-1 font-extrabold text-xs underline group-hover:translate-x-1 transition">Khám phá ngay →</span>
           </div>
         </div>
@@ -444,18 +429,18 @@
           <div class="relative z-10 space-y-1.5">
             <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-black text-[11px] uppercase tracking-wider">Thiên đường mỹ phẩm</span>
             <h2 class="hero-headline text-3xl sm:text-4xl font-black tracking-tight">Olive Young</h2>
-            <p class="text-xs text-emerald-100 font-medium">Laneige, Torriden, Mediheal, Dr.G, d'Alba, Clio, Rom&amp;nd...</p>
+            <p class="text-xs text-emerald-100 font-medium">Medicube, Mediheal, Laneige, Torriden, Dr.G, d'Alba, Clio...</p>
             <span class="inline-block pt-1 font-extrabold text-xs underline group-hover:translate-x-1 transition">Khám phá Olive Young →</span>
           </div>
         </div>
 
-        <div onclick="switchPageView('catalog', { filterType: 'mall', value: 'Other' })" class="relative h-64 sm:h-72 rounded-3xl overflow-hidden cursor-pointer group shadow-md bg-gradient-to-br from-sky-700 via-sky-800 to-slate-900 text-white p-7 flex flex-col justify-end transition hover:-translate-y-1">
-          <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1000&q=80" alt="Other Malls" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-35 group-hover:scale-105 transition duration-500" />
+        <div onclick="switchPageView('catalog', { filterType: 'mall', value: 'KREAM' })" class="relative h-64 sm:h-72 rounded-3xl overflow-hidden cursor-pointer group shadow-md bg-gradient-to-br from-sky-700 via-sky-800 to-slate-900 text-white p-7 flex flex-col justify-end transition hover:-translate-y-1">
+          <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1000&q=80" alt="KREAM" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-35 group-hover:scale-105 transition duration-500" />
           <div class="relative z-10 space-y-1.5">
-            <span class="px-2.5 py-0.5 rounded-full bg-sky-200 text-sky-950 font-black text-[11px] uppercase tracking-wider">Thời trang &amp; Đời sống</span>
-            <h2 class="hero-headline text-3xl sm:text-4xl font-black tracking-tight">Other Malls</h2>
-            <p class="text-xs text-sky-100 font-medium">Musinsa, KREAM, Coupang, Calvin Klein, Adidas, MLB, Mardi Mercredi...</p>
-            <span class="inline-block pt-1 font-extrabold text-xs underline group-hover:translate-x-1 transition">Khám phá các sàn khác →</span>
+            <span class="px-2.5 py-0.5 rounded-full bg-sky-200 text-sky-950 font-black text-[11px] uppercase tracking-wider">Sneaker &amp; Streetwear</span>
+            <h2 class="hero-headline text-3xl sm:text-4xl font-black tracking-tight">KREAM &amp; Malls</h2>
+            <p class="text-xs text-sky-100 font-medium">Nike Air Force, Salomon, New Balance, The North Face, Calvin Klein...</p>
+            <span class="inline-block pt-1 font-extrabold text-xs underline group-hover:translate-x-1 transition">Khám phá KREAM →</span>
           </div>
         </div>
       </div>
@@ -580,10 +565,9 @@
       <button onclick="setCatalogFilter('all')" class="cat-pill-btn px-4 py-2 rounded-full bg-sky-600 text-white cursor-pointer" data-cat="all">Tất cả</button>
       <button onclick="setCatalogFilter('sale')" class="cat-pill-btn px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-rose-600 cursor-pointer" data-cat="sale">🔥 Hàng Sale</button>
       <button onclick="setCatalogFilter('mall', 'Olive Young')" class="cat-pill-btn px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer" data-cat="Olive Young">💄 Olive Young</button>
-      <button onclick="setCatalogFilter('mall', 'Other')" class="cat-pill-btn px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer" data-cat="Other">👟 Musinsa / Other</button>
-      <button onclick="setCatalogFilter('category', 'Mỹ phẩm')" class="cat-pill-btn px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer" data-cat="Mỹ phẩm">Mỹ phẩm</button>
-      <button onclick="setCatalogFilter('category', 'Giày')" class="cat-pill-btn px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer" data-cat="Giày">Giày / Dép</button>
-      <button onclick="setCatalogFilter('category', 'Áo')" class="cat-pill-btn px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer" data-cat="Áo">Quần áo</button>
+      <button onclick="setCatalogFilter('mall', 'KREAM')" class="cat-pill-btn px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer" data-cat="KREAM">👟 KREAM</button>
+      <button onclick="setCatalogFilter('brand', '메디큐브')" class="cat-pill-btn px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer" data-cat="메디큐브">🧬 Medicube</button>
+      <button onclick="setCatalogFilter('brand', '메디힐')" class="cat-pill-btn px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer" data-cat="메디힐">💧 Mediheal</button>
     </div>
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" id="catalogProductsGrid"></div>
@@ -750,7 +734,7 @@
     </form>
   </main>
 
-  <!-- ================= VIEW 5: TRANG QUẢN TRỊ ADMIN (TRANG RIÊNG BIỆT 100% ĂN CHUỘT) ================= -->
+  <!-- ================= VIEW 5: TRANG QUẢN TRỊ ADMIN (100% ĂN CHUỘT) ================= -->
   <main id="view-admin" class="page-view flex-1 max-w-4xl mx-auto px-6 py-10 w-full" style="position: relative; z-index: 10000; pointer-events: auto !important;">
     <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200">
       <div>
@@ -769,14 +753,17 @@
 
     <div class="space-y-6">
       <div class="p-6 rounded-3xl bg-sky-50 border border-sky-200 space-y-3">
-        <label class="block text-sm font-black text-sky-950 uppercase">⚡ Thêm sản phẩm nhanh (Dán JSON từ Bookmarklet Olive Young):</label>
-        <textarea id="adminImportJsonInput" rows="5" placeholder="Bấm chuột vào đây và nhấn Ctrl + V để dán mã sản phẩm vừa hút từ Olive Young..." class="w-full p-4 rounded-2xl border border-sky-300 text-xs font-mono outline-none bg-white focus:ring-2 focus:ring-sky-500"></textarea>
+        <div class="flex items-center justify-between">
+          <label class="block text-sm font-black text-sky-950 uppercase">⚡ Thêm sản phẩm nhanh (Dán JSON từ Bookmarklet):</label>
+          <span class="text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">✓ Tự động đồng bộ Online</span>
+        </div>
+        <textarea id="adminImportJsonInput" rows="5" placeholder="Bấm chuột vào đây và nhấn Ctrl + V để dán mã sản phẩm..." class="w-full p-4 rounded-2xl border border-sky-300 text-xs font-mono outline-none bg-white focus:ring-2 focus:ring-sky-500"></textarea>
         <div class="flex flex-wrap justify-between items-center gap-2 pt-1">
           <button type="button" onclick="resetToCleanStandardProducts()" class="text-xs font-bold text-sky-700 hover:underline cursor-pointer">
-            🔄 Khôi phục &amp; Cập nhật đầy đủ công dụng
+            🔄 Khôi phục danh sách chuẩn 58 món
           </button>
-          <button type="button" onclick="handleAdminImportSubmit()" class="px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs shadow-md transition cursor-pointer">
-            ⚡ Nạp Sản Phẩm Lên Web
+          <button type="button" id="adminImportBtn" onclick="handleAdminImportSubmit()" class="px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs shadow-md transition cursor-pointer">
+            ⚡ Nạp Lên Web &amp; Đồng Bộ Google Sheets
           </button>
         </div>
       </div>
@@ -825,7 +812,7 @@
     </div>
   </footer>
 
-  <!-- FLOATING AI WIDGET & QUICK CONTACT ICONS (ĐƯỢC ĐẶT Z-INDEX 999999 VÀ POINTER-EVENTS AUTO) -->
+  <!-- FLOATING AI WIDGET & QUICK CONTACT ICONS -->
   <div style="position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 999999; pointer-events: auto !important; display: flex; flex-direction: column; align-items: flex-end; gap: 0.625rem;">
     
     <!-- KHUNG CHAT AI TƯ VẤN TOÀN NĂNG -->
@@ -874,7 +861,6 @@
 
     <!-- CỤM NÚT NỔI: ZALO 1, ZALO 2, MESSENGER & HỎI ĐÁP AI -->
     <div class="flex items-center gap-2" style="pointer-events: auto !important;">
-      <!-- ZALO 1: 0383-774-099 -->
       <a
         href="https://zalo.me/0383774099"
         target="_blank"
@@ -885,7 +871,6 @@
         <span class="tracking-tighter text-[11px]">Zalo 1</span>
       </a>
 
-      <!-- ZALO 2: 0973-726-066 -->
       <a
         href="https://zalo.me/0973726066"
         target="_blank"
@@ -896,7 +881,6 @@
         <span class="tracking-tighter text-[11px]">Zalo 2</span>
       </a>
 
-      <!-- MESSENGER / FACEBOOK -->
       <a
         href="https://www.facebook.com/profile.php?id=61577854719150"
         target="_blank"
@@ -909,7 +893,6 @@
         </svg>
       </a>
 
-      <!-- NÚT MỞ BOX AI TƯ VẤN -->
       <button
         type="button"
         onclick="toggleFloatingAiChat()"
@@ -945,8 +928,8 @@
   </div>
 
   <script>
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwkE-4tu_Tu7gb-ofHJJuYjLiRALXp7S8XaeKlSJWH0DzvWg3oBxt0eojeqiBfrr8dh/exec';
-    const ADMIN_PIN = '1234';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzt22aihXB9fUkZyduRF06YBkccFAT-B-FPYKzpqW8mC9O-mdqlX_B4s7CLem9nr9Mj/exec';
+    const ADMIN_PIN = '0411'
 
     const EXCHANGE_RATE = 21;
     const FEE_UNDER_1KG = 30000;
@@ -956,7 +939,7 @@
     let currentUploadedFile = null;
     let isAdminLoggedIn = false;
 
-    // TỰ ĐỘNG BÙ ĐẮP CÔNG DỤNG VÀ THÔNG TIN SẢN PHẨM CHUẨN
+    // HÀM TỰ ĐỘNG BÙ ĐẮP CÔNG DỤNG VÀ THÔNG TIN SẢN PHẨM CHUẨN
     function sanitizeProductDetails(item) {
       if (!item) return item;
       if (!item.benefits || item.benefits.length === 0 || item.benefits[0].includes('tự động tính')) {
@@ -970,18 +953,36 @@
           item.targetAudience = 'Môi khô bong tróc, viền môi thâm ráp hoặc người thường xuyên thoa son lì.';
           item.usageGuide = 'Thoa một lớp dày trước khi ngủ, sáng hôm sau dùng khăn bông ấm lau nhẹ để lớp sừng chết tự bong ra.';
           item.benefit = 'Mặt nạ ngủ môi giải thưởng Olive Young Awards giúp tẩy da chết nhẹ dịu và khóa ẩm căng mọng.';
-        } else if (item.title && item.title.toLowerCase().includes('pad')) {
+        } else if (item.title && (item.title.toLowerCase().includes('pad') || item.title.toLowerCase().includes('zero pore'))) {
           item.benefits = [
-            'Hộp 100 miếng + 1 gói Refill 100 miếng (Tổng 200 miếng).',
-            'Madecassoside (Xanh lam): Làm dịu vết ửng đỏ, mờ thâm mụn rõ rệt.',
-            'PDRN & Collagen: Tăng độ đàn hồi, căng bóng da.'
+            'Hộp đẫm tinh chất dưỡng da chuyên sâu từ Olive Young Hàn Quốc.',
+            'Hỗ trợ se khít lỗ chân lông, làm sạch bã nhờn và tẩy tế bào chết dịu nhẹ.',
+            'Tăng cường độ đàn hồi, giúp da mềm mịn và hấp thụ dưỡng chất tốt hơn.'
           ];
-          item.targetAudience = 'Mọi loại da: Da mụn dùng dòng Teatree, da thâm dùng Madecassoside, da lão hóa dùng PDRN & Collagen.';
-          item.usageGuide = 'Sau khi rửa mặt, đắp 2-3 miếng pad lên vùng má/trán trong 5-10 phút rồi lau nhẹ.';
-          item.benefit = 'Set 200 miếng đẫm tinh chất: Làm dịu mờ thâm sau mụn, nâng cơ se khít lỗ chân lông.';
+          item.targetAudience = 'Mọi loại da: da mụn, da dầu lỗ chân lông to hoặc da nhạy cảm.';
+          item.usageGuide = 'Sau khi rửa mặt, đắp 2-3 miếng pad lên má và trán 5-10 phút rồi lau nhẹ.';
+          item.benefit = 'Dòng Pad bán chạy số 1 Olive Young giúp se khít lỗ chân lông và làm sạch mụn đầu đen.';
+        } else if (item.title && item.title.toLowerCase().includes('pdrn')) {
+          item.benefits = [
+            'Công nghệ PDRN chiết xuất tinh chất giúp phục hồi tế bào và tăng sinh collagen.',
+            'Cải thiện nếp nhăn li ti, giúp da căng bóng rạng rỡ chuẩn Glass Skin Hàn Quốc.',
+            'Dưỡng trắng mờ thâm và tăng cường hàng rào bảo vệ da.'
+          ];
+          item.targetAudience = 'Da thiếu sức sống, da lão hóa hoặc da thâm sạm sau mụn.';
+          item.usageGuide = 'Thoa đều 2-3 giọt serum lên mặt vào mỗi buổi sáng và tối sau bước toner.';
+          item.benefit = 'Huyết thanh PDRN giúp tăng độ đàn hồi, mờ thâm nám và căng bóng da chuyên sâu.';
+        } else if (item.mall === 'KREAM' || (item.title && (item.title.toLowerCase().includes('nike') || item.title.toLowerCase().includes('jacket') || item.title.toLowerCase().includes('force')))) {
+          item.benefits = [
+            'Sản phẩm thời trang & sneaker chính hãng kiểm định nghiêm ngặt từ sàn KREAM Hàn Quốc.',
+            'Chất liệu cao cấp, độ bền vượt trội và chuẩn form dáng thời thượng.',
+            'Đầy đủ tem mác xuất xứ và hộp nguyên bản từ hãng.'
+          ];
+          item.targetAudience = 'Người yêu thích phong cách thể thao, thời trang đường phố trẻ trung hiện đại.';
+          item.usageGuide = 'Chọn chuẩn size theo bảng size chân hoặc số đo chiều cao/cân nặng.';
+          item.benefit = 'Sản phẩm chính hãng săn sale trực tiếp trên sàn KREAM Hàn Quốc.';
         } else {
           item.benefits = [
-            'Hàng chính hãng nội địa Hàn Quốc đạt chứng nhận an toàn da liễu tại Olive Young.',
+            'Hàng chính hãng nội địa Hàn Quốc đạt chứng nhận an toàn da liễu tại Olive Young/KREAM.',
             'Cam kết vận chuyển bảo đảm đường Air Cargo trực tiếp từ Busan về Hà Nội.'
           ];
           item.targetAudience = 'Phù hợp với thị hiếu và làn da người châu Á.';
@@ -992,128 +993,62 @@
       return item;
     }
 
-    const DEFAULT_HABU_PRODUCTS = [
-      {
-        id: 101,
-        title: '[October All Young Pick/+3 Loại Mini] Mặt nạ ngủ môi Laneige Lip Sleeping Mask 20g',
-        brand: 'Laneige',
-        category: 'Mỹ phẩm',
-        subCategory: 'Mặt nạ',
-        mall: 'Olive Young',
-        krw: 16200,
-        oldKrw: 20000,
-        weightClass: 'under1',
-        estKg: 0.35,
-        isSale: true,
-        variant: 'Tặng kèm 3 hũ mini: Berry / Gummy Bear / Apple Lime',
-        link: 'https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000189392',
-        image: 'https://image.oliveyoung.co.kr/uploads/images/goods/400/10/0000/0018/A00000018939201ko.jpg',
-        benefit: 'Mặt nạ ngủ môi giải thưởng Olive Young Awards giúp tẩy da chết nhẹ dịu và khóa ẩm căng mọng.',
-        targetAudience: 'Môi khô bong tróc, viền môi thâm ráp hoặc người thường xuyên thoa son lì.',
-        usageGuide: 'Thoa một lớp dày trước khi ngủ, sáng hôm sau dùng khăn bông ấm lau nhẹ để lớp sừng chết tự bong ra.',
-        benefits: [
-          'Phiên bản Olive Young All-Young Pick tặng kèm 3 hũ mini trải nghiệm.',
-          'Công nghệ Moisture Wrap độc quyền giữ ẩm cho môi suốt 8 tiếng ban đêm.',
-          'Giàu Vitamin C chiết xuất từ quả mọng (Berry Complex) làm hồng môi tự nhiên.',
-          'Chất kem mềm tan thẩm thấu nhanh, không gây cảm giác nặng môi.'
-        ]
-      },
-      {
-        id: 201,
-        title: 'Hộp Toner Pad Mediheal 100 miếng + Refill 100 miếng',
-        brand: 'Mediheal',
-        category: 'Mỹ phẩm',
-        subCategory: 'Toner Pad',
-        mall: 'Olive Young',
-        krw: 28900,
-        oldKrw: 39800,
-        weightClass: 'over1',
-        estKg: 0.85,
-        isSale: true,
-        variant: 'Chọn loại: Madecassoside / PDRN / Teatree / Collagen',
-        link: 'https://www.oliveyoung.co.kr/',
-        image: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=600&q=80',
-        benefit: 'Set 200 miếng đẫm tinh chất: Làm dịu mờ thâm sau mụn, nâng cơ se khít lỗ chân lông.',
-        targetAudience: 'Mọi loại da: Da mụn dùng dòng Teatree, da thâm dùng Madecassoside, da lão hóa dùng PDRN & Collagen.',
-        usageGuide: 'Sau khi rửa mặt, đắp 2-3 miếng pad lên vùng má/trán trong 5-10 phút rồi lau nhẹ.',
-        benefits: [
-          'Hộp 100 miếng + 1 gói Refill 100 miếng (Tổng 200 miếng).',
-          'Madecassoside (Xanh lam): Làm dịu vết ửng đỏ, mờ thâm mụn rõ rệt.',
-          'PDRN & Collagen: Tăng độ đàn hồi, căng bóng da.'
-        ]
-      },
-      {
-        id: 203,
-        title: 'Áo Thun Calvin Klein (CK) Monogram Logo Crewneck',
-        brand: 'Calvin Klein',
-        category: 'Áo',
-        subCategory: 'Áo thun',
-        mall: 'Musinsa',
-        krw: 49000,
-        oldKrw: 69000,
-        weightClass: 'under1',
-        estKg: 0.35,
-        isSale: true,
-        variant: 'Màu: Đen / Trắng / Xám (Size S/M/L/XL)',
-        link: 'https://www.musinsa.com/',
-        image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80',
-        benefit: 'Chất cotton hữu cơ cao cấp thoáng mát, logo thêu tinh xảo chính hãng Store Hàn.',
-        targetAudience: 'Nam & Nữ yêu thích phong cách tối giản, sang trọng (Unisex / Regular Fit).',
-        usageGuide: 'Size S (48-58kg), Size M (58-68kg), Size L (68-78kg), Size XL (78-88kg).',
-        benefits: [
-          'Chính hãng Calvin Klein Korea phân phối trực tiếp trên Musinsa.',
-          'Chất vải 100% Cotton hữu cơ mềm mại, không bai dão.'
-        ]
-      },
-      {
-        id: 204,
-        title: 'Giày Sneaker Adidas Samba OG / Gazelle Indoor Full Box',
-        brand: 'Adidas',
-        category: 'Giày',
-        subCategory: 'Sneaker',
-        mall: 'Musinsa',
-        krw: 109000,
-        oldKrw: 139000,
-        weightClass: 'over1',
-        estKg: 1.0,
-        isSale: true,
-        variant: 'Mã: B75806 (Trắng sọc đen) / B75807 (Đen sọc trắng)',
-        link: 'https://www.musinsa.com/',
-        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80',
-        benefit: 'Giày Adidas chính hãng nguyên hộp săn trực tiếp tại Musinsa & KREAM Hàn Quốc.',
-        targetAudience: 'Unisex phù hợp cho cả nam và nữ, dễ phối mọi trang phục.',
-        usageGuide: 'Chọn đúng size (True to size). Bảng size Hàn: 230 (37), 240 (38.5), 250 (40), 260 (41).',
-        benefits: [
-          'Chất liệu da thật kết hợp mũi da lộn và đế cao su gum kinh điển.',
-          'Đầy đủ hộp gốc (Full Box), tem mác xuất xứ từ Adidas Hàn Quốc.'
-        ]
-      }
-    ];
-
-    let currentProductsList = DEFAULT_HABU_PRODUCTS.map(sanitizeProductDetails);
-    try {
-      const saved = localStorage.getItem('habu_catalog_store_v5');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          currentProductsList = parsed.map(sanitizeProductDetails);
-        }
-      }
-    } catch (e) {}
-
+    // DỮ LIỆU SẢN PHẨM KHỞI TẠO
+    let currentProductsList = [];
     let currentCatalogFilter = { type: 'all', value: '' };
 
     function saveProductsToStorage() {
       localStorage.setItem('habu_catalog_store_v5', JSON.stringify(currentProductsList));
     }
 
-    function resetToCleanStandardProducts() {
-      currentProductsList = DEFAULT_HABU_PRODUCTS.map(sanitizeProductDetails);
-      saveProductsToStorage();
-      renderAdminManageList();
-      renderCatalogView();
-      renderIntroTopProducts();
-      alert('✅ Đã cập nhật lại toàn bộ Tóm tắt, Công dụng và Thông tin chi tiết chuẩn hãng cho kho hàng!');
+    // ĐỒNG BỘ KHO SẢN PHẨM TỪ GOOGLE SHEETS
+    async function syncProductsFromGoogleSheets() {
+      try {
+        const res = await fetch(GOOGLE_SCRIPT_URL);
+        if (res.ok) {
+          const cloudData = await res.json();
+          if (Array.isArray(cloudData) && cloudData.length > 0) {
+            currentProductsList = cloudData.map(sanitizeProductDetails);
+            saveProductsToStorage();
+            renderCatalogView();
+            renderIntroTopProducts();
+            const countEl = document.getElementById('adminTotalCountText');
+            if (countEl) countEl.textContent = `Tổng: ${currentProductsList.length} món`;
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('Đang dùng kho lưu trữ cục bộ:', err);
+      }
+
+      // Nếu chưa có trên cloud, đọc tạm từ máy
+      try {
+        const saved = localStorage.getItem('habu_catalog_store_v5');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            currentProductsList = parsed.map(sanitizeProductDetails);
+            renderCatalogView();
+            renderIntroTopProducts();
+          }
+        }
+      } catch (e) {}
+    }
+
+    // HÀM LƯU KHO SẢN PHẨM LÊN GOOGLE SHEETS KHI ADMIN THÊM/XÓA
+    async function uploadProductsToGoogleSheets() {
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'save_products',
+            products: currentProductsList
+          })
+        });
+      } catch (e) {
+        console.error('Lỗi đẩy sản phẩm lên Sheets:', e);
+      }
     }
 
     function formatVND(num) {
@@ -1134,7 +1069,7 @@
     }
 
     // =========================================================================
-    // KHỐI QUẢN TRỊ ADMIN (MỞ VIEW RIÊNG BIỆT - 100% ĂN CHUỘT)
+    // KHỐI QUẢN TRỊ ADMIN (100% ĂN CHUỘT)
     // =========================================================================
     function handleAdminLoginClick() {
       if (isAdminLoggedIn) {
@@ -1193,7 +1128,7 @@
             <img src="${p.image || ''}" alt="" class="w-12 h-12 rounded-xl object-cover bg-white shrink-0 border border-slate-200" />
             <div class="min-w-0 truncate">
               <div class="font-bold text-slate-900 truncate">${p.title}</div>
-              <div class="text-[11px] text-slate-500">${p.brand || ''} • <strong>${(p.krw || 0).toLocaleString()} ₩</strong></div>
+              <div class="text-[11px] text-slate-500">${p.brand || ''} • ${p.mall || ''} • <strong>${(p.krw || 0).toLocaleString()} ₩</strong></div>
             </div>
           </div>
           <button type="button" onclick="deleteProductByAdmin(${p.id})" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-xs shrink-0 transition cursor-pointer shadow-sm">
@@ -1203,7 +1138,7 @@
       `).join('');
     }
 
-    function deleteProductByAdmin(productId) {
+    async function deleteProductByAdmin(productId) {
       if (!isAdminLoggedIn) {
         alert('Bạn không có quyền thực hiện thao tác này!');
         return;
@@ -1217,11 +1152,16 @@
         renderAdminManageList();
         renderCatalogView();
         renderIntroTopProducts();
+        
+        // Đồng bộ lên Google Sheets ngay lập tức
+        await uploadProductsToGoogleSheets();
+        alert('Đã xóa và cập nhật đồng bộ cho mọi khách hàng!');
       }
     }
 
     async function handleAdminImportSubmit() {
       const inputEl = document.getElementById('adminImportJsonInput');
+      const importBtn = document.getElementById('adminImportBtn');
       if (!inputEl) return;
       let raw = inputEl.value.trim();
       if (!raw) {
@@ -1248,6 +1188,11 @@
       }
 
       if (Array.isArray(list) && list.length > 0) {
+        if (importBtn) {
+          importBtn.disabled = true;
+          importBtn.textContent = '⏳ Đang đồng bộ lên Google Sheets...';
+        }
+
         const cleanedList = list.map(item => {
           let cleanLink = item.link || '';
           if (cleanLink.includes('goodsNo=')) {
@@ -1258,13 +1203,13 @@
           const rawBenefits = (item.benefits && item.benefits.length > 0 && !item.benefits[0].includes('tự động tính'))
             ? item.benefits
             : [
-                'Sản phẩm nội địa Hàn Quốc đạt giải thưởng chất lượng tại Olive Young.',
-                'Được chiết xuất từ thành phần lành tính, an toàn tuyệt đối cho người dùng.'
+                'Sản phẩm nội địa Hàn Quốc chính hãng từ Olive Young/KREAM.',
+                'Cam kết chuẩn hàng Store, bọc chống sốc kỹ lưỡng khi bay Air.'
               ];
 
           return sanitizeProductDetails({
             id: item.id || Date.now() + Math.floor(Math.random() * 1000),
-            title: item.title || 'Sản phẩm Olive Young',
+            title: item.title || 'Sản phẩm Hàn Quốc',
             brand: item.brand || 'Olive Young',
             category: item.category || 'Mỹ phẩm',
             subCategory: item.subCategory || 'Skincare',
@@ -1274,7 +1219,7 @@
             weightClass: item.weightClass || 'under1',
             estKg: Number(item.estKg) || 0.35,
             isSale: true,
-            variant: item.variant || 'Chính hãng từ Olive Young',
+            variant: item.variant || 'Chính hãng từ Hàn Quốc',
             link: cleanLink,
             image: item.image || '',
             benefit: rawBenefits[0],
@@ -1287,12 +1232,20 @@
         currentProductsList.unshift(...cleanedList);
         saveProductsToStorage();
 
+        // ĐỒNG BỘ TRỰC TIẾP LÊN CLOUD GOOGLE SHEETS ĐỂ MỌI KHÁCH HÀNG THẤY NGAY
+        await uploadProductsToGoogleSheets();
+
         inputEl.value = '';
         renderAdminManageList();
         renderCatalogView();
         renderIntroTopProducts();
 
-        alert(`✅ Đã nạp thành công ${cleanedList.length} sản phẩm mới kèm đầy đủ công dụng lên website!`);
+        if (importBtn) {
+          importBtn.disabled = false;
+          importBtn.textContent = '⚡ Nạp Lên Web & Đồng Bộ Google Sheets';
+        }
+
+        alert(`✅ Đã nạp thành công ${cleanedList.length} sản phẩm mới! Tất cả khách hàng mở web sẽ thấy ngay lập tức.`);
       } else {
         alert('Dữ liệu JSON không đúng danh sách sản phẩm!');
       }
@@ -1330,12 +1283,9 @@
     function getFilteredProductsList() {
       return currentProductsList.filter(item => {
         if (currentCatalogFilter.type === 'sale') return item.isSale !== false;
-        if (currentCatalogFilter.type === 'brand') return item.brand.toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
-        if (currentCatalogFilter.type === 'mall') {
-          if (currentCatalogFilter.value === 'Olive Young') return item.mall === 'Olive Young';
-          return item.mall !== 'Olive Young';
-        }
-        if (currentCatalogFilter.type === 'category') return item.category.toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
+        if (currentCatalogFilter.type === 'brand') return (item.brand || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
+        if (currentCatalogFilter.type === 'mall') return (item.mall || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
+        if (currentCatalogFilter.type === 'category') return (item.category || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
         if (currentCatalogFilter.type === 'subCategory') return (item.subCategory || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
         if (currentCatalogFilter.type === 'search') {
           const q = currentCatalogFilter.value.toLowerCase();
@@ -1417,7 +1367,7 @@
     function renderIntroTopProducts() {
       const topGrid = document.getElementById('introTopProductsGrid');
       if (topGrid) {
-        topGrid.innerHTML = currentProductsList.slice(0, 4).map(renderProductCardHtml).join('');
+        topGrid.innerHTML = currentProductsList.slice(0, 8).map(renderProductCardHtml).join('');
       }
     }
 
@@ -1473,7 +1423,7 @@
                 ${benefitList.map(b => `<li class="flex items-start gap-1.5"><span class="text-emerald-600 font-bold">✓</span><span>${b}</span></li>`).join('')}
               </ul>
               ${item.targetAudience ? `<div class="pt-2 border-t border-slate-200 text-slate-600">👤 <strong>Phù hợp với:</strong> ${item.targetAudience}</div>` : ''}
-              ${item.usageGuide ? `<div class="text-slate-600">💡 <strong>Hướng dẫn sử dụng / Chọn vị:</strong> ${item.usageGuide}</div>` : ''}
+              ${item.usageGuide ? `<div class="text-slate-600">💡 <strong>Hướng dẫn sử dụng / Chọn loại:</strong> ${item.usageGuide}</div>` : ''}
             </div>
 
             <div class="p-3.5 rounded-2xl bg-gradient-to-r from-amber-50 to-rose-50 border border-amber-200 flex items-baseline justify-between">
@@ -1493,7 +1443,7 @@
               </div>
               <div class="flex flex-wrap gap-1.5 text-[11px]">
                 <button type="button" onclick="askProductAiModal('suitability')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-sky-600 hover:text-white border border-sky-200 font-semibold transition cursor-pointer">Hợp da/dáng nào?</button>
-                <button type="button" onclick="askProductAiModal('usage')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-sky-600 hover:text-white border border-sky-200 font-semibold transition cursor-pointer">Cách chọn vị / mã?</button>
+                <button type="button" onclick="askProductAiModal('usage')" class="px-2.5 py-1 rounded-lg bg-white hover:bg-sky-600 hover:text-white border border-sky-200 font-semibold transition cursor-pointer">Cách chọn mã / vị?</button>
               </div>
               <div id="productModalAiAnswer" class="p-2.5 rounded-xl bg-white border border-sky-100 text-slate-700 leading-relaxed">
                 Bấm câu hỏi phía trên hoặc gõ câu hỏi bên dưới để AI tư vấn ngay nhé!
@@ -1535,7 +1485,7 @@
       if (type === 'suitability') {
         box.innerHTML = `🤖 <strong>AI Tư vấn:</strong> ${item.targetAudience || 'Sản phẩm nội địa Hàn Quốc chính hãng, an toàn và lành tính với làn da châu Á.'}`;
       } else if (type === 'usage') {
-        box.innerHTML = `🤖 <strong>AI Hướng dẫn:</strong> ${item.usageGuide || 'Khi đặt link này, tại ô Mã số sản phẩm bạn ghi rõ loại (ví dụ: Vị Berry / Gummy Bear) để shop nhặt chuẩn xác nhé!'}`;
+        box.innerHTML = `🤖 <strong>AI Hướng dẫn:</strong> ${item.usageGuide || 'Khi đặt link này, tại ô Mã số sản phẩm bạn ghi rõ loại hoặc mã màu để shop nhặt chuẩn xác nhé!'}`;
       } else {
         const inp = document.getElementById('modalProductAiInput');
         const q = inp.value.trim();
@@ -1587,7 +1537,7 @@
       // 1. THỜI GIAN VẬN CHUYỂN & LỊCH BAY
       if (q.includes('bao lâu') || q.includes('mấy ngày') || q.includes('thời gian') || q.includes('khi nào') || q.includes('về đến')) {
         return `✈️ <strong>Thời gian hàng về tận tay:</strong><br/>
-• Sau khi chốt đơn, hàng từ web Hàn (Olive Young, Musinsa...) về kho HàBu tại <strong>Busan mất 1 - 2 ngày</strong>.<br/>
+• Sau khi chốt đơn, hàng từ web Hàn (Olive Young, Musinsa, KREAM...) về kho HàBu tại <strong>Busan mất 1 - 2 ngày</strong>.<br/>
 • Hàng được kiểm tra, cân điện tử và đóng chuyến bay thẳng Air Cargo về Nội Bài (Hà Nội).<br/>
 • <strong>Tổng thời gian từ lúc mua đến khi nhận hàng tại Việt Nam chỉ từ 3 - 5 ngày làm việc</strong>.<br/>
 • Nội thành Hà Nội nhận ngay trong ngày sau khi thông quan; tỉnh khác ship 1-2 ngày.`;
@@ -1630,21 +1580,25 @@
 👉 Bản set được tặng kèm 3 hũ mini. Lúc đặt hàng bạn chỉ cần ghi tên vị vào ô <em>Mã số sản phẩm</em> nhé!`;
       }
 
-      // 6. TƯ VẤN TONER PAD / MẶT NẠ MEDIHEAL
-      if (q.includes('mediheal') || q.includes('pad') || q.includes('mặt nạ') || q.includes('pdrn') || q.includes('madecassoside')) {
-        return `🌿 <strong>Phân loại Pad / Mặt nạ Mediheal:</strong><br/>
-• <strong>Madecassoside (Xanh lam):</strong> Làm dịu da ửng đỏ, mờ thâm sau mụn, phục hồi da nhạy cảm.<br/>
-• <strong>Teatree (Tràm trà):</strong> Kiềm dầu, giảm sưng nốt mụn viêm.<br/>
-• <strong>PDRN & Collagen:</strong> Căng bóng da chuẩn Hàn, thu nhỏ lỗ chân lông.<br/>
-• <em>Hộp Pad:</em> 100 miếng + túi Refill 100 miếng (Tổng 200 miếng siêu tiết kiệm).`;
+      // 6. TƯ VẤN TONER PAD / MEDICUBE / MEDIHEAL
+      if (q.includes('mediheal') || q.includes('medicube') || q.includes('pad') || q.includes('mặt nạ') || q.includes('pdrn') || q.includes('madecassoside')) {
+        return `🌿 <strong>Phân loại Pad / Mặt nạ Mediheal &amp; Medicube:</strong><br/>
+• <strong>Medicube Zero Pore Pad:</strong> Se khít lỗ chân lông, kiềm dầu, giảm mụn đầu đen.<br/>
+• <strong>Medicube PDRN Pink Peptide / Booster:</strong> Tăng sinh collagen, dưỡng trắng, căng bóng da.<br/>
+• <strong>Mediheal Madecassoside:</strong> Làm dịu da ửng đỏ, mờ thâm sau mụn, phục hồi da nhạy cảm.<br/>
+• <strong>Mediheal Teatree:</strong> Kiềm dầu, giảm sưng nốt mụn viêm.`;
       }
 
       // 7. BẢNG CHỌN SIZE QUẦN ÁO & GIÀY SNEAKER
-      if (q.includes('size') || q.includes('cỡ') || q.includes('chọn size') || q.includes('áo ck') || q.includes('samba')) {
+      if (q.includes('size') || q.includes('cỡ') || q.includes('chọn size') || q.includes('nike') || q.includes('air force') || q.includes('samba')) {
         return `👟 <strong>Bảng chọn Size chuẩn form Hàn Quốc:</strong><br/>
-• <strong>Áo CK / Hoodie / Mardi:</strong> S (48-58kg), M (58-68kg), L (68-78kg), XL (78-88kg).<br/>
-• <strong>Giày Sneaker (Adidas Samba / MLB):</strong> 230 (size 37), 240 (size 38.5), 250 (size 40), 260 (size 41.5).<br/>
-*(Giày form ôm, chân bè ngang nên tăng 0.5 size).*`;
+• <strong>Áo khoác / Hoodie Nike / The North Face:</strong> S (48-58kg), M (58-68kg), L (68-78kg), XL (78-88kg).<br/>
+• <strong>Giày Sneaker (Nike Air Force 1 / Samba / New Balance):</strong><br/>
+  - Size 230 = Size 37 VN<br/>
+  - Size 240 = Size 38.5 VN<br/>
+  - Size 250 = Size 40 VN<br/>
+  - Size 260 = Size 41.5 VN<br/>
+  *(Giày form ôm, chân bè ngang nên tăng 0.5 size).*`;
       }
 
       // 8. KHI HỎI TRONG POPUP CỦA SẢN PHẨM CỤ THỂ
@@ -1662,7 +1616,7 @@
     // DỊCH TỰ ĐỘNG
     const KOREAN_VIET_GLOSSARY = [
       [/라네즈/gi, 'Laneige'], [/올리브영/gi, 'Olive Young'], [/무신사/gi, 'Musinsa'], [/메디힐/gi, 'Mediheal'],
-      [/립\s*슬리핑\s*마스크/gi, 'Mặt nạ ngủ môi'], [/마스크팩|마스크\s*팩/gi, 'Mặt nạ dưỡng da'],
+      [/메디큐브/gi, 'Medicube'], [/립\s*슬리핑\s*마스크/gi, 'Mặt nạ ngủ môi'], [/마스크팩|마스크\s*팩/gi, 'Mặt nạ dưỡng da'],
       [/토너\s*패드|패드/gi, 'Toner Pad'], [/세럼|앰플/gi, 'Serum dưỡng ẩm']
     ];
 
@@ -1716,7 +1670,7 @@
 
     // FORM ĐẶT HÀNG
     let productRows = [
-      { id: Date.now(), link: '', krw: 16200, qty: 1, weightClass: 'under1', estKg: 0.35, variant: '' }
+      { id: Date.now(), link: '', krw: 21000, qty: 1, weightClass: 'under1', estKg: 0.35, variant: '' }
     ];
 
     function renderOrderRows() {
@@ -1903,17 +1857,17 @@
         text = (res?.data?.text || '').toLowerCase();
       } catch (err) {}
 
-      const found = currentProductsList.find(p => text.includes(p.brand.toLowerCase()) || text.includes(p.title.toLowerCase()));
+      const found = currentProductsList.find(p => text.includes((p.brand || '').toLowerCase()) || text.includes((p.title || '').toLowerCase()));
       if (found) {
         document.getElementById('lensDetectedName').value = found.title;
         document.getElementById('lensDetectedBrand').value = found.brand;
         document.getElementById('lensPriceKRW').value = found.krw;
         document.getElementById('lensDetectedBenefit').value = found.variant;
       } else {
-        document.getElementById('lensDetectedName').value = 'Mặt nạ ngủ môi Laneige (hoặc sản phẩm theo ảnh)';
-        document.getElementById('lensDetectedBrand').value = 'Laneige';
-        document.getElementById('lensDetectedBenefit').value = 'Vị Berry';
-        document.getElementById('lensPriceKRW').value = 16200;
+        document.getElementById('lensDetectedName').value = 'Sản phẩm đặt theo ảnh gửi';
+        document.getElementById('lensDetectedBrand').value = 'Hàn Quốc';
+        document.getElementById('lensDetectedBenefit').value = 'Chính hãng';
+        document.getElementById('lensPriceKRW').value = 20000;
       }
       recalculateLensVND();
       overlay.classList.add('hidden');
@@ -1994,7 +1948,7 @@
             <div class="inline-flex items-center gap-4 bg-slate-800/90 p-5 rounded-2xl border border-slate-700 shadow-xl">
               <div class="w-24 h-20 rounded-xl bg-amber-400/20 border border-amber-400 flex flex-col items-center justify-center p-1 text-center">
                 <span class="text-2xl">🛍️💄👟</span>
-                <span class="text-[8px] font-black text-amber-300 mt-1 uppercase">Olive Young / Musinsa</span>
+                <span class="text-[8px] font-black text-amber-300 mt-1 uppercase">Olive Young / KREAM</span>
               </div>
               <span class="text-2xl text-sky-400 font-black">➔</span>
               <div class="w-28 h-24 rounded-xl bg-gradient-to-br from-[#e2b477] to-[#b57c36] border-2 border-amber-200 p-2 flex flex-col items-center justify-center text-habu-navy shadow-lg">
@@ -2003,7 +1957,7 @@
                 <div class="mt-1 px-2 py-0.5 bg-sky-950 text-amber-300 text-[8px] font-black rounded">ĐÃ GOM ĐỦ</div>
               </div>
             </div>
-            <p class="text-xs text-sky-200">Nhân viên HàBu kiểm tra kỹ đúng mẫu, đúng mùi vị Laneige &amp; size áo trước khi đóng kiện.</p>
+            <p class="text-xs text-sky-200">Nhân viên HàBu kiểm tra kỹ đúng mẫu, đúng loại Medicube/Mediheal &amp; size giày trước khi đóng kiện.</p>
           </div>
         `;
       } else if (stage === 2) {
@@ -2097,8 +2051,9 @@
       }, 3500);
     }
 
+    // TẢI TRANG LẦN ĐẦU: TỰ ĐỘNG KÉO KHO SẢN PHẨM MỚI NHẤT TỪ GOOGLE SHEETS
     window.addEventListener('DOMContentLoaded', () => {
-      renderIntroTopProducts();
+      syncProductsFromGoogleSheets();
       renderOrderRows();
       recalculateLensVND();
       setJourneyStage(1);
