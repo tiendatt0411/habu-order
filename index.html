@@ -203,9 +203,11 @@
   </div>
 
   <!-- NAVBAR -->
+  <!-- NAVBAR CHUẨN DUY NHẤT (ĐÃ DỌN SẠCH CÁC THẺ NAV THỪA) -->
   <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-sm px-6">
     <div class="max-w-7xl mx-auto h-16 flex items-center justify-between gap-6">
       
+      <!-- Logo biểu tượng -->
       <a href="javascript:void(0)" onclick="switchPageView('intro')" class="shrink-0 flex items-center group cursor-pointer" title="HàBu Order">
         <div class="w-12 h-12 rounded-full card-gold-texture border-2 border-[#9e7029]/70 flex items-center justify-center p-1 hover:scale-105 transition shadow-md">
           <svg viewBox="0 0 250 215" class="w-full h-full">
@@ -214,13 +216,13 @@
         </div>
       </a>
 
-      <!-- MENU CHÍNH -->
+      <!-- DUY NHẤT 1 THẺ NAV NẰM Ở ĐÂY -->
       <nav class="hidden md:flex items-center gap-8 text-[14px]">
         <button type="button" id="navBtn-intro" onclick="switchPageView('intro')" class="nav-nike-link active-nav">
           Giới Thiệu
         </button>
 
-        <!-- Hãng -->
+        <!-- Menu Hãng -->
         <div class="relative nike-dropdown-parent">
           <button type="button" id="navBtn-brand" onclick="switchPageView('catalog', { filterType: 'all' })" class="nav-nike-link flex items-center gap-1">
             <span>Hãng</span>
@@ -257,7 +259,7 @@
           </div>
         </div>
 
-        <!-- Loại sản phẩm -->
+        <!-- Menu Loại sản phẩm -->
         <div class="relative nike-dropdown-parent">
           <button type="button" id="navBtn-category" onclick="switchPageView('catalog', { filterType: 'all' })" class="nav-nike-link flex items-center gap-1">
             <span>Loại sản phẩm</span>
@@ -293,17 +295,14 @@
           </div>
         </div>
 
+        <!-- Nút Sale -->
         <button type="button" id="navBtn-sale" onclick="switchPageView('catalog', { filterType: 'sale' })" class="nav-nike-link text-rose-600 flex items-center gap-1.5">
           <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
           <span>Sale</span>
         </button>
-
-        <!-- NÚT QUẢN TRỊ TRỰC TIẾP TRÊN THANH MENU -->
-        <button type="button" onclick="handleAdminLoginClick()" class="nav-nike-link text-sky-700 font-extrabold flex items-center gap-1">
-          <span>⚙️ Quản trị</span>
-        </button>
       </nav>
 
+      <!-- Khung tìm kiếm, hỏi đáp và giỏ hàng bên phải -->
       <div class="flex items-center gap-3 shrink-0">
         <form onsubmit="handleNikeSearch(event)" class="relative w-36 sm:w-52">
           <input
@@ -330,9 +329,9 @@
           <span>📸 Gửi ảnh</span>
         </button>
       </div>
+
     </div>
   </header>
-
   <!-- ================= VIEW 1: TRANG GIỚI THIỆU ================= -->
   <main id="view-intro" class="page-view active-view flex-1">
     
