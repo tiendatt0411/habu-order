@@ -200,7 +200,7 @@
         <a href="https://zalo.me/0383774099" target="_blank" class="hover:text-amber-300">📞 Zalo 1: 0383-774-099</a>
         <a href="https://zalo.me/0973726066" target="_blank" class="hover:text-amber-300">📞 Zalo 2: 0973-726-066</a>
         
-        <button type="button" id="topBarAdminBtn" onclick="handleAdminLoginClick()" class="force-clickable hover:text-amber-300 font-black bg-white/20 hover:bg-white/30 px-3 py-1 rounded text-amber-300 border border-amber-300/60 shadow-sm transition">
+        <button type="button" id="topBarAdminBtn" onclick="onclick="handleAdminAccess()"" class="force-clickable hover:text-amber-300 font-black bg-white/20 hover:bg-white/30 px-3 py-1 rounded text-amber-300 border border-amber-300/60 shadow-sm transition">
           🔒 Quản trị
         </button>
       </div>
@@ -1112,6 +1112,9 @@
   };
 }
   function handleAdminAccess() {
+     const ADMIN_PIN = "8888";
+
+    function handleAdminAccess() {
       const pin = prompt('Vui lòng nhập Mã PIN Quản Trị Viên:');
       if (pin === ADMIN_PIN) {
         isAdminLoggedIn = true;
@@ -1121,7 +1124,6 @@
         alert('Mã PIN không chính xác! Chỉ quản trị viên mới có quyền thao tác.');
       }
     }
-
     function switchSmartCatalogFilter(key) {
       if (typeof switchCatalogFilter === 'function') {
         if (key === 'all') switchCatalogFilter('all');
