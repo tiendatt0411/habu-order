@@ -1055,20 +1055,80 @@
       return Math.round(num || 0).toLocaleString('vi-VN') + ' đ';
     }
 
-    function calculateFormulaVND(krw, weightClass, estKg, oldKrw) {
+// THUẬT TOÁN ĐOÁN CÂN THÔNG MINH CHO MỸ PHẨM (TÍNH CẢ 1+1, QUÀ TẶNG)
+    function estimateSmartWeight(title, category, fallbackKg) {
+      var t = (title || '').toLowerCase();
+      var calculatedKg = 0;
+
+      var volMatch = t.match(/(\d+(?:\.\d+)?)\s*(ml|l|g|kg)/i);
+      if (volMatch) {
+        var num = parseFloat(volMatch[1]);
+        var unit = volMatch[2].toLowerCase();
+        var baseKg = 0;
+        if (unit === 'l' || unit === 'kg') baseKg = num;
+        else if (unit === 'ml' || unit === 'g') baseKg = num / 1000;
+        calculatedKg = baseKg + 0.15;
+      }
+
+      if (t.includes('pad') || t.includes('miếng') || t.includes('tờ')) {
+        var sheetMatch = t.match(/(\d+)\s*(?:miếng|tờ|sheet)/i);
+        var sheets = sheetMatch ? parseInt(sheetMatch[1]) : 100;
+        calculatedKg = Math.max(calculatedKg, (sheets * 0.0035) + 0.15);
+      }
+
+      if (t.includes('1+1') || t.includes('double') || t.includes('duo') || t.includes('+refill') || t.includes('nạp lại') || t.includes('2 gói') || t.includes('*2') || t.includes('+100') || t.includes('+50ml')) {
+        calculatedKg = calculatedKg > 0 ? (calculatedKg * 1.85) : 0.75;
+      }
+
+      if (t.includes('túi') || t.includes('quà tặng') || t.includes('bình') || t.includes('bộ') || t.includes('set') || t.includes('hộp vẽ') || t.includes('full box')) {
+        calculatedKg += 0.18;
+      }
+
+      if (t.includes('áo khoác') || t.includes('puffer') || t.includes('down') || t.includes('jumper') || t.includes('jacket')) {
+        calculatedKg = Math.max(calculatedKg, 0.95);
+      } else if (t.includes('giày') || t.includes('sneaker') || t.includes('air force') || t.includes('samba') || t.includes('new balance')) {
+        calculatedKg = Math.max(calculatedKg, 1.15);
+      }
+
+      if (calculatedKg <= 0) {
+        calculatedKg = Number(fallbackKg) || 0.35;
+      }
+
+      // LÀM TRÒN: >0.5kg TÍNH 1.0kg, BƯỚC NHẢY TRẦN 0.5kg
+      var billedKg = Math.ceil(calculatedKg / 0.5) * 0.5;
+      if (billedKg < 0.5) billedKg = 0.5;
+
+      return {
+        actualEstKg: Math.round(calculatedKg * 100) / 100,
+        billedKg: billedKg
+      };
+    }
+
+    function calculateFormulaVND(krw, weightClass, estKg, oldKrw, itemTitle) {
       const cleanKrw = Math.max(0, Number(krw) || 0);
       const cleanOldKrw = Math.max(cleanKrw, Number(oldKrw) || cleanKrw);
-      const buyingFee = weightClass === 'over1' ? FEE_OVER_1KG : FEE_UNDER_1KG;
-      const weight = Math.max(0.1, Number(estKg) || (weightClass === 'over1' ? 1.0 : 0.35));
-      const shipVND = Math.round(weight * SHIP_PER_KG);
+      
+      const weightInfo = estimateSmartWeight(itemTitle, '', estKg);
+      const finalWeight = weightInfo.billedKg;
+
+      const buyingFee = finalWeight > 1.0 ? FEE_OVER_1KG : FEE_UNDER_1KG;
+      const shipVND = Math.round(finalWeight * SHIP_PER_KG);
       const convertedVND = Math.round(cleanKrw * EXCHANGE_RATE);
       const noWeightVND = convertedVND + buyingFee;
       const allInVND = noWeightVND + shipVND;
       const oldAllInVND = Math.round(cleanOldKrw * EXCHANGE_RATE) + buyingFee + shipVND;
-      return { convertedVND, buyingFee, shipVND, noWeightVND, allInVND, oldAllInVND, weight };
-    }
 
-    // =========================================================================
+      return { 
+        convertedVND, 
+        buyingFee, 
+        shipVND, 
+        noWeightVND, 
+        allInVND, 
+        oldAllInVND, 
+        weight: finalWeight,
+        actualWeight: weightInfo.actualEstKg
+      };
+    }
     // KHỐI QUẢN TRỊ ADMIN (100% ĂN CHUỘT)
     // =========================================================================
     function handleAdminLoginClick() {
@@ -1159,6 +1219,19 @@
       }
     }
 
+    // HÀM BÓC MÃ DUY NHẤT CỦA SẢN PHẨM TỪ LINK HOẶC TIÊU ĐỀ
+    function getProductUniqueKey(item) {
+      var link = item.link || '';
+      var mOlive = link.match(/goodsNo=([A-Za-z0-9]+)/);
+      if (mOlive) return 'OY_' + mOlive[1];
+      
+      var mKream = link.match(/products\/(\d+)/);
+      if (mKream) return 'KREAM_' + mKream[1];
+
+      return (item.title || '').toLowerCase().replace(/[^a-z0-9가-힣]/g, '');
+    }
+
+    // NẠP SẢN PHẨM CÓ CƠ CHẾ KHỬ TRÙNG LẶP (DEDUPLICATION)
     async function handleAdminImportSubmit() {
       const inputEl = document.getElementById('adminImportJsonInput');
       const importBtn = document.getElementById('adminImportBtn');
@@ -1190,7 +1263,7 @@
       if (Array.isArray(list) && list.length > 0) {
         if (importBtn) {
           importBtn.disabled = true;
-          importBtn.textContent = '⏳ Đang đồng bộ lên Google Sheets...';
+          importBtn.textContent = '⏳ Đang lọc trùng & đồng bộ...';
         }
 
         const cleanedList = list.map(item => {
@@ -1207,6 +1280,8 @@
                 'Cam kết chuẩn hàng Store, bọc chống sốc kỹ lưỡng khi bay Air.'
               ];
 
+          const wInfo = estimateSmartWeight(item.title, item.category, item.estKg);
+
           return sanitizeProductDetails({
             id: item.id || Date.now() + Math.floor(Math.random() * 1000),
             title: item.title || 'Sản phẩm Hàn Quốc',
@@ -1216,9 +1291,10 @@
             mall: item.mall || 'Olive Young',
             krw: Number(item.krw) || 20000,
             oldKrw: Number(item.oldKrw) || Math.round((Number(item.krw) || 20000) * 1.2),
-            weightClass: item.weightClass || 'under1',
-            estKg: Number(item.estKg) || 0.35,
+            weightClass: wInfo.billedKg > 1.0 ? 'over1' : 'under1',
+            estKg: wInfo.billedKg,
             isSale: true,
+            salesCount: item.salesCount || 0,
             variant: item.variant || 'Chính hãng từ Hàn Quốc',
             link: cleanLink,
             image: item.image || '',
@@ -1229,10 +1305,23 @@
           });
         });
 
-        currentProductsList.unshift(...cleanedList);
+        // TỰ ĐỘNG LỌC BỎ CÁC SẢN PHẨM BỊ TRÙNG LẶP
+        var combined = cleanedList.concat(currentProductsList);
+        var seenKeys = {};
+        var uniqueProducts = [];
+
+        combined.forEach(function(prod) {
+          var key = getProductUniqueKey(prod);
+          if (!seenKeys[key]) {
+            seenKeys[key] = true;
+            uniqueProducts.push(prod);
+          }
+        });
+
+        var duplicateCount = combined.length - uniqueProducts.length;
+        currentProductsList = uniqueProducts;
         saveProductsToStorage();
 
-        // ĐỒNG BỘ TRỰC TIẾP LÊN CLOUD GOOGLE SHEETS ĐỂ MỌI KHÁCH HÀNG THẤY NGAY
         await uploadProductsToGoogleSheets();
 
         inputEl.value = '';
@@ -1245,15 +1334,11 @@
           importBtn.textContent = '⚡ Nạp Lên Web & Đồng Bộ Google Sheets';
         }
 
-        alert(`✅ Đã nạp thành công ${cleanedList.length} sản phẩm mới! Tất cả khách hàng mở web sẽ thấy ngay lập tức.`);
+        alert(`✅ Đã nạp thành công!\n• Tổng sản phẩm hiện có: ${currentProductsList.length} món.\n• Đã tự động loại bỏ: ${duplicateCount} món bị trùng lặp.`);
       } else {
         alert('Dữ liệu JSON không đúng danh sách sản phẩm!');
       }
     }
-
-    // =========================================================================
-    // HIỂN THỊ KHO SẢN PHẨM & VIEW
-    // =========================================================================
     function switchPageView(viewName, filterParams) {
       document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active-view'));
       document.querySelectorAll('.nav-nike-link').forEach(el => el.classList.remove('active-nav'));
@@ -1326,7 +1411,7 @@
     }
 
     function renderProductCardHtml(item) {
-      const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.oldKrw);
+const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.oldKrw, item.title);
       const sales = extractSalesPopularity(item);
       const salesBadgeText = sales >= 10000 ? (Math.round(sales / 1000) + 'k+ đã bán') : (sales.toLocaleString() + ' lượt mua');
 
@@ -1436,7 +1521,7 @@
       const item = sanitizeProductDetails(rawItem);
       currentModalProduct = item;
 
-      const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.oldKrw);
+     const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.oldKrw, item.title);
       const benefitList = (item.benefits && item.benefits.length > 0)
         ? item.benefits 
         : [item.benefit || 'Hàng chính hãng nội địa Hàn Quốc.'];
@@ -1453,7 +1538,7 @@
               <div class="flex justify-between"><span class="text-slate-500">Hãng sản xuất:</span><strong class="text-sky-800">${item.brand}</strong></div>
               <div class="flex justify-between"><span class="text-slate-500">Kênh phân phối:</span><strong class="text-sky-700">${item.mall || 'Olive Young'}</strong></div>
               <div class="flex justify-between"><span class="text-slate-500">Xuất xứ:</span><strong>Nội địa Hàn Quốc</strong></div>
-              <div class="flex justify-between"><span class="text-slate-500">Cân nặng dự kiến:</span><strong>~${calc.weight} kg</strong></div>
+              <div class="flex justify-between"><span class="text-slate-500">Cân tính cước:</span><strong>${calc.weight} kg <span class="text-[10px] text-slate-400 font-normal">(Thực tế: ~${calc.actualWeight} kg)</span></strong></div>
             </div>
           </div>
 
