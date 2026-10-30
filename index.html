@@ -563,12 +563,11 @@
     </div>
 
     <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 custom-scrollbar text-xs font-bold">
-      <button onclick="setCatalogFilter('all')" class="cat-pill-btn px-4 py-2 rounded-full bg-sky-600 text-white cursor-pointer" data-cat="all">Tất cả</button>
-      <button onclick="setCatalogFilter('sale')" class="cat-pill-btn px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-rose-600 cursor-pointer" data-cat="sale">🔥 Hàng Sale</button>
-      <button onclick="setCatalogFilter('mall', 'Olive Young')" class="cat-pill-btn px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer" data-cat="Olive Young">💄 Olive Young</button>
-      <button onclick="setCatalogFilter('mall', 'KREAM')" class="cat-pill-btn px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer" data-cat="KREAM">👟 KREAM</button>
-      <button onclick="setCatalogFilter('brand', '메디큐브')" class="cat-pill-btn px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer" data-cat="메디큐브">🧬 Medicube</button>
-      <button onclick="setCatalogFilter('brand', '메디힐')" class="cat-pill-btn px-4 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer" data-cat="메디힐">💧 Mediheal</button>
+      <button type="button" onclick="switchSmartCatalogFilter('musinsa')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">👕 Musinsa</button>
+<button type="button" onclick="switchSmartCatalogFilter('nike')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">✔️ Nike</button>
+<button type="button" onclick="switchSmartCatalogFilter('adidas')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">👟 Adidas</button>
+<button type="button" onclick="switchSmartCatalogFilter('coupang')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">🚀 Coupang</button>
+<button type="button" onclick="switchSmartCatalogFilter('cosmetics_other')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">✨ Mỹ Phẩm Khác</button>
     </div>
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" id="catalogProductsGrid"></div>
@@ -1773,7 +1772,7 @@ const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.ol
                 <div class="mt-1 px-2 py-0.5 bg-sky-950 text-amber-300 text-[8px] font-black rounded">ĐÃ GOM ĐỦ</div>
               </div>
             </div>
-            <p class="text-xs text-sky-200">Nhân viên HàBu kiểm tra kỹ đúng mẫu, đúng loại Medicube/Mediheal &amp; size giày trước khi đóng kiện.</p>
+            <p class="text-xs text-sky-200">Nhân viên HàBu kiểm tra kỹ đúng mẫu, đúng loại mỹ phẩm &amp; size thời trang trước khi đóng kiện.</p>
           </div>
         `;
       } else if (stage === 2) {
