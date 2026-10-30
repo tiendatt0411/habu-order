@@ -1111,6 +1111,7 @@
     weightLabel: weightObj.displayLabel
   };
 }
+  function handleAdminAccess() {
       const pin = prompt('Vui lòng nhập Mã PIN Quản Trị Viên:');
       if (pin === ADMIN_PIN) {
         isAdminLoggedIn = true;
@@ -1118,6 +1119,20 @@
         openAdminPanel();
       } else if (pin !== null) {
         alert('Mã PIN không chính xác! Chỉ quản trị viên mới có quyền thao tác.');
+      }
+    }
+
+    function switchSmartCatalogFilter(key) {
+      if (typeof switchCatalogFilter === 'function') {
+        if (key === 'all') switchCatalogFilter('all');
+        else if (key === 'sale') switchCatalogFilter('sale');
+        else if (key === 'oliveyoung') switchCatalogFilter('mall', 'Olive Young');
+        else if (key === 'kream') switchCatalogFilter('mall', 'KREAM');
+        else if (key === 'musinsa') switchCatalogFilter('mall', 'Musinsa');
+        else if (key === 'nike') switchCatalogFilter('brand', 'Nike');
+        else if (key === 'adidas') switchCatalogFilter('brand', 'Adidas');
+        else if (key === 'coupang') switchCatalogFilter('mall', 'Coupang');
+        else if (key === 'cosmetics_other') switchCatalogFilter('mall', 'OtherCosmetic');
       }
     }
 
