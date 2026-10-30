@@ -1281,12 +1281,14 @@
     }
 
    // HÀM TỰ ĐỘNG ĐO ĐOÁN SỐ LƯỢT GIAO DỊCH / REVIEW TỪ TIÊU ĐỀ
+    // =========================================================================
+    // 1. THUẬT TOÁN ĐO LƯỢNG MUA & XẾP HẠNG THÔNG MINH
+    // =========================================================================
     function extractSalesPopularity(item) {
       if (item.salesCount && Number(item.salesCount) > 0) {
         return Number(item.salesCount);
       }
       var str = (item.title || '') + ' ' + (item.brand || '');
-      // Bóc tách các dạng "Giao dịch 806.000", "Ưu đãi 221.000", "Giao dịch 2.9만"
       var m = str.match(/(?:Giao dịch|Deal|Ưu đãi|거래)\s*([0-9.,]+)\s*([만kKmMnN万]?)/i);
       if (m) {
         var val = parseFloat(m[1].replace(/,/g, '.'));
@@ -1299,10 +1301,9 @@
       if (str.includes('KHÔNG. 1') || str.includes('hạng nhất') || str.includes('No.1') || str.includes('All Young Pick')) {
         return 15000;
       }
-      return 500; // Mức mặc định
+      return 500;
     }
 
-    // LỌC VÀ TỰ ĐỘNG XẾP HÀNG SẢN PHẨM MUA NHIỀU / ĐÁNH GIÁ CAO LÊN ĐẦU
     function getFilteredProductsList() {
       var filtered = currentProductsList.filter(function(item) {
         if (currentCatalogFilter.type === 'sale') return item.isSale !== false;
@@ -1318,7 +1319,7 @@
         return true;
       });
 
-      // SẮP XẾP: SẢN PHẨM MUA NHIỀU, REVIEW CAO ĐỨNG ĐẦU TIÊN
+      // TỰ ĐỘNG ĐẨY MÓN HOT/REVIEW CAO LÊN ĐẦU TIÊN
       return filtered.sort(function(a, b) {
         return extractSalesPopularity(b) - extractSalesPopularity(a);
       });
@@ -1341,13 +1342,11 @@
             <div onclick="openProductDetailModal(${item.id})" class="relative h-52 bg-slate-100 cursor-pointer overflow-hidden">
               <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
               
-              <!-- HUY HIỆU SÀN & HÃNG -->
               <div class="absolute top-2 left-2 flex flex-col gap-1 z-10">
                 <span class="px-2 py-0.5 rounded-md bg-sky-800 text-white text-[10px] font-black uppercase tracking-wider shadow">${item.mall || 'Korea'}</span>
                 ${sales >= 5000 ? `<span class="px-2 py-0.5 rounded-md bg-amber-400 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow">🔥 Top Bán Chạy</span>` : ''}
               </div>
 
-              <!-- HUY HIỆU ĐÁNH GIÁ THỰC TẾ -->
               <div class="absolute bottom-2 left-2 right-2 flex justify-between items-center z-10">
                 <span class="px-2 py-0.5 rounded-full bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold flex items-center gap-1 shadow">
                   <span>★ 4.9</span>
@@ -1383,54 +1382,13 @@
         </div>
       `;
     }
-      const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.oldKrw);
-      return `
-        <div class="rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-lg transition group bg-white relative">
-          ${isAdminLoggedIn ? `
-            <button onclick="event.stopPropagation(); deleteProductByAdmin(${item.id})" class="absolute top-2 right-2 z-20 w-7 h-7 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-black text-xs shadow-md transition cursor-pointer" title="Xóa món này (Admin)">
-              ✕
-            </button>
-          ` : ''}
-
-          <div>
-            <div onclick="openProductDetailModal(${item.id})" class="relative h-48 bg-slate-100 cursor-pointer overflow-hidden">
-              <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
-              <span class="absolute top-2 left-2 px-2 py-0.5 rounded bg-sky-700 text-white text-[10px] font-bold">${item.brand}</span>
-              ${item.isSale && !isAdminLoggedIn ? '<span class="absolute top-2 right-2 px-2 py-0.5 rounded bg-rose-600 text-white text-[10px] font-black">SALE</span>' : ''}
-              <div class="absolute bottom-2 left-2 right-2">
-                <span class="px-2 py-0.5 rounded bg-black/70 text-white text-[10px] font-bold">🔍 Bấm xem công dụng &amp; AI</span>
-              </div>
-            </div>
-            <div class="p-4 space-y-1.5">
-              <h4 onclick="openProductDetailModal(${item.id})" class="font-bold text-sm text-slate-900 hover:text-sky-600 cursor-pointer line-clamp-2 min-h-[40px]">${item.title}</h4>
-              <p class="text-[11px] text-sky-700 font-semibold truncate">${item.variant}</p>
-              
-              <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-600 line-clamp-2">
-                • ${item.benefit || (item.benefits && item.benefits[0]) || 'Hàng chính hãng nội địa Hàn Quốc.'}
-              </div>
-
-              <div class="pt-2 flex items-baseline justify-between border-t border-slate-100">
-                <span class="text-xs text-slate-400 line-through">${formatVND(calc.oldAllInVND)}</span>
-                <span class="text-base font-black text-rose-600">${formatVND(calc.allInVND)}</span>
-              </div>
-            </div>
-          </div>
-          <div class="px-4 pb-4 grid grid-cols-5 gap-1.5">
-            <button type="button" onclick="openProductDetailModal(${item.id})" class="col-span-2 py-2 rounded-xl bg-slate-100 hover:bg-sky-50 text-sky-800 font-bold text-xs transition cursor-pointer">
-              🤖 Hỏi AI
-            </button>
-            <button type="button" onclick="orderProductItemDirect(${item.id})" class="col-span-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition cursor-pointer">
-              🛒 Đặt ngay
-            </button>
-          </div>
-        </div>
-      `;
-    }
 
     function renderCatalogView() {
       const grid = document.getElementById('catalogProductsGrid');
+      if (!grid) return;
       const filtered = getFilteredProductsList();
-      document.getElementById('catalogCountBadge').textContent = `${filtered.length} sản phẩm`;
+      const badge = document.getElementById('catalogCountBadge');
+      if (badge) badge.textContent = `${filtered.length} sản phẩm`;
 
       const titles = {
         all: 'KHO SẢN PHẨM SALE',
@@ -1441,7 +1399,8 @@
         subCategory: `LOẠI: ${currentCatalogFilter.value.toUpperCase()}`,
         search: `KẾT QUẢ TÌM KIẾM: "${currentCatalogFilter.value.toUpperCase()}"`
       };
-      document.getElementById('catalogViewHeaderTitle').textContent = titles[currentCatalogFilter.type] || 'SẢN PHẨM';
+      const headerTitle = document.getElementById('catalogViewHeaderTitle');
+      if (headerTitle) headerTitle.textContent = titles[currentCatalogFilter.type] || 'SẢN PHẨM';
 
       if (filtered.length === 0) {
         grid.innerHTML = '<div class="col-span-full py-12 text-center text-slate-400 text-sm">Chưa có sản phẩm nào trong mục này.</div>';
@@ -1453,19 +1412,21 @@
     function renderIntroTopProducts() {
       const topGrid = document.getElementById('introTopProductsGrid');
       if (topGrid) {
-        topGrid.innerHTML = currentProductsList.slice(0, 8).map(renderProductCardHtml).join('');
+        // Tự động sắp xếp trước khi lấy 8 sản phẩm hàng đầu cho trang chủ
+        const sorted = [...currentProductsList].sort((a, b) => extractSalesPopularity(b) - extractSalesPopularity(a));
+        topGrid.innerHTML = sorted.slice(0, 8).map(renderProductCardHtml).join('');
       }
     }
 
     function handleNikeSearch(e) {
-      e.preventDefault();
+      if (e && e.preventDefault) e.preventDefault();
       const val = document.getElementById('nikeSearchInput').value.trim();
       if (!val) return;
       switchPageView('catalog', { filterType: 'search', value: val });
     }
 
     // =========================================================================
-    // MODAL CHI TIẾT SẢN PHẨM
+    // 2. MODAL CHI TIẾT SẢN PHẨM & AI TƯ VẤN
     // =========================================================================
     let currentModalProduct = null;
 
@@ -1581,9 +1542,6 @@
       }
     }
 
-    // =========================================================================
-    // AI TƯ VẤN & HỎI ĐÁP TOÀN NĂNG
-    // =========================================================================
     function toggleFloatingAiChat() {
       const panel = document.getElementById('floatingAiPanel');
       if (panel) {
@@ -1620,7 +1578,6 @@
     function generateSmartAiResponse(query, contextItem) {
       const q = query.toLowerCase().trim();
 
-      // 1. THỜI GIAN VẬN CHUYỂN & LỊCH BAY
       if (q.includes('bao lâu') || q.includes('mấy ngày') || q.includes('thời gian') || q.includes('khi nào') || q.includes('về đến')) {
         return `✈️ <strong>Thời gian hàng về tận tay:</strong><br/>
 • Sau khi chốt đơn, hàng từ web Hàn (Olive Young, Musinsa, KREAM...) về kho HàBu tại <strong>Busan mất 1 - 2 ngày</strong>.<br/>
@@ -1629,16 +1586,14 @@
 • Nội thành Hà Nội nhận ngay trong ngày sau khi thông quan; tỉnh khác ship 1-2 ngày.`;
       }
 
-      // 2. GỢI Ý QUÀ TẶNG BỐ MẸ / NGƯỜI LỚN TUỔI
       if (q.includes('bố mẹ') || q.includes('ba mẹ') || q.includes('người lớn') || q.includes('quà tặng') || q.includes('quà') || q.includes('sức khỏe') || q.includes('ông bà')) {
         return `🎁 <strong>Gợi ý quà biếu sức khỏe cho bố mẹ:</strong><br/>
-1. <strong>Tinh chất Hồng Sâm Chính Phủ KGC Everytime 30 gói:</strong> Bồi bổ nguyên khí, tăng đề kháng, giảm đau nhức mệt mỏi cho người lớn tuổi.<br/>
+1. <strong>Tinh chất Hồng Sâm KGC Everytime 30 gói:</strong> Bồi bổ nguyên khí, tăng đề kháng, giảm đau nhức mệt mỏi cho người lớn tuổi.<br/>
 2. <strong>Viên uống Glucosamine / Dầu thông đỏ Hàn Quốc:</strong> Rất tốt cho xương khớp và tim mạch người già.<br/>
-3. <strong>Set mặt nạ phục hồi chuyên sâu hoặc kem dưỡng Collagen/PDRN:</strong> Giúp dưỡng ẩm, chống nứt nẻ khô da cho mẹ.<br/>
-👉 Bạn có thể bấm vào icon <strong>Zalo</strong> hoặc <strong>Messenger</strong> bên cạnh để shop gửi hình set quà kèm túi biếu sang trọng nhé!`;
+3. <strong>Set kem dưỡng Phục hồi PDRN / Collagen:</strong> Cấp ẩm sâu, chống nứt nẻ khô da mùa đông.<br/>
+👉 Bạn bấm icon <strong>Zalo</strong> bên cạnh để shop tư vấn mẫu kèm túi biếu nhé!`;
       }
 
-      // 3. QUY TRÌNH VẬN CHUYỂN & CÂN ĐO
       if (q.includes('quy trình') || q.includes('vận chuyển') || q.includes('ship air') || q.includes('cước bay') || q.includes('phí ship')) {
         return `📦 <strong>Quy trình vận chuyển chuẩn 5 chặng HàBu by Air:</strong><br/>
 • <strong>Chặng 1:</strong> Gom hàng chính hãng tại kho Busan, kiểm tra chuẩn mã, chuẩn màu/size.<br/>
@@ -1648,7 +1603,6 @@
 • <strong>Chặng 5:</strong> Giao tận tay bạn qua ship hỏa tốc hoặc bưu cục toàn quốc.`;
       }
 
-      // 4. CÁCH TÍNH GIÁ VỀ TAY TRỌN GÓI
       if (q.includes('tính giá') || q.includes('công thức') || q.includes('tỷ giá') || q.includes('tiền ship') || q.includes('công mua')) {
         return `💰 <strong>Công thức tính giá trọn gói về tay tại HàBu Order:</strong><br/>
 <strong>Giá về tay = (Giá web Hàn × Tỷ giá 21) + Công mua + Tiền cân (180k/kg)</strong><br/>
@@ -1657,37 +1611,14 @@
 • <em>Cước bay:</em> 180.000đ/kg cân thực tế khi đóng thùng.`;
       }
 
-      // 5. TƯ VẤN SẢN PHẨM: MẶT NẠ MÔI LANEIGE
       if (q.includes('laneige') || q.includes('môi') || q.includes('lip')) {
         return `🍓 <strong>Mặt nạ ngủ môi Laneige Lip Sleeping Mask (Olive Young Pick):</strong><br/>
-• <strong>Vị Berry (Quả mọng):</strong> Dòng bán chạy nhất, dưỡng hồng môi và mờ thâm viền môi.<br/>
+• <strong>Vị Berry:</strong> Dòng bán chạy nhất, dưỡng hồng môi tự nhiên.<br/>
 • <strong>Vị Gummy Bear:</strong> Hương kẹo ngọt mát dễ chịu.<br/>
-• <strong>Vị Apple Lime:</strong> Tươi mát thanh dịu, tẩy tế bào chết nhẹ nhàng.<br/>
+• <strong>Vị Apple Lime:</strong> Tươi mát, tẩy tế bào chết nhẹ dịu.<br/>
 👉 Bản set được tặng kèm 3 hũ mini. Lúc đặt hàng bạn chỉ cần ghi tên vị vào ô <em>Mã số sản phẩm</em> nhé!`;
       }
 
-      // 6. TƯ VẤN TONER PAD / MEDICUBE / MEDIHEAL
-      if (q.includes('mediheal') || q.includes('medicube') || q.includes('pad') || q.includes('mặt nạ') || q.includes('pdrn') || q.includes('madecassoside')) {
-        return `🌿 <strong>Phân loại Pad / Mặt nạ Mediheal &amp; Medicube:</strong><br/>
-• <strong>Medicube Zero Pore Pad:</strong> Se khít lỗ chân lông, kiềm dầu, giảm mụn đầu đen.<br/>
-• <strong>Medicube PDRN Pink Peptide / Booster:</strong> Tăng sinh collagen, dưỡng trắng, căng bóng da.<br/>
-• <strong>Mediheal Madecassoside:</strong> Làm dịu da ửng đỏ, mờ thâm sau mụn, phục hồi da nhạy cảm.<br/>
-• <strong>Mediheal Teatree:</strong> Kiềm dầu, giảm sưng nốt mụn viêm.`;
-      }
-
-      // 7. BẢNG CHỌN SIZE QUẦN ÁO & GIÀY SNEAKER
-      if (q.includes('size') || q.includes('cỡ') || q.includes('chọn size') || q.includes('nike') || q.includes('air force') || q.includes('samba')) {
-        return `👟 <strong>Bảng chọn Size chuẩn form Hàn Quốc:</strong><br/>
-• <strong>Áo khoác / Hoodie Nike / The North Face:</strong> S (48-58kg), M (58-68kg), L (68-78kg), XL (78-88kg).<br/>
-• <strong>Giày Sneaker (Nike Air Force 1 / Samba / New Balance):</strong><br/>
-  - Size 230 = Size 37 VN<br/>
-  - Size 240 = Size 38.5 VN<br/>
-  - Size 250 = Size 40 VN<br/>
-  - Size 260 = Size 41.5 VN<br/>
-  *(Giày form ôm, chân bè ngang nên tăng 0.5 size).*`;
-      }
-
-      // 8. KHI HỎI TRONG POPUP CỦA SẢN PHẨM CỤ THỂ
       if (contextItem) {
         return `Sản phẩm <strong>${contextItem.title}</strong> thuộc thương hiệu <strong>${contextItem.brand}</strong>.<br/>
 • <em>Công dụng:</em> ${contextItem.benefit || ''}<br/>
@@ -1695,311 +1626,11 @@
 👉 Bạn có thể bấm <strong>"Đặt ngay"</strong> hoặc nhắn Zalo để shop hỗ trợ giữ suất sale nhé!`;
       }
 
-      // 9. CÂU TRẢ LỜI MẶC ĐỊNH
       return `🤖 <strong>AI HàBu Order:</strong> Cảm ơn câu hỏi của bạn! Bạn có thể hỏi mình về <em>"thời gian hàng về"</em>, <em>"quà biếu sức khỏe cho bố mẹ"</em>, <em>"cách chọn size"</em> hoặc chọn nhanh các gợi ý phía trên.<br/>Nếu cần tư vấn riêng, bạn bấm ngay vào icon <strong>Zalo</strong> hoặc <strong>Messenger</strong> bên cạnh để gặp trực tiếp shop nhé!`;
     }
 
-    // DỊCH TỰ ĐỘNG
-    const KOREAN_VIET_GLOSSARY = [
-      [/라네즈/gi, 'Laneige'], [/올리브영/gi, 'Olive Young'], [/무신사/gi, 'Musinsa'], [/메디힐/gi, 'Mediheal'],
-      [/메디큐브/gi, 'Medicube'], [/립\s*슬리핑\s*마스크/gi, 'Mặt nạ ngủ môi'], [/마스크팩|마스크\s*팩/gi, 'Mặt nạ dưỡng da'],
-      [/토너\s*패드|패드/gi, 'Toner Pad'], [/세럼|앰플/gi, 'Serum dưỡng ẩm']
-    ];
-
-    function quickDictionaryTranslateKoToVi(text) {
-      if (!text) return '';
-      let out = String(text);
-      KOREAN_VIET_GLOSSARY.forEach(([regex, vi]) => {
-        out = out.replace(regex, ' ' + vi + ' ');
-      });
-      return out.replace(/\s+/g, ' ').trim();
-    }
-
-    function containsKoreanChars(str) {
-      return /[가-힣]/.test(str || '');
-    }
-
-    async function translateKoreanTitleAsync(rawText) {
-      if (!rawText || !containsKoreanChars(rawText)) return rawText;
-      try {
-        const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=ko&tl=vi&dt=t&q=${encodeURIComponent(rawText)}`;
-        const res = await fetch(url);
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data?.[0])) {
-            return data[0].map(part => part[0]).join('').trim();
-          }
-        }
-      } catch (e) {}
-      return quickDictionaryTranslateKoToVi(rawText);
-    }
-
-    async function translateAllCatalogTitlesToVietnamese() {
-      const btn = document.getElementById('translateAllBtn');
-      if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = '⏳ Đang dịch...';
-      }
-      for (let i = 0; i < currentProductsList.length; i++) {
-        if (containsKoreanChars(currentProductsList[i].title)) {
-          currentProductsList[i].title = await translateKoreanTitleAsync(currentProductsList[i].title);
-        }
-      }
-      saveProductsToStorage();
-      renderCatalogView();
-      renderIntroTopProducts();
-      if (btn) {
-        btn.disabled = false;
-        btn.innerHTML = '✅ Đã dịch xong sang Tiếng Việt';
-      }
-    }
-
-    // FORM ĐẶT HÀNG
-    let productRows = [
-      { id: Date.now(), link: '', krw: 21000, qty: 1, weightClass: 'under1', estKg: 0.35, variant: '' }
-    ];
-
-    function renderOrderRows() {
-      const container = document.getElementById('productItemsContainer');
-      container.innerHTML = productRows.map((r, i) => {
-        const calc = calculateFormulaVND(r.krw, r.weightClass, r.estKg);
-        return `
-          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-            <div class="flex justify-between items-center text-xs">
-              <span class="font-bold text-slate-700">Sản phẩm #${i + 1}</span>
-              <span class="font-black text-rose-600">${formatVND(calc.allInVND * r.qty)}</span>
-            </div>
-            <div class="grid sm:grid-cols-3 gap-3">
-              <div>
-                <label class="block text-[11px] font-bold text-slate-600 mb-1">Giá KRW *</label>
-                <input type="number" value="${r.krw}" oninput="updateRow(${r.id}, 'krw', this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
-              </div>
-              <div>
-                <label class="block text-[11px] font-bold text-slate-600 mb-1">Số lượng *</label>
-                <input type="number" min="1" value="${r.qty}" oninput="updateRow(${r.id}, 'qty', this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
-              </div>
-              <div>
-                <label class="block text-[11px] font-bold text-slate-600 mb-1">Công mua</label>
-                <select onchange="updateRow(${r.id}, 'weightClass', this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold">
-                  <option value="under1" ${r.weightClass === 'under1' ? 'selected' : ''}>&lt; 1kg (+30k)</option>
-                  <option value="over1" ${r.weightClass === 'over1' ? 'selected' : ''}>&ge; 1kg (+60k)</option>
-                </select>
-              </div>
-            </div>
-            <div class="grid sm:grid-cols-2 gap-3">
-              <div>
-                <label class="block text-[11px] font-bold text-slate-600 mb-1">Link sản phẩm *</label>
-                <input type="text" value="${r.link}" oninput="updateRow(${r.id}, 'link', this.value)" placeholder="Dán link web Hàn..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs" />
-              </div>
-              <div>
-                <label class="block text-[11px] font-bold text-slate-600 mb-1">Mã số sản phẩm (Loại / Vị / Mã màu) *</label>
-                <input type="text" value="${r.variant}" oninput="updateRow(${r.id}, 'variant', this.value)" placeholder="VD: Vị Berry / Loại PDRN..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold text-slate-900" />
-              </div>
-            </div>
-          </div>
-        `;
-      }).join('');
-      recalculateOrderSummary();
-    }
-
-    function updateRow(id, field, val) {
-      const r = productRows.find(x => x.id === id);
-      if (r) {
-        r[field] = (field === 'krw' || field === 'qty') ? Number(val) || 0 : val;
-        renderOrderRows();
-      }
-    }
-
-    function addProductRow() {
-      productRows.push({ id: Date.now(), link: '', krw: 20000, qty: 1, weightClass: 'under1', estKg: 0.35, variant: '' });
-      renderOrderRows();
-    }
-
-    function orderProductItemDirect(id) {
-      const item = currentProductsList.find(p => p.id === id);
-      if (!item) return;
-      productRows[0] = {
-        id: Date.now(),
-        link: item.link,
-        krw: item.krw,
-        qty: 1,
-        weightClass: item.weightClass,
-        estKg: item.estKg,
-        variant: item.variant
-      };
-      switchPageView('order');
-      renderOrderRows();
-    }
-
-    function recalculateOrderSummary() {
-      let totalKRW = 0, totalFee = 0;
-      productRows.forEach(r => {
-        totalKRW += r.krw * r.qty;
-        totalFee += (r.weightClass === 'over1' ? FEE_OVER_1KG : FEE_UNDER_1KG) * r.qty;
-      });
-      const conv = totalKRW * EXCHANGE_RATE;
-      const ship = Math.round(0.35 * SHIP_PER_KG);
-      const grand = conv + totalFee + ship;
-
-      document.getElementById('summaryConvertedVND').textContent = formatVND(conv);
-      document.getElementById('summaryFeeVND').textContent = formatVND(totalFee);
-      document.getElementById('summaryShippingVND').textContent = formatVND(ship);
-      document.getElementById('summaryGrandTotalVND').textContent = formatVND(grand);
-    }
-
-    async function handleOrderSubmit(e) {
-      e.preventDefault();
-      const btn = document.getElementById('submitOrderBtn');
-      btn.disabled = true;
-      btn.textContent = '⏳ Đang lưu đơn...';
-
-      const payload = {
-        customerName: document.getElementById('customerName').value.trim(),
-        customerPhone: document.getElementById('customerPhone').value.trim(),
-        customerAddress: document.getElementById('customerAddress').value.trim(),
-        items: productRows,
-        grandTotalVND: document.getElementById('summaryGrandTotalVND').textContent
-      };
-
-      try {
-        const res = await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
-        const result = await res.json();
-        if (result.status === 'success') {
-          document.getElementById('modalOrderCode').textContent = result.orderId;
-          document.getElementById('modalSummaryText').innerHTML = `
-            <div>👤 <strong>Khách:</strong> ${payload.customerName} (${payload.customerPhone})</div>
-            <div>📍 <strong>Nhận tại:</strong> ${payload.customerAddress}</div>
-            <div>💰 <strong>Giá trọn gói:</strong> <span class="text-rose-600 font-black">${payload.grandTotalVND}</span></div>
-          `;
-          document.getElementById('orderSuccessModal').classList.remove('hidden');
-          document.getElementById('orderSuccessModal').classList.add('flex');
-        } else {
-          alert('Có lỗi lưu đơn, vui lòng thử lại!');
-        }
-      } catch (err) {
-        alert('Lỗi kết nối máy chủ Google Sheets!');
-      } finally {
-        btn.disabled = false;
-        btn.textContent = '🚀 Gửi Đơn & Nhận Mã ORD';
-      }
-    }
-
-    function closeSuccessModal() {
-      document.getElementById('orderSuccessModal').classList.add('hidden');
-      document.getElementById('orderSuccessModal').classList.remove('flex');
-    }
-
-    // LENS SCAN
-    function handleImageFileSelect(e) {
-      const file = e.target.files?.[0];
-      if (file) {
-        currentUploadedFile = file;
-        const r = new FileReader();
-        r.onload = ev => {
-          document.getElementById('lensUploadPrompt').classList.add('hidden');
-          document.getElementById('lensPreviewContainer').classList.remove('hidden');
-          document.getElementById('lensPreviewImg').src = ev.target.result;
-          runImageScan(ev.target.result);
-        };
-        r.readAsDataURL(file);
-      }
-    }
-
-    window.addEventListener('paste', e => {
-      const items = e.clipboardData?.items;
-      if (!items) return;
-      for (let i = 0; i < items.length; i++) {
-        if (items[i].type.includes('image')) {
-          const f = items[i].getAsFile();
-          if (f) {
-            switchPageView('lens');
-            currentUploadedFile = f;
-            const r = new FileReader();
-            r.onload = ev => {
-              document.getElementById('lensUploadPrompt').classList.add('hidden');
-              document.getElementById('lensPreviewContainer').classList.remove('hidden');
-              document.getElementById('lensPreviewImg').src = ev.target.result;
-              runImageScan(ev.target.result);
-            };
-            r.readAsDataURL(f);
-            break;
-          }
-        }
-      }
-    });
-
-    async function runImageScan(dataUrl) {
-      const overlay = document.getElementById('lensLaserOverlay');
-      overlay.classList.remove('hidden');
-      overlay.classList.add('flex');
-
-      let text = '';
-      try {
-        const res = await Tesseract.recognize(dataUrl, 'eng+kor');
-        text = (res?.data?.text || '').toLowerCase();
-      } catch (err) {}
-
-      const found = currentProductsList.find(p => text.includes((p.brand || '').toLowerCase()) || text.includes((p.title || '').toLowerCase()));
-      if (found) {
-        document.getElementById('lensDetectedName').value = found.title;
-        document.getElementById('lensDetectedBrand').value = found.brand;
-        document.getElementById('lensPriceKRW').value = found.krw;
-        document.getElementById('lensDetectedBenefit').value = found.variant;
-      } else {
-        document.getElementById('lensDetectedName').value = 'Sản phẩm đặt theo ảnh gửi';
-        document.getElementById('lensDetectedBrand').value = 'Hàn Quốc';
-        document.getElementById('lensDetectedBenefit').value = 'Chính hãng';
-        document.getElementById('lensPriceKRW').value = 20000;
-      }
-      recalculateLensVND();
-      overlay.classList.add('hidden');
-      overlay.classList.remove('flex');
-    }
-
-    function recalculateLensVND() {
-      const krw = Number(document.getElementById('lensPriceKRW').value) || 0;
-      const calc = calculateFormulaVND(krw, 'under1', 0.35);
-      document.getElementById('lensResultAllInVND').textContent = formatVND(calc.allInVND);
-    }
-
-    function addLensProductToOrderForm(isQuoteOnly) {
-      const title = document.getElementById('lensDetectedName').value.trim();
-      const variant = document.getElementById('lensDetectedBenefit').value.trim();
-      const krw = isQuoteOnly ? 0 : Number(document.getElementById('lensPriceKRW').value) || 0;
-      productRows[0] = {
-        id: Date.now(),
-        link: 'https://www.oliveyoung.co.kr/',
-        krw,
-        qty: 1,
-        weightClass: 'under1',
-        estKg: 0.35,
-        variant: isQuoteOnly ? `[Báo giá Zalo] ${title}` : `${variant} (${title})`
-      };
-      switchPageView('order');
-      renderOrderRows();
-    }
-
-    function submitDirectToGoogleLens() {
-      if (!currentUploadedFile) {
-        window.open('https://lens.google.com/', '_blank');
-        return;
-      }
-      try {
-        const dt = new DataTransfer();
-        dt.items.add(currentUploadedFile);
-        document.getElementById('googleLensHiddenFile').files = dt.files;
-        document.getElementById('googleLensDirectForm').submit();
-      } catch (e) {
-        window.open('https://lens.google.com/', '_blank');
-      }
-    }
-
     // =========================================================================
-    // MÔ HÌNH ĐỒ HỌA 3D 5 CHẶNG HÀNH TRÌNH BAY
+    // 3. MÔ PHỎNG 5 CHẶNG HÀNH TRÌNH BAY 3D
     // =========================================================================
     let currentStage = 1;
     let autoPlayTimer = null;
@@ -2022,8 +1653,10 @@
         4: 'CHẶNG 04 / 05: THÔNG QUAN HÀNG KHÔNG TẠI SÂN BAY NỘI BÀI',
         5: 'CHẶNG 05 / 05: GIAO TẬN TAY KHÁCH HÀNG TOÀN QUỐC'
       };
-      document.getElementById('stageBadge').textContent = titles[stage];
-      document.getElementById('stageProgress').style.width = `${stage * 20}%`;
+      const badge = document.getElementById('stageBadge');
+      if (badge) badge.textContent = titles[stage];
+      const prog = document.getElementById('stageProgress');
+      if (prog) prog.style.width = `${stage * 20}%`;
 
       const canvas = document.getElementById('sceneCanvas');
       if (!canvas) return;
@@ -2122,10 +1755,10 @@
       if (autoPlayTimer) {
         clearInterval(autoPlayTimer);
         autoPlayTimer = null;
-        btn.textContent = '▶ Tiếp tục';
+        if (btn) btn.textContent = '▶ Tiếp tục';
       } else {
         startAutoJourney();
-        btn.textContent = '⏸ Tạm dừng';
+        if (btn) btn.textContent = '⏸ Tạm dừng';
       }
     }
 
@@ -2137,7 +1770,272 @@
       }, 3500);
     }
 
-    // TẢI TRANG LẦN ĐẦU: TỰ ĐỘNG KÉO KHO SẢN PHẨM MỚI NHẤT TỪ GOOGLE SHEETS
+    // =========================================================================
+    // 4. FORM ĐẶT HÀNG & LENS SCAN
+    // =========================================================================
+    let productRows = [
+      { id: Date.now(), link: '', krw: 21000, qty: 1, weightClass: 'under1', estKg: 0.35, variant: '' }
+    ];
+
+    function renderOrderRows() {
+      const container = document.getElementById('productItemsContainer');
+      if (!container) return;
+      container.innerHTML = productRows.map((r, i) => {
+        const calc = calculateFormulaVND(r.krw, r.weightClass, r.estKg);
+        return `
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-bold text-slate-700">Sản phẩm #${i + 1}</span>
+              <span class="font-black text-rose-600">${formatVND(calc.allInVND * r.qty)}</span>
+            </div>
+            <div class="grid sm:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Giá KRW *</label>
+                <input type="number" value="${r.krw}" oninput="updateRow(${r.id}, 'krw', this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Số lượng *</label>
+                <input type="number" min="1" value="${r.qty}" oninput="updateRow(${r.id}, 'qty', this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Công mua</label>
+                <select onchange="updateRow(${r.id}, 'weightClass', this.value)" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold">
+                  <option value="under1" ${r.weightClass === 'under1' ? 'selected' : ''}>&lt; 1kg (+30k)</option>
+                  <option value="over1" ${r.weightClass === 'over1' ? 'selected' : ''}>&ge; 1kg (+60k)</option>
+                </select>
+              </div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Link sản phẩm *</label>
+                <input type="text" value="${r.link}" oninput="updateRow(${r.id}, 'link', this.value)" placeholder="Dán link web Hàn..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Mã số sản phẩm (Loại / Vị / Mã màu) *</label>
+                <input type="text" value="${r.variant}" oninput="updateRow(${r.id}, 'variant', this.value)" placeholder="VD: Vị Berry / Loại PDRN..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold text-slate-900" />
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+      recalculateOrderSummary();
+    }
+
+    function updateRow(id, field, val) {
+      const r = productRows.find(x => x.id === id);
+      if (r) {
+        r[field] = (field === 'krw' || field === 'qty') ? Number(val) || 0 : val;
+        renderOrderRows();
+      }
+    }
+
+    function addProductRow() {
+      productRows.push({ id: Date.now(), link: '', krw: 20000, qty: 1, weightClass: 'under1', estKg: 0.35, variant: '' });
+      renderOrderRows();
+    }
+
+    function orderProductItemDirect(id) {
+      const item = currentProductsList.find(p => p.id === id);
+      if (!item) return;
+      productRows[0] = {
+        id: Date.now(),
+        link: item.link,
+        krw: item.krw,
+        qty: 1,
+        weightClass: item.weightClass,
+        estKg: item.estKg,
+        variant: item.variant
+      };
+      switchPageView('order');
+      renderOrderRows();
+    }
+
+    function recalculateOrderSummary() {
+      let totalKRW = 0, totalFee = 0;
+      productRows.forEach(r => {
+        totalKRW += r.krw * r.qty;
+        totalFee += (r.weightClass === 'over1' ? FEE_OVER_1KG : FEE_UNDER_1KG) * r.qty;
+      });
+      const conv = totalKRW * EXCHANGE_RATE;
+      const ship = Math.round(0.35 * SHIP_PER_KG);
+      const grand = conv + totalFee + ship;
+
+      const cEl = document.getElementById('summaryConvertedVND');
+      if (cEl) cEl.textContent = formatVND(conv);
+      const fEl = document.getElementById('summaryFeeVND');
+      if (fEl) fEl.textContent = formatVND(totalFee);
+      const sEl = document.getElementById('summaryShippingVND');
+      if (sEl) sEl.textContent = formatVND(ship);
+      const gEl = document.getElementById('summaryGrandTotalVND');
+      if (gEl) gEl.textContent = formatVND(grand);
+    }
+
+    async function handleOrderSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const btn = document.getElementById('submitOrderBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳ Đang lưu đơn...';
+      }
+
+      const payload = {
+        customerName: document.getElementById('customerName').value.trim(),
+        customerPhone: document.getElementById('customerPhone').value.trim(),
+        customerAddress: document.getElementById('customerAddress').value.trim(),
+        items: productRows,
+        grandTotalVND: document.getElementById('summaryGrandTotalVND').textContent
+      };
+
+      try {
+        const res = await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result.status === 'success') {
+          document.getElementById('modalOrderCode').textContent = result.orderId;
+          document.getElementById('modalSummaryText').innerHTML = `
+            <div>👤 <strong>Khách:</strong> ${payload.customerName} (${payload.customerPhone})</div>
+            <div>📍 <strong>Nhận tại:</strong> ${payload.customerAddress}</div>
+            <div>💰 <strong>Giá trọn gói:</strong> <span class="text-rose-600 font-black">${payload.grandTotalVND}</span></div>
+          `;
+          document.getElementById('orderSuccessModal').classList.remove('hidden');
+          document.getElementById('orderSuccessModal').classList.add('flex');
+        } else {
+          alert('Có lỗi lưu đơn, vui lòng thử lại!');
+        }
+      } catch (err) {
+        alert('Lỗi kết nối máy chủ Google Sheets!');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = '🚀 Gửi Đơn & Nhận Mã ORD';
+        }
+      }
+    }
+
+    function closeSuccessModal() {
+      document.getElementById('orderSuccessModal').classList.add('hidden');
+      document.getElementById('orderSuccessModal').classList.remove('flex');
+    }
+
+    function handleImageFileSelect(e) {
+      const file = e.target.files?.[0];
+      if (file) {
+        currentUploadedFile = file;
+        const r = new FileReader();
+        r.onload = ev => {
+          document.getElementById('lensUploadPrompt').classList.add('hidden');
+          document.getElementById('lensPreviewContainer').classList.remove('hidden');
+          document.getElementById('lensPreviewImg').src = ev.target.result;
+          runImageScan(ev.target.result);
+        };
+        r.readAsDataURL(file);
+      }
+    }
+
+    window.addEventListener('paste', e => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.includes('image')) {
+          const f = items[i].getAsFile();
+          if (f) {
+            switchPageView('lens');
+            currentUploadedFile = f;
+            const r = new FileReader();
+            r.onload = ev => {
+              document.getElementById('lensUploadPrompt').classList.add('hidden');
+              document.getElementById('lensPreviewContainer').classList.remove('hidden');
+              document.getElementById('lensPreviewImg').src = ev.target.result;
+              runImageScan(ev.target.result);
+            };
+            r.readAsDataURL(f);
+            break;
+          }
+        }
+      }
+    });
+
+    async function runImageScan(dataUrl) {
+      const overlay = document.getElementById('lensLaserOverlay');
+      if (overlay) {
+        overlay.classList.remove('hidden');
+        overlay.classList.add('flex');
+      }
+
+      let text = '';
+      try {
+        if (typeof Tesseract !== 'undefined') {
+          const res = await Tesseract.recognize(dataUrl, 'eng+kor');
+          text = (res?.data?.text || '').toLowerCase();
+        }
+      } catch (err) {}
+
+      const found = currentProductsList.find(p => text.includes((p.brand || '').toLowerCase()) || text.includes((p.title || '').toLowerCase()));
+      if (found) {
+        document.getElementById('lensDetectedName').value = found.title;
+        document.getElementById('lensDetectedBrand').value = found.brand;
+        document.getElementById('lensPriceKRW').value = found.krw;
+        document.getElementById('lensDetectedBenefit').value = found.variant;
+      } else {
+        document.getElementById('lensDetectedName').value = 'Sản phẩm đặt theo ảnh gửi';
+        document.getElementById('lensDetectedBrand').value = 'Hàn Quốc';
+        document.getElementById('lensDetectedBenefit').value = 'Chính hãng';
+        document.getElementById('lensPriceKRW').value = 20000;
+      }
+      recalculateLensVND();
+      if (overlay) {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+      }
+    }
+
+    function recalculateLensVND() {
+      const el = document.getElementById('lensPriceKRW');
+      if (!el) return;
+      const krw = Number(el.value) || 0;
+      const calc = calculateFormulaVND(krw, 'under1', 0.35);
+      const resEl = document.getElementById('lensResultAllInVND');
+      if (resEl) resEl.textContent = formatVND(calc.allInVND);
+    }
+
+    function addLensProductToOrderForm(isQuoteOnly) {
+      const title = document.getElementById('lensDetectedName').value.trim();
+      const variant = document.getElementById('lensDetectedBenefit').value.trim();
+      const krw = isQuoteOnly ? 0 : Number(document.getElementById('lensPriceKRW').value) || 0;
+      productRows[0] = {
+        id: Date.now(),
+        link: 'https://www.oliveyoung.co.kr/',
+        krw,
+        qty: 1,
+        weightClass: 'under1',
+        estKg: 0.35,
+        variant: isQuoteOnly ? `[Báo giá Zalo] ${title}` : `${variant} (${title})`
+      };
+      switchPageView('order');
+      renderOrderRows();
+    }
+
+    function submitDirectToGoogleLens() {
+      if (!currentUploadedFile) {
+        window.open('https://lens.google.com/', '_blank');
+        return;
+      }
+      try {
+        const dt = new DataTransfer();
+        dt.items.add(currentUploadedFile);
+        document.getElementById('googleLensHiddenFile').files = dt.files;
+        document.getElementById('googleLensDirectForm').submit();
+      } catch (e) {
+        window.open('https://lens.google.com/', '_blank');
+      }
+    }
+
+    // =========================================================================
+    // 5. KHỞI CHẠY HỆ THỐNG KHI TẢI TRANG
+    // =========================================================================
     window.addEventListener('DOMContentLoaded', () => {
       syncProductsFromGoogleSheets();
       renderOrderRows();
