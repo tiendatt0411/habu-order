@@ -1385,15 +1385,73 @@
 function getFilteredProductsList() {
       var filtered = currentProductsList.filter(function(item) {
         if (currentCatalogFilter.type === 'sale') return item.isSale !== false;
-        if (currentCatalogFilter.type === 'brand') return (item.brand || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
-        if (currentCatalogFilter.type === 'mall') return (item.mall || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
+        // 1. TÌM KIẾM THÔNG MINH, SỬA LỖI CHÍNH TẢ & ĐỒNG NGHĨA HÀN - ANH
+        if (currentCatalogFilter.type === 'search') {
+          const rawQ = (currentCatalogFilter.value || '').trim().toLowerCase();
+          const target = ((item.title || '') + ' ' + (item.brand || '') + ' ' + (item.mall || '') + ' ' + (item.category || '') + ' ' + (item.variant || '')).toLowerCase();
+
+          // Khớp chuỗi trực tiếp
+          if (target.includes(rawQ)) return true;
+
+          // Bản đồ từ khóa đồng nghĩa (Tiếng Hàn <-> Quốc tế <-> Gõ sai)
+          const SYNONYMS = {
+            'laneige': ['라네즈', 'laneige', 'lageine', 'lanegie', 'lanege'],
+            'medicube': ['메디큐브', 'medicube'],
+            'mediheal': ['메디힐', 'mediheal'],
+            'torriden': ['토리든', 'torriden'],
+            'anua': ['아누아', 'anua'],
+            'skin1004': ['스킨1004', 'skin1004', 'centella'],
+            'round lab': ['라운드랩', 'round lab', 'roundlab'],
+            'olive young': ['올리브영', 'olive young', 'oliveyoung'],
+            'musinsa': ['무신사', 'musinsa'],
+            'kream': ['크림', 'kream'],
+            'nike': ['나이키', 'nike'],
+            'adidas': ['아디다스', 'adidas', 'samba']
+          };
+
+          for (const key in SYNONYMS) {
+            const list = SYNONYMS[key];
+            const matchQuery = list.some(w => w.includes(rawQ) || rawQ.includes(w));
+            if (matchQuery && list.some(w => target.includes(w))) return true;
+          }
+
+          // Đoán từ tương đồng gần đúng (Same-same)
+          function sim(s1, s2) {
+            let matches = 0;
+            for (let i = 0; i < s1.length; i++) {
+              if (s2.includes(s1[i])) matches++;
+            }
+            return matches / Math.max(s1.length, s2.length);
+          }
+
+          const words = target.split(/\s+/);
+          return words.some(w => sim(rawQ, w) >= 0.7);
+        }
+
+        // 2. LỌC THEO SÀN & BRAND
+        const link = (item.link || '').toLowerCase();
+        const mall = (item.mall || '').toLowerCase();
+        const brand = (item.brand || '').toLowerCase();
+        const isOlive = link.includes('oliveyoung') || mall.includes('olive') || brand.includes('olive young');
+        const isKream = link.includes('kream') || mall.includes('kream');
+        const isMusinsa = link.includes('musinsa') || mall.includes('musinsa') || brand.includes('musinsa');
+        const isNike = brand.includes('nike') || target.includes('nike') || link.includes('nike');
+        const isAdidas = brand.includes('adidas') || target.includes('adidas') || link.includes('adidas');
+        const isCoupang = link.includes('coupang') || mall.includes('coupang');
+
+        if (currentCatalogFilter.type === 'mall') {
+          const val = currentCatalogFilter.value.toLowerCase();
+          if (val === 'olive young') return isOlive;
+          if (val === 'kream') return isKream;
+          if (val === 'musinsa') return isMusinsa;
+          if (val === 'nike') return isNike;
+          if (val === 'adidas') return isAdidas;
+          if (val === 'coupang') return isCoupang;
+          return mall.includes(val);
+        }
+        if (currentCatalogFilter.type === 'brand') return brand.includes(currentCatalogFilter.value.toLowerCase());
         if (currentCatalogFilter.type === 'category') return (item.category || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
         if (currentCatalogFilter.type === 'subCategory') return (item.subCategory || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
-        if (currentCatalogFilter.type === 'search') {
-          var q = currentCatalogFilter.value.toLowerCase();
-          var hay = (item.title + ' ' + item.brand + ' ' + item.mall + ' ' + item.variant + ' ' + (item.benefit || '')).toLowerCase();
-          return hay.includes(q) || (q === 'ck' && hay.includes('calvin'));
-        }
         return true;
       });
 
