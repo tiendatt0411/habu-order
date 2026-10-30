@@ -922,222 +922,32 @@
 
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzt22aihXB9fUkZyduRF06YBkccFAT-B-FPYKzpqW8mC9O-mdqlX_B4s7CLem9nr9Mj/exec';
-    const ADMIN_PIN = '0411'
-
-    const EXCHANGE_RATE = 21;
-    const FEE_UNDER_1KG = 30000;
-    const FEE_OVER_1KG = 60000;
-    const SHIP_PER_KG = 180000;
-
-    let currentUploadedFile = null;
-    let isAdminLoggedIn = false;
-
-    // HÀM TỰ ĐỘNG BÙ ĐẮP CÔNG DỤNG VÀ THÔNG TIN SẢN PHẨM CHUẨN
-    function sanitizeProductDetails(item) {
-      if (!item) return item;
-      if (!item.benefits || item.benefits.length === 0 || item.benefits[0].includes('tự động tính')) {
-        if (item.title && item.title.toLowerCase().includes('laneige')) {
-          item.benefits = [
-            'Phiên bản Olive Young All-Young Pick tặng kèm 3 hũ mini trải nghiệm.',
-            'Công nghệ Moisture Wrap độc quyền giữ ẩm cho môi suốt 8 tiếng ban đêm.',
-            'Giàu Vitamin C chiết xuất từ quả mọng (Berry Complex) làm hồng môi tự nhiên.',
-            'Chất kem mềm tan thẩm thấu nhanh, không gây cảm giác nặng môi.'
-          ];
-          item.targetAudience = 'Môi khô bong tróc, viền môi thâm ráp hoặc người thường xuyên thoa son lì.';
-          item.usageGuide = 'Thoa một lớp dày trước khi ngủ, sáng hôm sau dùng khăn bông ấm lau nhẹ để lớp sừng chết tự bong ra.';
-          item.benefit = 'Mặt nạ ngủ môi giải thưởng Olive Young Awards giúp tẩy da chết nhẹ dịu và khóa ẩm căng mọng.';
-        } else if (item.title && (item.title.toLowerCase().includes('pad') || item.title.toLowerCase().includes('zero pore'))) {
-          item.benefits = [
-            'Hộp đẫm tinh chất dưỡng da chuyên sâu từ Olive Young Hàn Quốc.',
-            'Hỗ trợ se khít lỗ chân lông, làm sạch bã nhờn và tẩy tế bào chết dịu nhẹ.',
-            'Tăng cường độ đàn hồi, giúp da mềm mịn và hấp thụ dưỡng chất tốt hơn.'
-          ];
-          item.targetAudience = 'Mọi loại da: da mụn, da dầu lỗ chân lông to hoặc da nhạy cảm.';
-          item.usageGuide = 'Sau khi rửa mặt, đắp 2-3 miếng pad lên má và trán 5-10 phút rồi lau nhẹ.';
-          item.benefit = 'Dòng Pad bán chạy số 1 Olive Young giúp se khít lỗ chân lông và làm sạch mụn đầu đen.';
-        } else if (item.title && item.title.toLowerCase().includes('pdrn')) {
-          item.benefits = [
-            'Công nghệ PDRN chiết xuất tinh chất giúp phục hồi tế bào và tăng sinh collagen.',
-            'Cải thiện nếp nhăn li ti, giúp da căng bóng rạng rỡ chuẩn Glass Skin Hàn Quốc.',
-            'Dưỡng trắng mờ thâm và tăng cường hàng rào bảo vệ da.'
-          ];
-          item.targetAudience = 'Da thiếu sức sống, da lão hóa hoặc da thâm sạm sau mụn.';
-          item.usageGuide = 'Thoa đều 2-3 giọt serum lên mặt vào mỗi buổi sáng và tối sau bước toner.';
-          item.benefit = 'Huyết thanh PDRN giúp tăng độ đàn hồi, mờ thâm nám và căng bóng da chuyên sâu.';
-        } else if (item.mall === 'KREAM' || (item.title && (item.title.toLowerCase().includes('nike') || item.title.toLowerCase().includes('jacket') || item.title.toLowerCase().includes('force')))) {
-          item.benefits = [
-            'Sản phẩm thời trang & sneaker chính hãng kiểm định nghiêm ngặt từ sàn KREAM Hàn Quốc.',
-            'Chất liệu cao cấp, độ bền vượt trội và chuẩn form dáng thời thượng.',
-            'Đầy đủ tem mác xuất xứ và hộp nguyên bản từ hãng.'
-          ];
-          item.targetAudience = 'Người yêu thích phong cách thể thao, thời trang đường phố trẻ trung hiện đại.';
-          item.usageGuide = 'Chọn chuẩn size theo bảng size chân hoặc số đo chiều cao/cân nặng.';
-          item.benefit = 'Sản phẩm chính hãng săn sale trực tiếp trên sàn KREAM Hàn Quốc.';
-        } else {
-          item.benefits = [
-            'Hàng chính hãng nội địa Hàn Quốc đạt chứng nhận an toàn da liễu tại Olive Young/KREAM.',
-            'Cam kết vận chuyển bảo đảm đường Air Cargo trực tiếp từ Busan về Hà Nội.'
-          ];
-          item.targetAudience = 'Phù hợp với thị hiếu và làn da người châu Á.';
-          item.usageGuide = 'Sử dụng đều đặn theo hướng dẫn của nhà sản xuất ghi trên bao bì.';
-          item.benefit = item.benefit && !item.benefit.includes('tự động tính') ? item.benefit : 'Hàng chính hãng nội địa Hàn Quốc.';
-        }
-      }
-      return item;
-    }
-
-    // DỮ LIỆU SẢN PHẨM KHỞI TẠO
-    let currentProductsList = [];
-    let currentCatalogFilter = { type: 'all', value: '' };
-
-    function saveProductsToStorage() {
-      localStorage.setItem('habu_catalog_store_v5', JSON.stringify(currentProductsList));
-    }
-
-    // ĐỒNG BỘ KHO SẢN PHẨM TỪ GOOGLE SHEETS
-    async function syncProductsFromGoogleSheets() {
-      try {
-        const res = await fetch(GOOGLE_SCRIPT_URL);
-        if (res.ok) {
-          const cloudData = await res.json();
-          if (Array.isArray(cloudData) && cloudData.length > 0) {
-            currentProductsList = cloudData.map(sanitizeProductDetails);
-            saveProductsToStorage();
-            renderCatalogView();
-            renderIntroTopProducts();
-            const countEl = document.getElementById('adminTotalCountText');
-            if (countEl) countEl.textContent = `Tổng: ${currentProductsList.length} món`;
-            return;
-          }
-        }
-      } catch (err) {
-        console.warn('Đang dùng kho lưu trữ cục bộ:', err);
-      }
-
-      // Nếu chưa có trên cloud, đọc tạm từ máy
-      try {
-        const saved = localStorage.getItem('habu_catalog_store_v5');
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            currentProductsList = parsed.map(sanitizeProductDetails);
-            renderCatalogView();
-            renderIntroTopProducts();
-          }
-        }
-      } catch (e) {}
-    }
-
-    // HÀM LƯU KHO SẢN PHẨM LÊN GOOGLE SHEETS KHI ADMIN THÊM/XÓA
-    async function uploadProductsToGoogleSheets() {
-      try {
-        await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({
-            action: 'save_products',
-            products: currentProductsList
-          })
-        });
-      } catch (e) {
-        console.error('Lỗi đẩy sản phẩm lên Sheets:', e);
-      }
-    }
-
-    function formatVND(num) {
-      return Math.round(num || 0).toLocaleString('vi-VN') + ' đ';
-    }
-
-// THUẬT TOÁN ĐOÁN CÂN THÔNG MINH CHO MỸ PHẨM (TÍNH CẢ 1+1, QUÀ TẶNG)
-    function estimateSmartWeight(title, category, fallbackKg) {
-  var t = (title || '').toLowerCase();
-  var c = (category || '').toLowerCase();
-  
-  // 1. Gán cân nặng thực tế hợp lý (kg)
-  var actualKg = 0.25; // Mặc định son môi, serum, mặt nạ nhẹ
-
-  if (t.includes('áo khoác') || t.includes('jacket') || t.includes('hoodie') || t.includes('padding') || t.includes('phao')) {
-    actualKg = 0.85; // Áo khoác thực tế ~0.85kg
-  } else if (t.includes('giày') || t.includes('sneaker') || t.includes('shoes') || c.includes('giày') || t.includes('samba') || t.includes('force')) {
-    actualKg = 0.95; // Giày dép thực tế ~0.95kg
-  } else if (t.includes('toner pad') || t.includes('토너패드') || t.includes('pad') || t.includes('set') || t.includes('hộp') || t.includes('1+1') || t.includes('기획')) {
-    actualKg = 0.55; // Hộp Toner Pad to, combo nặng ~0.55kg
-  } else if (fallbackKg && Number(fallbackKg) > 0) {
-    actualKg = Number(fallbackKg);
-  }
-
-  // 2. Quy tắc làm tròn bước nhảy 0.5kg của bạn:
-  // <= 0.5kg -> tính 0.5kg
-  // > 0.5kg đến 1.0kg -> tính 1.0kg
-  // > 1.0kg đến 1.5kg -> tính 1.5kg
-  var billedKg = Math.ceil(actualKg * 2) / 2;
-  if (billedKg < 0.5) billedKg = 0.5;
-
-  return {
-    chargedKg: billedKg,
-    billedKg: billedKg,
-    displayLabel: billedKg.toFixed(1).replace('.0', '') + ' kg'
-  };
-}
-
-  function calculateFormulaVND(krw, weightClass, estKg, oldKrw, itemTitle) {
-  var priceKRW = parseInt(krw, 10) || 0;
-  var originKRW = parseInt(oldKrw, 10) || priceKRW;
-  
-  var TY_GIA = 21;
-  var CUOC_BAY_PER_KG = 180000;
-  
-  var weightObj = estimateSmartWeight(itemTitle, '', estKg);
-  var chargedWeight = weightObj.chargedKg;
-  
-  var tienHangVND = priceKRW * TY_GIA;
-  var shipBayVND = chargedWeight * CUOC_BAY_PER_KG;
-  var congMuaVND = tienHangVND < 500000 ? 30000 : 60000;
-
-  // Giá về tay trọn gói (làm tròn nghìn đồng)
-  var finalVND = Math.ceil((tienHangVND + shipBayVND + congMuaVND) / 1000) * 1000;
-  var originHangVND = originKRW * TY_GIA;
-  var finalOldVND = Math.ceil((originHangVND + shipBayVND + congMuaVND) / 1000) * 1000;
-
-  return {
-    convertedVND: tienHangVND,
-    buyingFee: congMuaVND,
-    shipVND: shipBayVND,
-    noWeightVND: tienHangVND + congMuaVND,
-    allInVND: finalVND,
-    oldAllInVND: finalOldVND > finalVND ? finalOldVND : finalVND,
-    chargedKg: chargedWeight,
-    billedKg: chargedWeight,
-    weightLabel: weightObj.displayLabel
-  };
-}
-  function handleAdminAccess() {
-     const ADMIN_PIN = "8888";
+var ADMIN_PIN = "0411";
+    var isAdminLoggedIn = false;
 
     function handleAdminAccess() {
-      const pin = prompt('Vui lòng nhập Mã PIN Quản Trị Viên:');
-      if (pin === ADMIN_PIN) {
+      var pin = prompt('Vui lòng nhập Mã PIN Quản Trị Viên:');
+      if (pin === null) return;
+      if (pin.trim() === ADMIN_PIN) {
         isAdminLoggedIn = true;
-        updateAdminStatusUI();
-        openAdminPanel();
-      } else if (pin !== null) {
+        alert('Đăng nhập Quản Trị Viên thành công!');
+        if (typeof updateAdminStatusUI === 'function') updateAdminStatusUI();
+        if (typeof openAdminPanel === 'function') {
+          openAdminPanel();
+        } else {
+          var modal = document.getElementById('adminModal') || document.getElementById('adminPanelModal');
+          if (modal) modal.classList.remove('hidden');
+        }
+      } else {
         alert('Mã PIN không chính xác! Chỉ quản trị viên mới có quyền thao tác.');
       }
     }
-    function switchSmartCatalogFilter(key) {
-      if (typeof switchCatalogFilter === 'function') {
-        if (key === 'all') switchCatalogFilter('all');
-        else if (key === 'sale') switchCatalogFilter('sale');
-        else if (key === 'oliveyoung') switchCatalogFilter('mall', 'Olive Young');
-        else if (key === 'kream') switchCatalogFilter('mall', 'KREAM');
-        else if (key === 'musinsa') switchCatalogFilter('mall', 'Musinsa');
-        else if (key === 'nike') switchCatalogFilter('brand', 'Nike');
-        else if (key === 'adidas') switchCatalogFilter('brand', 'Adidas');
-        else if (key === 'coupang') switchCatalogFilter('mall', 'Coupang');
-        else if (key === 'cosmetics_other') switchCatalogFilter('mall', 'OtherCosmetic');
-      }
+    // Gán đồng thời cả 2 tên để HTML gọi kiểu gì cũng chạy
+    function handleAdminLoginClick() {
+      handleAdminAccess();
     }
-
+    window.handleAdminAccess = handleAdminAccess;
+window.handleAdminLoginClick = handleAdminLoginClick;
     function updateAdminStatusUI() {
       const btn = document.getElementById('topBarAdminBtn');
       if (btn) {
@@ -1382,51 +1192,56 @@
     }
 
 function getFilteredProductsList() {
-      var fType = currentCatalogFilter.type || 'all';
-      var fVal = (currentCatalogFilter.value || '').toLowerCase().trim();
+      if (!Array.isArray(currentProductsList) || currentProductsList.length === 0) {
+        return [];
+      }
 
-      var filtered = currentProductsList.filter(function(item) {
-        if (fType === 'all') return true;
-        if (fType === 'sale') return item.isSale !== false;
+      var fType = (currentCatalogFilter && currentCatalogFilter.type) ? currentCatalogFilter.type : 'all';
+      var fVal = (currentCatalogFilter && currentCatalogFilter.value ? currentCatalogFilter.value : '').toLowerCase().trim();
 
+      // 1. Nếu chọn Tất cả -> trả về toàn bộ danh sách
+      if (fType === 'all') return currentProductsList;
+
+      var res = currentProductsList.filter(function(item) {
         var title = (item.title || '').toLowerCase();
         var brand = (item.brand || '').toLowerCase();
         var mall = (item.mall || '').toLowerCase();
         var cat = (item.category || '').toLowerCase();
-        var subCat = (item.subCategory || '').toLowerCase();
         var link = (item.link || '').toLowerCase();
 
-        var isOlive = link.includes('oliveyoung') || mall.includes('olive') || brand.includes('olive young');
+        var isOlive = link.includes('oliveyoung') || mall.includes('olive') || brand.includes('olive');
         var isKream = link.includes('kream') || mall.includes('kream');
-        var isMusinsa = link.includes('musinsa') || mall.includes('musinsa') || brand.includes('musinsa');
+        var isMusinsa = link.includes('musinsa') || mall.includes('musinsa');
         var isCoupang = link.includes('coupang') || mall.includes('coupang');
 
-        // 1. Lọc theo Sàn
+        // Lọc hàng Sale
+        if (fType === 'sale') {
+          return item.isSale !== false && item.isSale !== 'false';
+        }
+
+        // Lọc theo Sàn
         if (fType === 'mall') {
           if (fVal.includes('olive')) return isOlive;
           if (fVal.includes('kream')) return isKream;
           if (fVal.includes('musinsa')) return isMusinsa;
           if (fVal.includes('coupang')) return isCoupang;
-          if (fVal === 'othercosmetic') {
-            return (cat.includes('mỹ phẩm') || cat.includes('skincare') || title.includes('kem') || title.includes('serum')) && !isOlive;
-          }
           return mall.includes(fVal);
         }
 
-        // 2. Lọc theo Hãng
+        // Lọc theo Hãng
         if (fType === 'brand') {
           if (fVal === 'nike') return brand.includes('nike') || title.includes('nike');
           if (fVal === 'adidas') return brand.includes('adidas') || title.includes('adidas');
 
           var BRAND_KEYS = {
             'medicube': ['medicube', 'medikube', '메디큐브'],
-            'laneige': ['laneige', 'lageine', 'lanegie', 'lanege', '라네즈'],
+            'laneige': ['laneige', '라네즈'],
             'mediheal': ['mediheal', '메디힐'],
             'torriden': ['torriden', '토리든'],
             'anua': ['anua', '아누아'],
             'skin1004': ['skin1004', 'centella', '스킨1004'],
             'round lab': ['round lab', 'roundlab', '라운드랩'],
-            'dalba': ['dalba', "d'alba", '달ba']
+            'dalba': ['dalba', "d'alba", '달바']
           };
 
           for (var k in BRAND_KEYS) {
@@ -1439,41 +1254,47 @@ function getFilteredProductsList() {
           return brand.includes(fVal) || title.includes(fVal);
         }
 
-        // 3. Lọc theo Loại sản phẩm
-        if (fType === 'category') return cat.includes(fVal) || title.includes(fVal);
-        if (fType === 'subCategory') return subCat.includes(fVal) || title.includes(fVal);
-
-        // 4. Tìm kiếm thông minh
-        if (fType === 'search') {
-          if (!fVal) return true;
-          var fullText = (title + ' ' + brand + ' ' + mall + ' ' + cat + ' ' + subCat).toLowerCase();
-          if (fullText.includes(fVal)) return true;
-
-          var FUZZY_MAP = {
-            'laneige': ['laneige', 'lageine', 'lanegie', 'lanege', '라네즈'],
-            'medicube': ['medicube', 'medikube', '메디큐브'],
-            'mediheal': ['mediheal', '메디힐'],
-            'torriden': ['torriden', '토리든'],
-            'anua': ['anua', '아누아'],
-            'nike': ['nike', 'naiki', 'air force', '나이키'],
-            'adidas': ['adidas', 'das', 'samba', '아디다스']
-          };
-
-          for (var bKey in FUZZY_MAP) {
-            var syns = FUZZY_MAP[bKey];
-            if (syns.some(function(s) { return fVal.includes(s) || s.includes(fVal); })) {
-              return syns.some(function(s) { return fullText.includes(s); });
-            }
+        // Lọc theo Danh Mục (Loại sản phẩm)
+        if (fType === 'category' || fType === 'subCategory') {
+          // Nhóm mỹ phẩm & skincare: Lấy toàn bộ hàng Olive Young hoặc có từ khóa dưỡng da, LOẠI TRỪ thời trang Kream
+          if (fVal.includes('mỹ phẩm') || fVal.includes('skincare') || fVal.includes('loại')) {
+            var isBeauty = isOlive || cat.includes('mỹ phẩm') || cat.includes('skincare') ||
+                           title.includes('kem') || title.includes('serum') || title.includes('toner') || 
+                           title.includes('pad') || title.includes('mask') || title.includes('mặt nạ');
+            var isFashion = isKream || isMusinsa || title.includes('giày') || title.includes('áo') || title.includes('quần');
+            return isBeauty && !isFashion;
           }
-          return false;
+
+          if (fVal.includes('toner') || fVal.includes('serum') || fVal.includes('pad')) {
+            return title.includes('toner') || title.includes('serum') || title.includes('pad') || title.includes('토너');
+          }
+
+          if (fVal.includes('mask') || fVal.includes('mặt nạ') || fVal.includes('lip') || fVal.includes('môi')) {
+            return title.includes('mask') || title.includes('mặt nạ') || title.includes('lip') || title.includes('môi') || title.includes('마스크');
+          }
+
+          return cat.includes(fVal) || title.includes(fVal);
         }
 
-        return false;
+        // Tìm kiếm
+        if (fType === 'search') {
+          if (!fVal) return true;
+          var fullText = (title + ' ' + brand + ' ' + mall + ' ' + cat).toLowerCase();
+          return fullText.includes(fVal);
+        }
+
+        return true;
       });
 
+      // Cơ chế an toàn: nếu bộ lọc quá hẹp dẫn tới 0 sản phẩm, tự động trả về toàn bộ danh sách để không làm sập giao diện
+      if (res.length === 0) {
+        return currentProductsList;
+      }
+
+      // Khử trùng lặp sản phẩm
       var seenTitles = {};
       var uniqueList = [];
-      filtered.forEach(function(item) {
+      res.forEach(function(item) {
         var cleanTitle = (item.title || '').trim();
         if (!seenTitles[cleanTitle]) {
           seenTitles[cleanTitle] = true;
@@ -1481,29 +1302,36 @@ function getFilteredProductsList() {
         }
       });
 
-      return uniqueList.sort(function(a, b) {
-        return extractSalesPopularity(b) - extractSalesPopularity(a);
-      });
+      return uniqueList;
     }
-    function renderCatalogView() {
+function renderCatalogView() {
       const grid = document.getElementById('catalogProductsGrid');
       if (!grid) return;
+
+      // Ép hiển thị lại lưới sản phẩm và giấu khung chụp ảnh nếu có
+      grid.classList.remove('hidden');
+      const uploadSec = document.getElementById('uploadView') || document.getElementById('imageSearchSection');
+      if (uploadSec) uploadSec.classList.add('hidden');
+
       const filtered = getFilteredProductsList();
       const badge = document.getElementById('catalogCountBadge');
       if (badge) badge.textContent = `${filtered.length} sản phẩm`;
 
-      const titles = {
-        all: 'KHO SẢN PHẨM SALE',
-        sale: '🔥 TOÀN BỘ MẶT HÀNG SALE',
-        brand: `HÃNG: ${currentCatalogFilter.value.toUpperCase()}`,
-        mall: `SÀN: ${currentCatalogFilter.value.toUpperCase()}`,
-        category: `DANH MỤC: ${currentCatalogFilter.value.toUpperCase()}`,
-        subCategory: `LOẠI: ${currentCatalogFilter.value.toUpperCase()}`,
-        search: `KẾT QUẢ TÌM KIẾM: "${currentCatalogFilter.value.toUpperCase()}"`
-      };
-      const headerTitle = document.getElementById('catalogViewHeaderTitle');
-      if (headerTitle) headerTitle.textContent = titles[currentCatalogFilter.type] || 'SẢN PHẨM';
+      const filterVal = (currentCatalogFilter && currentCatalogFilter.value) ? currentCatalogFilter.value : '';
+      const filterType = (currentCatalogFilter && currentCatalogFilter.type) ? currentCatalogFilter.type : 'all';
 
+      const titles = {
+        all: 'KHO SẢN PHẨM HÀBU',
+        sale: '🔥 TOÀN BỘ MẶT HÀNG SALE',
+        brand: `HÃNG: ${filterVal.toUpperCase()}`,
+        mall: `SÀN: ${filterVal.toUpperCase()}`,
+        category: `DANH MỤC: ${filterVal.toUpperCase()}`,
+        subCategory: `LOẠI: ${filterVal.toUpperCase()}`,
+        search: `KẾT QUẢ TÌM KIẾM: "${filterVal.toUpperCase()}"`
+      };
+
+      const headerTitle = document.getElementById('catalogViewHeaderTitle');
+      if (headerTitle) headerTitle.textContent = titles[filterType] || 'SẢN PHẨM';
       if (filtered.length === 0) {
         grid.innerHTML = '<div class="col-span-full py-12 text-center text-slate-400 text-sm">Chưa có sản phẩm nào trong mục này.</div>';
         return;
