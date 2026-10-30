@@ -1380,219 +1380,93 @@
     }
 
 function getFilteredProductsList() {
+      var fType = currentCatalogFilter.type || 'all';
+      var fVal = (currentCatalogFilter.value || '').toLowerCase().trim();
+
       var filtered = currentProductsList.filter(function(item) {
-        if (currentCatalogFilter.type === 'sale') return item.isSale !== false;
-        // 1. TÌM KIẾM THÔNG MINH, SỬA LỖI CHÍNH TẢ & ĐỒNG NGHĨA HÀN - ANH
-        if (currentCatalogFilter.type === 'search') {
-          const rawQ = (currentCatalogFilter.value || '').trim().toLowerCase();
-          const target = ((item.title || '') + ' ' + (item.brand || '') + ' ' + (item.mall || '') + ' ' + (item.category || '') + ' ' + (item.variant || '')).toLowerCase();
+        if (fType === 'all') return true;
+        if (fType === 'sale') return item.isSale !== false;
 
-          // Khớp chuỗi trực tiếp
-          if (target.includes(rawQ)) return true;
+        var title = (item.title || '').toLowerCase();
+        var brand = (item.brand || '').toLowerCase();
+        var mall = (item.mall || '').toLowerCase();
+        var cat = (item.category || '').toLowerCase();
+        var subCat = (item.subCategory || '').toLowerCase();
+        var link = (item.link || '').toLowerCase();
 
-          // Bản đồ từ khóa đồng nghĩa (Tiếng Hàn <-> Quốc tế <-> Gõ sai)
-          const SYNONYMS = {
-            'laneige': ['라네즈', 'laneige', 'lageine', 'lanegie', 'lanege'],
-            'medicube': ['메디큐브', 'medicube'],
-            'mediheal': ['메디힐', 'mediheal'],
-            'torriden': ['토리든', 'torriden'],
-            'anua': ['아누아', 'anua'],
-            'skin1004': ['스킨1004', 'skin1004', 'centella'],
-            'round lab': ['라운드랩', 'round lab', 'roundlab'],
-            'olive young': ['올리브영', 'olive young', 'oliveyoung'],
-            'musinsa': ['무신사', 'musinsa'],
-            'kream': ['크림', 'kream'],
-            'nike': ['나이키', 'nike'],
-            'adidas': ['아디다스', 'adidas', 'samba']
+        var isOlive = link.includes('oliveyoung') || mall.includes('olive') || brand.includes('olive young');
+        var isKream = link.includes('kream') || mall.includes('kream');
+        var isMusinsa = link.includes('musinsa') || mall.includes('musinsa') || brand.includes('musinsa');
+        var isCoupang = link.includes('coupang') || mall.includes('coupang');
+
+        // 1. Lọc theo Sàn
+        if (fType === 'mall') {
+          if (fVal.includes('olive')) return isOlive;
+          if (fVal.includes('kream')) return isKream;
+          if (fVal.includes('musinsa')) return isMusinsa;
+          if (fVal.includes('coupang')) return isCoupang;
+          if (fVal === 'othercosmetic') {
+            return (cat.includes('mỹ phẩm') || cat.includes('skincare') || title.includes('kem') || title.includes('serum')) && !isOlive;
+          }
+          return mall.includes(fVal);
+        }
+
+        // 2. Lọc theo Hãng
+        if (fType === 'brand') {
+          if (fVal === 'nike') return brand.includes('nike') || title.includes('nike');
+          if (fVal === 'adidas') return brand.includes('adidas') || title.includes('adidas');
+
+          var BRAND_KEYS = {
+            'medicube': ['medicube', 'medikube', '메디큐브'],
+            'laneige': ['laneige', 'lageine', 'lanegie', 'lanege', '라네즈'],
+            'mediheal': ['mediheal', '메디힐'],
+            'torriden': ['torriden', '토리든'],
+            'anua': ['anua', '아누아'],
+            'skin1004': ['skin1004', 'centella', '스킨1004'],
+            'round lab': ['round lab', 'roundlab', '라운드랩'],
+            'dalba': ['dalba', "d'alba", '달ba']
           };
 
-          for (const key in SYNONYMS) {
-            const list = SYNONYMS[key];
-            const matchQuery = list.some(w => w.includes(rawQ) || rawQ.includes(w));
-            if (matchQuery && list.some(w => target.includes(w))) return true;
-          }
-
-          // Đoán từ tương đồng gần đúng (Same-same)
-          function sim(s1, s2) {
-            let matches = 0;
-            for (let i = 0; i < s1.length; i++) {
-              if (s2.includes(s1[i])) matches++;
+          for (var k in BRAND_KEYS) {
+            if (fVal.includes(k) || k.includes(fVal)) {
+              return BRAND_KEYS[k].some(function(alias) {
+                return brand.includes(alias) || title.includes(alias);
+              });
             }
-            return matches / Math.max(s1.length, s2.length);
           }
-
-          const words = target.split(/\s+/);
-          return words.some(w => sim(rawQ, w) >= 0.7);
+          return brand.includes(fVal) || title.includes(fVal);
         }
 
-        // 2. LỌC THEO SÀN & BRAND
-        const link = (item.link || '').toLowerCase();
-        const mall = (item.mall || '').toLowerCase();
-        const brand = (item.brand || '').toLowerCase();
-        const isOlive = link.includes('oliveyoung') || mall.includes('olive') || brand.includes('olive young');
-        const isKream = link.includes('kream') || mall.includes('kream');
-        const isMusinsa = link.includes('musinsa') || mall.includes('musinsa') || brand.includes('musinsa');
-        const isNike = brand.includes('nike') || target.includes('nike') || link.includes('nike');
-        const isAdidas = brand.includes('adidas') || target.includes('adidas') || link.includes('adidas');
-        const isCoupang = link.includes('coupang') || mall.includes('coupang');
+        // 3. Lọc theo Loại sản phẩm
+        if (fType === 'category') return cat.includes(fVal) || title.includes(fVal);
+        if (fType === 'subCategory') return subCat.includes(fVal) || title.includes(fVal);
 
-        if (currentCatalogFilter.type === 'mall') {
-          const val = currentCatalogFilter.value.toLowerCase();
-          if (val === 'olive young') return isOlive;
-          if (val === 'kream') return isKream;
-          if (val === 'musinsa') return isMusinsa;
-          if (val === 'nike') return isNike;
-          if (val === 'adidas') return isAdidas;
-          if (val === 'coupang') return isCoupang;
-          return mall.includes(val);
+        // 4. Tìm kiếm thông minh
+        if (fType === 'search') {
+          if (!fVal) return true;
+          var fullText = (title + ' ' + brand + ' ' + mall + ' ' + cat + ' ' + subCat).toLowerCase();
+          if (fullText.includes(fVal)) return true;
+
+          var FUZZY_MAP = {
+            'laneige': ['laneige', 'lageine', 'lanegie', 'lanege', '라네즈'],
+            'medicube': ['medicube', 'medikube', '메디큐브'],
+            'mediheal': ['mediheal', '메디힐'],
+            'torriden': ['torriden', '토리든'],
+            'anua': ['anua', '아누아'],
+            'nike': ['nike', 'naiki', 'air force', '나이키'],
+            'adidas': ['adidas', 'das', 'samba', '아디다스']
+          };
+
+          for (var bKey in FUZZY_MAP) {
+            var syns = FUZZY_MAP[bKey];
+            if (syns.some(function(s) { return fVal.includes(s) || s.includes(fVal); })) {
+              return syns.some(function(s) { return fullText.includes(s); });
+            }
+          }
+          return false;
         }
-        if (currentCatalogFilter.type === 'brand') return brand.includes(currentCatalogFilter.value.toLowerCase());
-        if (currentCatalogFilter.type === 'category') return (item.category || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
-        if (currentCatalogFilter.type === 'subCategory') return (item.subCategory || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
-        return true;
-      });
 
-      // BỘ LỌC TỰ ĐỘNG XÓA SẠCH SẢN PHẨM TRÙNG TÊN TRƯỚC KHI HIỂN THỊ
-      var seenTitles = {};
-      var uniqueList = [];
-      filtered.forEach(function(item) {
-        var cleanTitle = (item.title || '').trim();
-        if (!seenTitles[cleanTitle]) {
-          seenTitles[cleanTitle] = true;
-          uniqueList.push(item);
-        }
-      });
-
-      // TỰ ĐỘNG ĐẨY MÓN MUA NHIỀU / REVIEW CAO LÊN ĐẦU
-      return uniqueList.sort(function(a, b) {
-        return extractSalesPopularity(b) - extractSalesPopularity(a);
-      });
-    }
-
-    function renderProductCardHtml(item) {
-const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.oldKrw, item.title);
-      const sales = extractSalesPopularity(item);
-      const salesBadgeText = sales >= 10000 ? (Math.round(sales / 1000) + 'k+ đã bán') : (sales.toLocaleString() + ' lượt mua');
-
-      return `
-        <div class="rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-xl transition duration-300 group bg-white relative">
-          ${isAdminLoggedIn ? `
-            <button onclick="event.stopPropagation(); deleteProductByAdmin(${item.id})" class="absolute top-2 right-2 z-20 w-7 h-7 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-black text-xs shadow-md transition cursor-pointer" title="Xóa món này (Admin)">
-              ✕
-            </button>
-          ` : ''}
-
-          <div>
-            <div onclick="openProductDetailModal(${item.id})" class="relative h-52 bg-slate-100 cursor-pointer overflow-hidden">
-              <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
-              
-              <div class="absolute top-2 left-2 flex flex-col gap-1 z-10">
-                <span class="px-2 py-0.5 rounded-md bg-sky-800 text-white text-[10px] font-black uppercase tracking-wider shadow">${item.mall || 'Korea'}</span>
-                ${sales >= 5000 ? `<span class="px-2 py-0.5 rounded-md bg-amber-400 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow">🔥 Top Bán Chạy</span>` : ''}
-              </div>
-
-              <div class="absolute bottom-2 left-2 right-2 flex justify-between items-center z-10">
-                <span class="px-2 py-0.5 rounded-full bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold flex items-center gap-1 shadow">
-                  <span>★ 4.9</span>
-                  <span class="text-white/80">(${salesBadgeText})</span>
-                </span>
-                <span class="px-2 py-0.5 rounded-full bg-black/75 backdrop-blur-sm text-white text-[10px] font-bold">Chi tiết ➔</span>
-              </div>
-            </div>
-
-            <div class="p-4 space-y-1.5">
-              <h4 onclick="openProductDetailModal(${item.id})" class="font-bold text-sm text-slate-900 hover:text-sky-600 cursor-pointer line-clamp-2 min-h-[40px] leading-snug">${item.title}</h4>
-              <p class="text-[11px] text-sky-700 font-semibold truncate">${item.variant}</p>
-              
-              <div class="p-2 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-600 line-clamp-2">
-                • ${item.benefit || (item.benefits && item.benefits[0]) || 'Sản phẩm nội địa Hàn Quốc đạt kiểm định.'}
-              </div>
-
-              <div class="pt-2 flex items-baseline justify-between border-t border-slate-100">
-                <span class="text-xs text-slate-400 line-through">${formatVND(calc.oldAllInVND)}</span>
-                <span class="text-base font-black text-rose-600">${formatVND(calc.allInVND)}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="px-4 pb-4 grid grid-cols-5 gap-1.5">
-            <button type="button" onclick="openProductDetailModal(${item.id})" class="col-span-2 py-2 rounded-xl bg-slate-100 hover:bg-sky-50 text-sky-800 font-bold text-xs transition cursor-pointer">
-              🤖 Hỏi AI
-            </button>
-            <button type="button" onclick="orderProductItemDirect(${item.id})" class="col-span-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition cursor-pointer">
-              🛒 Đặt ngay
-            </button>
-          </div>
-        </div>
-      `;
-    }
-// ==========================================
-    // BỘ LỌC ĐA SÀN & TIỆN ÍCH THÔNG MINH
-    // ==========================================
-    var currentSmartFilter = 'all';
-
-    function detectProductChannel(item) {
-      var link = (item.link || '').toLowerCase();
-      var mall = (item.mall || '').toLowerCase();
-      var brand = (item.brand || '').toLowerCase();
-      var title = (item.title || '').toLowerCase();
-      var cat = (item.category || '').toLowerCase();
-
-      var isOliveYoung = link.includes('oliveyoung') || mall.includes('olive') || brand.includes('olive young');
-      var isKream = link.includes('kream') || mall.includes('kream');
-      var isMusinsa = link.includes('musinsa') || mall.includes('musinsa') || brand.includes('musinsa');
-      var isNike = brand.includes('nike') || title.includes('nike') || link.includes('nike');
-      var isAdidas = brand.includes('adidas') || title.includes('adidas') || link.includes('adidas') || title.includes('samba');
-      var isCoupang = link.includes('coupang') || mall.includes('coupang');
-
-      var isCosmetic = cat.includes('mỹ phẩm') || cat.includes('skincare') || 
-                       title.includes('serum') || title.includes('toner') || 
-                       title.includes('kem') || title.includes('mask') || 
-                       title.includes('pad') || title.includes('son') ||
-                       title.includes('tinh chất') || title.includes('dưỡng ẩm');
-
-      return {
-        isOliveYoung: isOliveYoung,
-        isKream: isKream,
-        isMusinsa: isMusinsa,
-        isNike: isNike,
-        isAdidas: isAdidas,
-        isCoupang: isCoupang,
-        isCosmeticOther: isCosmetic && !isOliveYoung
-      };
-    }
-
-    function switchSmartCatalogFilter(filterKey) {
-      currentSmartFilter = filterKey;
-
-      var buttons = document.querySelectorAll('.cat-filter-btn');
-      buttons.forEach(function(btn) {
-        if (btn.getAttribute('data-filter') === filterKey) {
-          btn.className = 'cat-filter-btn px-4 py-2 rounded-xl text-xs font-black transition cursor-pointer bg-sky-600 text-white shadow-sm shrink-0';
-        } else {
-          btn.className = 'cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0';
-        }
-      });
-
-      renderCatalogView();
-    }
-
-    function getFilteredProductsList() {
-      var filtered = currentProductsList.filter(function(item) {
-        if (currentSmartFilter === 'all') return true;
-        if (currentSmartFilter === 'sale') return item.isSale !== false;
-
-        var info = detectProductChannel(item);
-
-        if (currentSmartFilter === 'oliveyoung') return info.isOliveYoung;
-        if (currentSmartFilter === 'kream') return info.isKream;
-        if (currentSmartFilter === 'musinsa') return info.isMusinsa;
-        if (currentSmartFilter === 'nike') return info.isNike;
-        if (currentSmartFilter === 'adidas') return info.isAdidas;
-        if (currentSmartFilter === 'coupang') return info.isCoupang;
-        if (currentSmartFilter === 'cosmetics_other') return info.isCosmeticOther;
-
-        return true;
+        return false;
       });
 
       var seenTitles = {};
