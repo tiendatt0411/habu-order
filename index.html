@@ -1050,53 +1050,35 @@
 
 // THUẬT TOÁN ĐOÁN CÂN THÔNG MINH CHO MỸ PHẨM (TÍNH CẢ 1+1, QUÀ TẶNG)
     function estimateSmartWeight(title, category, fallbackKg) {
-      var t = (title || '').toLowerCase();
-      var calculatedKg = 0;
+  var t = (title || '').toLowerCase();
+  var c = (category || '').toLowerCase();
+  
+  // 1. Gán cân nặng thực tế hợp lý (kg)
+  var actualKg = 0.25; // Mặc định son môi, serum, mặt nạ nhẹ
 
-      var volMatch = t.match(/(\d+(?:\.\d+)?)\s*(ml|l|g|kg)/i);
-      if (volMatch) {
-        var num = parseFloat(volMatch[1]);
-        var unit = volMatch[2].toLowerCase();
-        var baseKg = 0;
-        if (unit === 'l' || unit === 'kg') baseKg = num;
-        else if (unit === 'ml' || unit === 'g') baseKg = num / 1000;
-        calculatedKg = baseKg + 0.15;
-      }
+  if (t.includes('áo khoác') || t.includes('jacket') || t.includes('hoodie') || t.includes('padding') || t.includes('phao')) {
+    actualKg = 0.85; // Áo khoác thực tế ~0.85kg
+  } else if (t.includes('giày') || t.includes('sneaker') || t.includes('shoes') || c.includes('giày') || t.includes('samba') || t.includes('force')) {
+    actualKg = 0.95; // Giày dép thực tế ~0.95kg
+  } else if (t.includes('toner pad') || t.includes('토너패드') || t.includes('pad') || t.includes('set') || t.includes('hộp') || t.includes('1+1') || t.includes('기획')) {
+    actualKg = 0.55; // Hộp Toner Pad to, combo nặng ~0.55kg
+  } else if (fallbackKg && Number(fallbackKg) > 0) {
+    actualKg = Number(fallbackKg);
+  }
 
-      if (t.includes('pad') || t.includes('miếng') || t.includes('tờ')) {
-        var sheetMatch = t.match(/(\d+)\s*(?:miếng|tờ|sheet)/i);
-        var sheets = sheetMatch ? parseInt(sheetMatch[1]) : 100;
-        calculatedKg = Math.max(calculatedKg, (sheets * 0.0035) + 0.15);
-      }
+  // 2. Quy tắc làm tròn bước nhảy 0.5kg của bạn:
+  // <= 0.5kg -> tính 0.5kg
+  // > 0.5kg đến 1.0kg -> tính 1.0kg
+  // > 1.0kg đến 1.5kg -> tính 1.5kg
+  var billedKg = Math.ceil(actualKg * 2) / 2;
+  if (billedKg < 0.5) billedKg = 0.5;
 
-      if (t.includes('1+1') || t.includes('double') || t.includes('duo') || t.includes('+refill') || t.includes('nạp lại') || t.includes('2 gói') || t.includes('*2') || t.includes('+100') || t.includes('+50ml')) {
-        calculatedKg = calculatedKg > 0 ? (calculatedKg * 1.85) : 0.75;
-      }
-
-      if (t.includes('túi') || t.includes('quà tặng') || t.includes('bình') || t.includes('bộ') || t.includes('set') || t.includes('hộp vẽ') || t.includes('full box')) {
-        calculatedKg += 0.18;
-      }
-
-      if (t.includes('áo khoác') || t.includes('puffer') || t.includes('down') || t.includes('jumper') || t.includes('jacket')) {
-        calculatedKg = Math.max(calculatedKg, 0.95);
-      } else if (t.includes('giày') || t.includes('sneaker') || t.includes('air force') || t.includes('samba') || t.includes('new balance')) {
-        calculatedKg = Math.max(calculatedKg, 1.15);
-      }
-
-      if (calculatedKg <= 0) {
-        calculatedKg = Number(fallbackKg) || 0.35;
-      }
-
-      // LÀM TRÒN: >0.5kg TÍNH 1.0kg, BƯỚC NHẢY TRẦN 0.5kg
-      var billedKg = Math.ceil(calculatedKg / 0.5) * 0.5;
-      if (billedKg < 0.5) billedKg = 0.5;
-
-      return {
-      chargedKg: billedKg,
-      billedKg: billedKg,
-      displayLabel: billedKg.toFixed(1).replace('.0', '') + ' kg'
-    };
-    }
+  return {
+    chargedKg: billedKg,
+    billedKg: billedKg,
+    displayLabel: billedKg.toFixed(1).replace('.0', '') + ' kg'
+  };
+}
 
   function calculateFormulaVND(krw, weightClass, estKg, oldKrw, itemTitle) {
   var priceKRW = parseInt(krw, 10) || 0;
