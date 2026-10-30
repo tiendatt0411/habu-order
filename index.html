@@ -1390,7 +1390,7 @@
       return 500;
     }
 
-    function getFilteredProductsList() {
+function getFilteredProductsList() {
       var filtered = currentProductsList.filter(function(item) {
         if (currentCatalogFilter.type === 'sale') return item.isSale !== false;
         if (currentCatalogFilter.type === 'brand') return (item.brand || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
@@ -1405,8 +1405,19 @@
         return true;
       });
 
-      // TỰ ĐỘNG ĐẨY MÓN HOT/REVIEW CAO LÊN ĐẦU TIÊN
-      return filtered.sort(function(a, b) {
+      // BỘ LỌC TỰ ĐỘNG XÓA SẠCH SẢN PHẨM TRÙNG TÊN TRƯỚC KHI HIỂN THỊ
+      var seenTitles = {};
+      var uniqueList = [];
+      filtered.forEach(function(item) {
+        var cleanTitle = (item.title || '').trim();
+        if (!seenTitles[cleanTitle]) {
+          seenTitles[cleanTitle] = true;
+          uniqueList.push(item);
+        }
+      });
+
+      // TỰ ĐỘNG ĐẨY MÓN MUA NHIỀU / REVIEW CAO LÊN ĐẦU
+      return uniqueList.sort(function(a, b) {
         return extractSalesPopularity(b) - extractSalesPopularity(a);
       });
     }
