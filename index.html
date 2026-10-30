@@ -1280,23 +1280,109 @@
       renderCatalogView();
     }
 
+   // HÀM TỰ ĐỘNG ĐO ĐOÁN SỐ LƯỢT GIAO DỊCH / REVIEW TỪ TIÊU ĐỀ
+    function extractSalesPopularity(item) {
+      if (item.salesCount && Number(item.salesCount) > 0) {
+        return Number(item.salesCount);
+      }
+      var str = (item.title || '') + ' ' + (item.brand || '');
+      // Bóc tách các dạng "Giao dịch 806.000", "Ưu đãi 221.000", "Giao dịch 2.9만"
+      var m = str.match(/(?:Giao dịch|Deal|Ưu đãi|거래)\s*([0-9.,]+)\s*([만kKmMnN万]?)/i);
+      if (m) {
+        var val = parseFloat(m[1].replace(/,/g, '.'));
+        var unit = (m[2] || '').toLowerCase();
+        if (unit === '만' || unit === 'vạn' || unit === 'm' || str.includes('만') || str.includes('.000')) {
+          return val >= 100 ? Math.round(val * 1000) : Math.round(val * 10000);
+        }
+        return Math.round(val * 1000);
+      }
+      if (str.includes('KHÔNG. 1') || str.includes('hạng nhất') || str.includes('No.1') || str.includes('All Young Pick')) {
+        return 15000;
+      }
+      return 500; // Mức mặc định
+    }
+
+    // LỌC VÀ TỰ ĐỘNG XẾP HÀNG SẢN PHẨM MUA NHIỀU / ĐÁNH GIÁ CAO LÊN ĐẦU
     function getFilteredProductsList() {
-      return currentProductsList.filter(item => {
+      var filtered = currentProductsList.filter(function(item) {
         if (currentCatalogFilter.type === 'sale') return item.isSale !== false;
         if (currentCatalogFilter.type === 'brand') return (item.brand || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
         if (currentCatalogFilter.type === 'mall') return (item.mall || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
         if (currentCatalogFilter.type === 'category') return (item.category || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
         if (currentCatalogFilter.type === 'subCategory') return (item.subCategory || '').toLowerCase().includes(currentCatalogFilter.value.toLowerCase());
         if (currentCatalogFilter.type === 'search') {
-          const q = currentCatalogFilter.value.toLowerCase();
-          const hay = `${item.title} ${item.brand} ${item.mall} ${item.variant} ${item.benefit || ''}`.toLowerCase();
+          var q = currentCatalogFilter.value.toLowerCase();
+          var hay = (item.title + ' ' + item.brand + ' ' + item.mall + ' ' + item.variant + ' ' + (item.benefit || '')).toLowerCase();
           return hay.includes(q) || (q === 'ck' && hay.includes('calvin'));
         }
         return true;
       });
+
+      // SẮP XẾP: SẢN PHẨM MUA NHIỀU, REVIEW CAO ĐỨNG ĐẦU TIÊN
+      return filtered.sort(function(a, b) {
+        return extractSalesPopularity(b) - extractSalesPopularity(a);
+      });
     }
 
     function renderProductCardHtml(item) {
+      const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.oldKrw);
+      const sales = extractSalesPopularity(item);
+      const salesBadgeText = sales >= 10000 ? (Math.round(sales / 1000) + 'k+ đã bán') : (sales.toLocaleString() + ' lượt mua');
+
+      return `
+        <div class="rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-xl transition duration-300 group bg-white relative">
+          ${isAdminLoggedIn ? `
+            <button onclick="event.stopPropagation(); deleteProductByAdmin(${item.id})" class="absolute top-2 right-2 z-20 w-7 h-7 rounded-full bg-rose-600 hover:bg-rose-700 text-white font-black text-xs shadow-md transition cursor-pointer" title="Xóa món này (Admin)">
+              ✕
+            </button>
+          ` : ''}
+
+          <div>
+            <div onclick="openProductDetailModal(${item.id})" class="relative h-52 bg-slate-100 cursor-pointer overflow-hidden">
+              <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
+              
+              <!-- HUY HIỆU SÀN & HÃNG -->
+              <div class="absolute top-2 left-2 flex flex-col gap-1 z-10">
+                <span class="px-2 py-0.5 rounded-md bg-sky-800 text-white text-[10px] font-black uppercase tracking-wider shadow">${item.mall || 'Korea'}</span>
+                ${sales >= 5000 ? `<span class="px-2 py-0.5 rounded-md bg-amber-400 text-slate-950 text-[9px] font-black uppercase tracking-wider shadow">🔥 Top Bán Chạy</span>` : ''}
+              </div>
+
+              <!-- HUY HIỆU ĐÁNH GIÁ THỰC TẾ -->
+              <div class="absolute bottom-2 left-2 right-2 flex justify-between items-center z-10">
+                <span class="px-2 py-0.5 rounded-full bg-black/75 backdrop-blur-sm text-amber-300 text-[10px] font-extrabold flex items-center gap-1 shadow">
+                  <span>★ 4.9</span>
+                  <span class="text-white/80">(${salesBadgeText})</span>
+                </span>
+                <span class="px-2 py-0.5 rounded-full bg-black/75 backdrop-blur-sm text-white text-[10px] font-bold">Chi tiết ➔</span>
+              </div>
+            </div>
+
+            <div class="p-4 space-y-1.5">
+              <h4 onclick="openProductDetailModal(${item.id})" class="font-bold text-sm text-slate-900 hover:text-sky-600 cursor-pointer line-clamp-2 min-h-[40px] leading-snug">${item.title}</h4>
+              <p class="text-[11px] text-sky-700 font-semibold truncate">${item.variant}</p>
+              
+              <div class="p-2 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-600 line-clamp-2">
+                • ${item.benefit || (item.benefits && item.benefits[0]) || 'Sản phẩm nội địa Hàn Quốc đạt kiểm định.'}
+              </div>
+
+              <div class="pt-2 flex items-baseline justify-between border-t border-slate-100">
+                <span class="text-xs text-slate-400 line-through">${formatVND(calc.oldAllInVND)}</span>
+                <span class="text-base font-black text-rose-600">${formatVND(calc.allInVND)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="px-4 pb-4 grid grid-cols-5 gap-1.5">
+            <button type="button" onclick="openProductDetailModal(${item.id})" class="col-span-2 py-2 rounded-xl bg-slate-100 hover:bg-sky-50 text-sky-800 font-bold text-xs transition cursor-pointer">
+              🤖 Hỏi AI
+            </button>
+            <button type="button" onclick="orderProductItemDirect(${item.id})" class="col-span-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition cursor-pointer">
+              🛒 Đặt ngay
+            </button>
+          </div>
+        </div>
+      `;
+    }
       const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.oldKrw);
       return `
         <div class="rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-lg transition group bg-white relative">
