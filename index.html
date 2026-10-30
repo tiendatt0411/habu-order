@@ -1471,7 +1471,89 @@ const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.ol
         </div>
       `;
     }
+// ==========================================
+    // BỘ LỌC ĐA SÀN & TIỆN ÍCH THÔNG MINH
+    // ==========================================
+    var currentSmartFilter = 'all';
 
+    function detectProductChannel(item) {
+      var link = (item.link || '').toLowerCase();
+      var mall = (item.mall || '').toLowerCase();
+      var brand = (item.brand || '').toLowerCase();
+      var title = (item.title || '').toLowerCase();
+      var cat = (item.category || '').toLowerCase();
+
+      var isOliveYoung = link.includes('oliveyoung') || mall.includes('olive') || brand.includes('olive young');
+      var isKream = link.includes('kream') || mall.includes('kream');
+      var isMusinsa = link.includes('musinsa') || mall.includes('musinsa') || brand.includes('musinsa');
+      var isNike = brand.includes('nike') || title.includes('nike') || link.includes('nike');
+      var isAdidas = brand.includes('adidas') || title.includes('adidas') || link.includes('adidas') || title.includes('samba');
+      var isCoupang = link.includes('coupang') || mall.includes('coupang');
+
+      var isCosmetic = cat.includes('mỹ phẩm') || cat.includes('skincare') || 
+                       title.includes('serum') || title.includes('toner') || 
+                       title.includes('kem') || title.includes('mask') || 
+                       title.includes('pad') || title.includes('son') ||
+                       title.includes('tinh chất') || title.includes('dưỡng ẩm');
+
+      return {
+        isOliveYoung: isOliveYoung,
+        isKream: isKream,
+        isMusinsa: isMusinsa,
+        isNike: isNike,
+        isAdidas: isAdidas,
+        isCoupang: isCoupang,
+        isCosmeticOther: isCosmetic && !isOliveYoung
+      };
+    }
+
+    function switchSmartCatalogFilter(filterKey) {
+      currentSmartFilter = filterKey;
+
+      var buttons = document.querySelectorAll('.cat-filter-btn');
+      buttons.forEach(function(btn) {
+        if (btn.getAttribute('data-filter') === filterKey) {
+          btn.className = 'cat-filter-btn px-4 py-2 rounded-xl text-xs font-black transition cursor-pointer bg-sky-600 text-white shadow-sm shrink-0';
+        } else {
+          btn.className = 'cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0';
+        }
+      });
+
+      renderCatalogView();
+    }
+
+    function getFilteredProductsList() {
+      var filtered = currentProductsList.filter(function(item) {
+        if (currentSmartFilter === 'all') return true;
+        if (currentSmartFilter === 'sale') return item.isSale !== false;
+
+        var info = detectProductChannel(item);
+
+        if (currentSmartFilter === 'oliveyoung') return info.isOliveYoung;
+        if (currentSmartFilter === 'kream') return info.isKream;
+        if (currentSmartFilter === 'musinsa') return info.isMusinsa;
+        if (currentSmartFilter === 'nike') return info.isNike;
+        if (currentSmartFilter === 'adidas') return info.isAdidas;
+        if (currentSmartFilter === 'coupang') return info.isCoupang;
+        if (currentSmartFilter === 'cosmetics_other') return info.isCosmeticOther;
+
+        return true;
+      });
+
+      var seenTitles = {};
+      var uniqueList = [];
+      filtered.forEach(function(item) {
+        var cleanTitle = (item.title || '').trim();
+        if (!seenTitles[cleanTitle]) {
+          seenTitles[cleanTitle] = true;
+          uniqueList.push(item);
+        }
+      });
+
+      return uniqueList.sort(function(a, b) {
+        return extractSalesPopularity(b) - extractSalesPopularity(a);
+      });
+    }
     function renderCatalogView() {
       const grid = document.getElementById('catalogProductsGrid');
       if (!grid) return;
