@@ -563,12 +563,15 @@
     </div>
 
     <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 custom-scrollbar text-xs font-bold">
-      <button type="button" onclick="switchSmartCatalogFilter('musinsa')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">👕 Musinsa</button>
-<button type="button" onclick="switchSmartCatalogFilter('nike')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">✔️ Nike</button>
-<button type="button" onclick="switchSmartCatalogFilter('adidas')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">👟 Adidas</button>
-<button type="button" onclick="switchSmartCatalogFilter('coupang')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">🚀 Coupang</button>
-<button type="button" onclick="switchSmartCatalogFilter('cosmetics_other')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 text-slate-700 hover:bg-slate-200">✨ Mỹ Phẩm Khác</button>
-    </div>
+     <button type="button" onclick="switchSmartCatalogFilter('all')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-black transition cursor-pointer bg-sky-600 text-white shadow-sm" data-filter="all">Tất cả</button>
+     <button type="button" onclick="switchSmartCatalogFilter('sale')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="sale">🔥 Hàng Sale</button>
+     <button type="button" onclick="switchSmartCatalogFilter('oliveyoung')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="oliveyoung">💄 Olive Young</button>
+     <button type="button" onclick="switchSmartCatalogFilter('kream')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="kream">👟 KREAM</button>
+     <button type="button" onclick="switchSmartCatalogFilter('musinsa')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="musinsa">👕 Musinsa</button>
+     <button type="button" onclick="switchSmartCatalogFilter('nike')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="nike">✔️ Nike</button>
+     <button type="button" onclick="switchSmartCatalogFilter('adidas')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="adidas">👟 Adidas</button>
+     <button type="button" onclick="switchSmartCatalogFilter('coupang')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="coupang">🚀 Coupang</button>
+     <button type="button" onclick="switchSmartCatalogFilter('cosmetics_other')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200" data-filter="cosmetics_other">✨ Mỹ Phẩm Khác</button>
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" id="catalogProductsGrid"></div>
   </main>
