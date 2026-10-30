@@ -1092,43 +1092,43 @@
       if (billedKg < 0.5) billedKg = 0.5;
 
       return {
-        actualEstKg: Math.round(calculatedKg * 100) / 100,
-        billedKg: billedKg
-      };
+      chargedKg: billedKg,
+      billedKg: billedKg,
+      displayLabel: billedKg.toFixed(1).replace('.0', '') + ' kg'
+    };
     }
 
-    function calculateFormulaVND(krw, weightClass, estKg, oldKrw, itemTitle) {
-      const cleanKrw = Math.max(0, Number(krw) || 0);
-      const cleanOldKrw = Math.max(cleanKrw, Number(oldKrw) || cleanKrw);
-      
-      const weightInfo = estimateSmartWeight(itemTitle, '', estKg);
-      const finalWeight = weightInfo.billedKg;
+  function calculateFormulaVND(krw, weightClass, estKg, oldKrw, itemTitle) {
+  var priceKRW = parseInt(krw, 10) || 0;
+  var originKRW = parseInt(oldKrw, 10) || priceKRW;
+  
+  var TY_GIA = 21;
+  var CUOC_BAY_PER_KG = 180000;
+  
+  var weightObj = estimateSmartWeight(itemTitle, '', estKg);
+  var chargedWeight = weightObj.chargedKg;
+  
+  var tienHangVND = priceKRW * TY_GIA;
+  var shipBayVND = chargedWeight * CUOC_BAY_PER_KG;
+  var congMuaVND = tienHangVND < 500000 ? 30000 : 60000;
 
-      const buyingFee = finalWeight > 1.0 ? FEE_OVER_1KG : FEE_UNDER_1KG;
-      const shipVND = Math.round(finalWeight * SHIP_PER_KG);
-      const convertedVND = Math.round(cleanKrw * EXCHANGE_RATE);
-      const noWeightVND = convertedVND + buyingFee;
-      const allInVND = noWeightVND + shipVND;
-      const oldAllInVND = Math.round(cleanOldKrw * EXCHANGE_RATE) + buyingFee + shipVND;
+  // Giá về tay trọn gói (làm tròn nghìn đồng)
+  var finalVND = Math.ceil((tienHangVND + shipBayVND + congMuaVND) / 1000) * 1000;
+  var originHangVND = originKRW * TY_GIA;
+  var finalOldVND = Math.ceil((originHangVND + shipBayVND + congMuaVND) / 1000) * 1000;
 
-      return { 
-        convertedVND, 
-        buyingFee, 
-        shipVND, 
-        noWeightVND, 
-        allInVND, 
-        oldAllInVND, 
-        weight: finalWeight,
-        actualWeight: weightInfo.actualEstKg
-      };
-    }
-    // KHỐI QUẢN TRỊ ADMIN (100% ĂN CHUỘT)
-    // =========================================================================
-    function handleAdminLoginClick() {
-      if (isAdminLoggedIn) {
-        openAdminPanel();
-        return;
-      }
+  return {
+    convertedVND: tienHangVND,
+    buyingFee: congMuaVND,
+    shipVND: shipBayVND,
+    noWeightVND: tienHangVND + congMuaVND,
+    allInVND: finalVND,
+    oldAllInVND: finalOldVND > finalVND ? finalOldVND : finalVND,
+    chargedKg: chargedWeight,
+    billedKg: chargedWeight,
+    weightLabel: weightObj.displayLabel
+  };
+}
       const pin = prompt('Vui lòng nhập Mã PIN Quản Trị Viên:');
       if (pin === ADMIN_PIN) {
         isAdminLoggedIn = true;
