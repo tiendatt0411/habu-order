@@ -93,17 +93,6 @@
       visibility: visible;
       transform: translateY(0);
     }
-    .nike-sub-dropdown {
-      opacity: 0;
-      visibility: hidden;
-      transform: translateX(6px);
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .nike-sub-parent:hover .nike-sub-dropdown {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(0);
-    }
     .page-view {
       display: none;
     }
@@ -200,7 +189,7 @@
         <a href="https://zalo.me/0383774099" target="_blank" class="hover:text-amber-300">📞 Zalo 1: 0383-774-099</a>
         <a href="https://zalo.me/0973726066" target="_blank" class="hover:text-amber-300">📞 Zalo 2: 0973-726-066</a>
         
-        <button type="button" id="topBarAdminBtn" onclick="onclick="handleAdminAccess()"" class="force-clickable hover:text-amber-300 font-black bg-white/20 hover:bg-white/30 px-3 py-1 rounded text-amber-300 border border-amber-300/60 shadow-sm transition">
+        <button type="button" id="topBarAdminBtn" onclick="handleAdminAccess()" class="force-clickable hover:text-amber-300 font-black bg-white/20 hover:bg-white/30 px-3 py-1 rounded text-amber-300 border border-amber-300/60 shadow-sm transition">
           🔒 Quản trị
         </button>
       </div>
@@ -321,7 +310,6 @@
   <!-- ================= VIEW 1: TRANG GIỚI THIỆU ================= -->
   <main id="view-intro" class="page-view active-view flex-1">
     
-    <!-- BANNER HERO GỐC -->
     <section class="relative bg-gradient-to-r from-[#0369a1] via-[#0284c7] to-[#0c4a6e] text-white py-14 px-6 overflow-hidden">
       <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8 items-center">
         <div class="lg:col-span-7 space-y-4">
@@ -352,7 +340,6 @@
           </div>
         </div>
 
-        <!-- MÔ HÌNH THÙNG AIR TREO 3D & CARD VÀNG -->
         <div class="lg:col-span-5 flex flex-col items-center justify-center relative">
           <div class="w-full flex justify-end mb-2 pr-2 pointer-events-none">
             <div class="plane-float inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/30 text-xs font-bold text-amber-200 shadow-lg">
@@ -461,7 +448,7 @@
       <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" id="introTopProductsGrid"></div>
     </section>
 
-    <!-- HÀNH TRÌNH THÙNG HÀNG AIR - MÔ PHỎNG ĐỒ HỌA 3D ĐẦY ĐỦ 5 BƯỚC -->
+    <!-- HÀNH TRÌNH THÙNG HÀNG AIR -->
     <section class="bg-gradient-to-b from-slate-900 to-slate-950 text-white py-14 px-6 border-y border-slate-800">
       <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8 items-center">
         <div class="lg:col-span-5 space-y-4">
@@ -527,7 +514,7 @@
       </div>
     </section>
 
-    <!-- 5. GỬI ẢNH BÁO GIÁ -->
+    <!-- GỬI ẢNH BÁO GIÁ -->
     <section class="max-w-7xl mx-auto px-6 py-12">
       <div class="rounded-3xl bg-gradient-to-br from-sky-50 via-white to-sky-100/60 border border-sky-200 p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
         <div class="space-y-2 max-w-xl">
@@ -550,7 +537,7 @@
       <div>
         <div class="text-xs font-bold text-sky-700 uppercase tracking-wider">HàBu Order Catalog</div>
         <h2 id="catalogViewHeaderTitle" class="text-2xl sm:text-4xl font-black text-slate-900 mt-1">
-          KHO SẢN PHẨM SALE
+          KHO SẢN PHẨM HÀBU
         </h2>
       </div>
       <div class="flex flex-wrap items-center gap-2">
@@ -562,7 +549,7 @@
       </div>
     </div>
 
-   <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 custom-scrollbar text-xs font-bold" id="catalogFilterButtonGroup">
+    <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 custom-scrollbar text-xs font-bold" id="catalogFilterButtonGroup">
       <button type="button" onclick="switchSmartCatalogFilter('all')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-black transition cursor-pointer bg-sky-600 text-white shadow-sm shrink-0" data-filter="all">Tất cả</button>
       <button type="button" onclick="switchSmartCatalogFilter('sale')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0" data-filter="sale">🔥 Hàng Sale</button>
       <button type="button" onclick="switchSmartCatalogFilter('oliveyoung')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0" data-filter="oliveyoung">💄 Olive Young</button>
@@ -573,7 +560,19 @@
       <button type="button" onclick="switchSmartCatalogFilter('coupang')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0" data-filter="coupang">🚀 Coupang</button>
       <button type="button" onclick="switchSmartCatalogFilter('cosmetics_other')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0" data-filter="cosmetics_other">✨ Sản Phẩm Khác</button>
     </div>
+
+    <!-- KHU VỰC HIỂN THỊ SẢN PHẨM (LUÔN HIỂN THỊ) -->
     <div id="catalogProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"></div>
+  </main>
+
+  <!-- ================= VIEW 3: GỬI ẢNH BÁO GIÁ (LENS VIEW) ================= -->
+  <main id="view-lens" class="page-view flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
+    <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200">
+      <div>
+        <span class="text-xs font-bold text-sky-700 uppercase">Tìm Kiếm Bằng Hình Ảnh</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-0.5">NHẬN DIỆN &amp; TÍNH GIÁ TỰ ĐỘNG</h2>
+      </div>
+      <button onclick="switchPageView('catalog', { filterType: 'all' })" class="text-xs font-bold text-slate-500 hover:text-sky-700 cursor-pointer">← Về Kho Hàng</button>
     </div>
 
     <div class="grid lg:grid-cols-12 gap-8 items-start">
@@ -710,7 +709,7 @@
             </div>
             <div class="flex justify-between">
               <span>Cước bay Air (180k/kg):</span>
-              <span id="summaryShippingVND" class="font-bold text-emerald-400">72.000 đ</span>
+              <span id="summaryShippingVND" class="font-bold text-emerald-400">90.000 đ</span>
             </div>
           </div>
 
@@ -727,7 +726,7 @@
     </form>
   </main>
 
-  <!-- ================= VIEW 5: TRANG QUẢN TRỊ ADMIN (100% ĂN CHUỘT) ================= -->
+  <!-- ================= VIEW 5: TRANG QUẢN TRỊ ADMIN ================= -->
   <main id="view-admin" class="page-view flex-1 max-w-4xl mx-auto px-6 py-10 w-full" style="position: relative; z-index: 10000; pointer-events: auto !important;">
     <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200">
       <div>
@@ -752,8 +751,8 @@
         </div>
         <textarea id="adminImportJsonInput" rows="5" placeholder="Bấm chuột vào đây và nhấn Ctrl + V để dán mã sản phẩm..." class="w-full p-4 rounded-2xl border border-sky-300 text-xs font-mono outline-none bg-white focus:ring-2 focus:ring-sky-500"></textarea>
         <div class="flex flex-wrap justify-between items-center gap-2 pt-1">
-          <button type="button" onclick="resetToCleanStandardProducts()" class="text-xs font-bold text-sky-700 hover:underline cursor-pointer">
-            🔄 Khôi phục danh sách chuẩn 58 món
+          <button type="button" onclick="resetToStandardProducts()" class="text-xs font-bold text-sky-700 hover:underline cursor-pointer">
+            🔄 Nạp lại dữ liệu gốc
           </button>
           <button type="button" id="adminImportBtn" onclick="handleAdminImportSubmit()" class="px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs shadow-md transition cursor-pointer">
             ⚡ Nạp Lên Web &amp; Đồng Bộ Google Sheets
@@ -805,10 +804,9 @@
     </div>
   </footer>
 
-  <!-- FLOATING AI WIDGET & QUICK CONTACT ICONS -->
+  <!-- FLOATING WIDGET -->
   <div style="position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 999999; pointer-events: auto !important; display: flex; flex-direction: column; align-items: flex-end; gap: 0.625rem;">
     
-    <!-- KHUNG CHAT AI TƯ VẤN TOÀN NĂNG -->
     <div id="floatingAiPanel" class="hidden mb-1 w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border-2 border-sky-600 overflow-hidden" style="pointer-events: auto !important;">
       <div class="bg-gradient-to-r from-sky-700 to-habu-deep text-white p-3.5 flex items-center justify-between">
         <div class="flex items-center gap-2">
@@ -852,7 +850,6 @@
       </form>
     </div>
 
-    <!-- CỤM NÚT NỔI: ZALO 1, ZALO 2, MESSENGER & HỎI ĐÁP AI -->
     <div class="flex items-center gap-2" style="pointer-events: auto !important;">
       <a
         href="https://zalo.me/0383774099"
@@ -920,34 +917,197 @@
     </div>
   </div>
 
+  <!-- SCRIPT HỆ THỐNG TOÀN DIỆN -->
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzt22aihXB9fUkZyduRF06YBkccFAT-B-FPYKzpqW8mC9O-mdqlX_B4s7CLem9nr9Mj/exec';
-var ADMIN_PIN = "0411";
-    var isAdminLoggedIn = false;
+    const ADMIN_PIN = "0411";
+    let isAdminLoggedIn = false;
+    let currentUploadedFile = null;
 
+    const EXCHANGE_RATE = 21;
+    const FEE_UNDER_1KG = 30000;
+    const FEE_OVER_1KG = 60000;
+    const SHIP_PER_KG = 180000;
+
+    let currentCatalogFilter = { type: 'all', value: '' };
+
+    // KHO SẢN PHẨM KHỞI TẠO MẶC ĐỊNH
+    let currentProductsList = [
+      {
+        id: 101,
+        title: "[Olive Young 1등] [업그레이드 리뉴얼/81관왕 No.1] 메디힐 더마 토너패드 100매 7종 피부 고민별 골라 담기 (Toner Pad Mediheal 100 miếng kèm lõi)",
+        brand: "Mediheal",
+        category: "Mỹ phẩm",
+        subCategory: "Toner Pad",
+        mall: "Olive Young",
+        krw: 28900,
+        oldKrw: 39900,
+        weightClass: "under1",
+        estKg: 0.6,
+        isSale: true,
+        salesCount: 15400,
+        variant: "Hộp 100 miếng + Lõi Refill",
+        link: "https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000171207",
+        image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80",
+        benefit: "Làm dịu da mụn, tẩy tế bào chết nhẹ và cấp ẩm tức thì.",
+        benefits: ["Sản phẩm săn sale trực tiếp trên Olive Young Hàn Quốc.", "Hộp to tiện dụng kèm nhíp gắp hợp vệ sinh."],
+        targetAudience: "Mọi loại da, da mụn, da nhạy cảm cần làm dịu tức thì.",
+        usageGuide: "Dùng sau bước rửa mặt, đắp lên 2 bên má hoặc lau nhẹ theo chiều cấu trúc da."
+      },
+      {
+        id: 102,
+        title: "[KHÔNG. 1 trong 15 năm liên tiếp] Mediheal Essential Mask Pack 10/10+1 Sheet Special 7 loại cho bạn lựa chọn",
+        brand: "Mediheal",
+        category: "Mỹ phẩm",
+        subCategory: "Mặt nạ",
+        mall: "Olive Young",
+        krw: 12000,
+        oldKrw: 20000,
+        weightClass: "under1",
+        estKg: 0.35,
+        isSale: true,
+        salesCount: 28900,
+        variant: "Hộp 10 miếng tặng 1",
+        link: "https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000165507",
+        image: "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=600&q=80",
+        benefit: "Dưỡng chất dồi dào, cấp ẩm sâu và phục hồi da cấp tốc.",
+        benefits: ["Mặt nạ quốc dân bán chạy nhất tại Olive Young Hàn Quốc.", "Chất liệu sợi cellulose ôm khít khuôn mặt."],
+        targetAudience: "Phù hợp mọi loại da cần phục hồi mệt mỏi.",
+        usageGuide: "Đắp trong 15 - 20 phút rồi vỗ nhẹ cho dưỡng chất thẩm thấu."
+      },
+      {
+        id: 103,
+        title: "[October All Young Pick/+3 Loại Mini] Mặt nạ ngủ môi Laneige 20g Lip Sleeping Mask Berry",
+        brand: "Laneige",
+        category: "Mỹ phẩm",
+        subCategory: "Mặt nạ",
+        mall: "Olive Young",
+        krw: 18000,
+        oldKrw: 24000,
+        weightClass: "under1",
+        estKg: 0.2,
+        isSale: true,
+        salesCount: 19800,
+        variant: "Hũ 20g kèm 3 hũ mini",
+        link: "https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000155609",
+        image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80",
+        benefit: "Tẩy tế bào chết môi ban đêm, nuôi dưỡng môi hồng hào căng bóng.",
+        benefits: ["Chiết xuất quả mọng giàu Vitamin C dưỡng môi hồng tự nhiên.", "Tặng kèm 3 hũ mini tiện mang theo du lịch."],
+        targetAudience: "Người có đôi môi khô ráp, hay bong tróc vảy môi.",
+        usageGuide: "Thoa một lớp dày lên môi trước khi đi ngủ, sáng hôm sau lau nhẹ bằng khăn mềm."
+      },
+      {
+        id: 104,
+        title: "[Giao dịch 806.000] Nike Air Force 1 '07 Low White",
+        brand: "Nike",
+        category: "Thời trang",
+        subCategory: "Giày dép",
+        mall: "KREAM",
+        krw: 129000,
+        oldKrw: 139000,
+        weightClass: "under1",
+        estKg: 0.95,
+        isSale: false,
+        salesCount: 806000,
+        variant: "Trắng All White Chính Hãng",
+        link: "https://kream.co.kr/products/28",
+        image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=600&q=80",
+        benefit: "Mẫu giày sneaker kinh điển, phong cách trẻ trung năng động.",
+        benefits: ["Hàng kiểm định chính hãng 100% qua KREAM Hàn Quốc.", "Đầy đủ tag, hộp nguyên bản."],
+        targetAudience: "Tín đồ thời trang streetwear, thể thao.",
+        usageGuide: "Vui lòng ghi chú size giày (tính theo mm hoặc US) khi đặt hàng."
+      }
+    ];
+
+    // 1. THUẬT TOÁN ƯỚC LƯỢNG CÂN NẶNG CHUẨN (LÀM TRÒN BƯỚC 0.5KG)
+    function estimateSmartWeight(title, category, fallbackKg) {
+      const t = (title || '').toLowerCase();
+      const c = (category || '').toLowerCase();
+
+      // Cân nặng cơ sở thực tế (kg)
+      let actualKg = 0.25; // Mặc định mỹ phẩm nhẹ: hũ môi 20g, serum, mặt nạ miếng
+
+      if (t.includes('áo khoác') || t.includes('jacket') || t.includes('hoodie') || t.includes('padding') || t.includes('phao') || t.includes('windbreaker')) {
+        actualKg = 0.85; // Áo khoác thực tế ~0.85kg
+      } else if (t.includes('giày') || t.includes('sneaker') || t.includes('shoes') || c.includes('giày') || t.includes('samba') || t.includes('force') || t.includes('asics')) {
+        actualKg = 0.95; // Giày dép thực tế ~0.95kg
+      } else if (t.includes('toner pad') || t.includes('토너패드') || t.includes('pad') || t.includes('set') || t.includes('hộp to') || t.includes('1+1') || t.includes('기획')) {
+        actualKg = 0.55; // Toner pad hộp to hoặc set quà thực tế ~0.55kg
+      } else if (fallbackKg && Number(fallbackKg) > 0) {
+        actualKg = Number(fallbackKg);
+      }
+
+      // QUY TẮC LÀM TRÒN BƯỚC NHẢY 0.5KG:
+      // <= 0.5kg -> tính 0.5kg
+      // > 0.5kg đến 1.0kg -> tính 1.0kg
+      // > 1.0kg đến 1.5kg -> tính 1.5kg
+      let billedKg = Math.ceil(actualKg * 2) / 2;
+      if (billedKg < 0.5) billedKg = 0.5;
+
+      return {
+        actualWeight: actualKg,
+        weight: billedKg,
+        chargedKg: billedKg,
+        billedKg: billedKg,
+        displayLabel: billedKg.toFixed(1).replace('.0', '') + ' kg'
+      };
+    }
+
+    // 2. CÔNG THỨC TÍNH GIÁ TRỌN GÓI VỀ TAY HÀBU
+    function calculateFormulaVND(krw, weightClass, estKg, oldKrw, itemTitle) {
+      const priceKRW = parseInt(krw, 10) || 0;
+      const originKRW = parseInt(oldKrw, 10) || priceKRW;
+      
+      const weightObj = estimateSmartWeight(itemTitle, '', estKg);
+      const chargedWeight = weightObj.chargedKg;
+      
+      const tienHangVND = priceKRW * EXCHANGE_RATE;
+      const shipBayVND = chargedWeight * SHIP_PER_KG;
+      const congMuaVND = tienHangVND < 500000 ? FEE_UNDER_1KG : FEE_OVER_1KG;
+
+      const finalVND = Math.ceil((tienHangVND + shipBayVND + congMuaVND) / 1000) * 1000;
+      const originHangVND = originKRW * EXCHANGE_RATE;
+      const finalOldVND = Math.ceil((originHangVND + shipBayVND + congMuaVND) / 1000) * 1000;
+
+      return {
+        convertedVND: tienHangVND,
+        buyingFee: congMuaVND,
+        shipVND: shipBayVND,
+        noWeightVND: tienHangVND + congMuaVND,
+        allInVND: finalVND,
+        oldAllInVND: finalOldVND > finalVND ? finalOldVND : finalVND,
+        weight: chargedWeight,
+        actualWeight: weightObj.actualWeight,
+        chargedKg: chargedWeight,
+        billedKg: chargedWeight,
+        weightLabel: weightObj.displayLabel
+      };
+    }
+
+    function formatVND(num) {
+      return Math.round(num || 0).toLocaleString('vi-VN') + ' đ';
+    }
+
+    // 3. QUẢN TRỊ ADMIN BẢO ĐẢM HOẠT ĐỘNG
     function handleAdminAccess() {
-      var pin = prompt('Vui lòng nhập Mã PIN Quản Trị Viên:');
+      const pin = prompt('Vui lòng nhập Mã PIN Quản Trị Viên:');
       if (pin === null) return;
       if (pin.trim() === ADMIN_PIN) {
         isAdminLoggedIn = true;
         alert('Đăng nhập Quản Trị Viên thành công!');
-        if (typeof updateAdminStatusUI === 'function') updateAdminStatusUI();
-        if (typeof openAdminPanel === 'function') {
-          openAdminPanel();
-        } else {
-          var modal = document.getElementById('adminModal') || document.getElementById('adminPanelModal');
-          if (modal) modal.classList.remove('hidden');
-        }
+        updateAdminStatusUI();
+        openAdminPanel();
       } else {
         alert('Mã PIN không chính xác! Chỉ quản trị viên mới có quyền thao tác.');
       }
     }
-    // Gán đồng thời cả 2 tên để HTML gọi kiểu gì cũng chạy
+
     function handleAdminLoginClick() {
       handleAdminAccess();
     }
     window.handleAdminAccess = handleAdminAccess;
-window.handleAdminLoginClick = handleAdminLoginClick;
+    window.handleAdminLoginClick = handleAdminLoginClick;
+
     function updateAdminStatusUI() {
       const btn = document.getElementById('topBarAdminBtn');
       if (btn) {
@@ -1014,26 +1174,45 @@ window.handleAdminLoginClick = handleAdminLoginClick;
         renderAdminManageList();
         renderCatalogView();
         renderIntroTopProducts();
-        
-        // Đồng bộ lên Google Sheets ngay lập tức
         await uploadProductsToGoogleSheets();
         alert('Đã xóa và cập nhật đồng bộ cho mọi khách hàng!');
       }
     }
 
-    // HÀM BÓC MÃ DUY NHẤT CỦA SẢN PHẨM TỪ LINK HOẶC TIÊU ĐỀ
     function getProductUniqueKey(item) {
-      var link = item.link || '';
-      var mOlive = link.match(/goodsNo=([A-Za-z0-9]+)/);
+      const link = item.link || '';
+      const mOlive = link.match(/goodsNo=([A-Za-z0-9]+)/);
       if (mOlive) return 'OY_' + mOlive[1];
-      
-      var mKream = link.match(/products\/(\d+)/);
+      const mKream = link.match(/products\/(\d+)/);
       if (mKream) return 'KREAM_' + mKream[1];
-
       return (item.title || '').toLowerCase().replace(/[^a-z0-9가-힣]/g, '');
     }
 
-    // NẠP SẢN PHẨM CÓ CƠ CHẾ KHỬ TRÙNG LẶP (DEDUPLICATION)
+    function sanitizeProductDetails(item) {
+      const wInfo = estimateSmartWeight(item.title, item.category, item.estKg);
+      return {
+        id: item.id || Date.now() + Math.floor(Math.random() * 1000),
+        title: item.title || 'Sản phẩm Hàn Quốc',
+        brand: item.brand || 'Olive Young',
+        category: item.category || 'Mỹ phẩm',
+        subCategory: item.subCategory || 'Skincare',
+        mall: item.mall || 'Olive Young',
+        krw: Number(item.krw) || 20000,
+        oldKrw: Number(item.oldKrw) || Math.round((Number(item.krw) || 20000) * 1.2),
+        weightClass: wInfo.billedKg > 1.0 ? 'over1' : 'under1',
+        estKg: wInfo.billedKg,
+        isSale: item.isSale !== false && item.isSale !== 'false',
+        salesCount: item.salesCount || 0,
+        variant: item.variant || 'Chính hãng từ Hàn Quốc',
+        link: item.link || '',
+        image: item.image || 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80',
+        benefit: item.benefit || 'Hàng chính hãng nội địa Hàn Quốc.',
+        benefits: item.benefits || ['Sản phẩm nội địa Hàn Quốc chính hãng từ Olive Young/KREAM.'],
+        targetAudience: item.targetAudience || 'Mọi loại da, phù hợp với thị hiếu người dùng châu Á.',
+        usageGuide: item.usageGuide || 'Sử dụng đều đặn theo hướng dẫn của nhà sản xuất.'
+      };
+    }
+
     async function handleAdminImportSubmit() {
       const inputEl = document.getElementById('adminImportJsonInput');
       const importBtn = document.getElementById('adminImportBtn');
@@ -1057,8 +1236,7 @@ window.handleAdminLoginClick = handleAdminLoginClick;
       try {
         list = JSON.parse(raw);
       } catch (err) {
-        console.error("Lỗi JSON:", err);
-        alert('Dữ liệu dán vào không hợp lệ. Hãy kiểm tra lại!');
+        alert('Dữ liệu JSON dán vào không hợp lệ. Hãy kiểm tra lại!');
         return;
       }
 
@@ -1068,62 +1246,22 @@ window.handleAdminLoginClick = handleAdminLoginClick;
           importBtn.textContent = '⏳ Đang lọc trùng & đồng bộ...';
         }
 
-        const cleanedList = list.map(item => {
-          let cleanLink = item.link || '';
-          if (cleanLink.includes('goodsNo=')) {
-            const m = cleanLink.match(/goodsNo=([A-Za-z0-9]+)/);
-            if (m) cleanLink = `https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=${m[1]}`;
-          }
+        const cleanedList = list.map(item => sanitizeProductDetails(item));
+        const combined = cleanedList.concat(currentProductsList);
+        const seenKeys = {};
+        const uniqueProducts = [];
 
-          const rawBenefits = (item.benefits && item.benefits.length > 0 && !item.benefits[0].includes('tự động tính'))
-            ? item.benefits
-            : [
-                'Sản phẩm nội địa Hàn Quốc chính hãng từ Olive Young/KREAM.',
-                'Cam kết chuẩn hàng Store, bọc chống sốc kỹ lưỡng khi bay Air.'
-              ];
-
-          const wInfo = estimateSmartWeight(item.title, item.category, item.estKg);
-
-          return sanitizeProductDetails({
-            id: item.id || Date.now() + Math.floor(Math.random() * 1000),
-            title: item.title || 'Sản phẩm Hàn Quốc',
-            brand: item.brand || 'Olive Young',
-            category: item.category || 'Mỹ phẩm',
-            subCategory: item.subCategory || 'Skincare',
-            mall: item.mall || 'Olive Young',
-            krw: Number(item.krw) || 20000,
-            oldKrw: Number(item.oldKrw) || Math.round((Number(item.krw) || 20000) * 1.2),
-            weightClass: wInfo.billedKg > 1.0 ? 'over1' : 'under1',
-            estKg: wInfo.billedKg,
-            isSale: true,
-            salesCount: item.salesCount || 0,
-            variant: item.variant || 'Chính hãng từ Hàn Quốc',
-            link: cleanLink,
-            image: item.image || '',
-            benefit: rawBenefits[0],
-            benefits: rawBenefits,
-            targetAudience: item.targetAudience || 'Mọi loại da, phù hợp với thị hiếu người dùng châu Á.',
-            usageGuide: item.usageGuide || 'Sử dụng đều đặn theo hướng dẫn của nhà sản xuất.'
-          });
-        });
-
-        // TỰ ĐỘNG LỌC BỎ CÁC SẢN PHẨM BỊ TRÙNG LẶP
-        var combined = cleanedList.concat(currentProductsList);
-        var seenKeys = {};
-        var uniqueProducts = [];
-
-        combined.forEach(function(prod) {
-          var key = getProductUniqueKey(prod);
+        combined.forEach(prod => {
+          const key = getProductUniqueKey(prod);
           if (!seenKeys[key]) {
             seenKeys[key] = true;
             uniqueProducts.push(prod);
           }
         });
 
-        var duplicateCount = combined.length - uniqueProducts.length;
+        const duplicateCount = combined.length - uniqueProducts.length;
         currentProductsList = uniqueProducts;
         saveProductsToStorage();
-
         await uploadProductsToGoogleSheets();
 
         inputEl.value = '';
@@ -1135,12 +1273,253 @@ window.handleAdminLoginClick = handleAdminLoginClick;
           importBtn.disabled = false;
           importBtn.textContent = '⚡ Nạp Lên Web & Đồng Bộ Google Sheets';
         }
-
         alert(`✅ Đã nạp thành công!\n• Tổng sản phẩm hiện có: ${currentProductsList.length} món.\n• Đã tự động loại bỏ: ${duplicateCount} món bị trùng lặp.`);
       } else {
         alert('Dữ liệu JSON không đúng danh sách sản phẩm!');
       }
     }
+
+    function resetToStandardProducts() {
+      if (confirm('Khôi phục danh sách sản phẩm mẫu ban đầu?')) {
+        localStorage.removeItem('habu_products_v2');
+        location.reload();
+      }
+    }
+
+    // 4. BỘ LỌC KHO SẢN PHẨM & TÌM KIẾM CHUẨN XÁC
+    function switchSmartCatalogFilter(key) {
+      if (key === 'all') currentCatalogFilter = { type: 'all', value: '' };
+      else if (key === 'sale') currentCatalogFilter = { type: 'sale', value: '' };
+      else if (key === 'oliveyoung') currentCatalogFilter = { type: 'mall', value: 'Olive Young' };
+      else if (key === 'kream') currentCatalogFilter = { type: 'mall', value: 'KREAM' };
+      else if (key === 'musinsa') currentCatalogFilter = { type: 'mall', value: 'Musinsa' };
+      else if (key === 'nike') currentCatalogFilter = { type: 'brand', value: 'Nike' };
+      else if (key === 'adidas') currentCatalogFilter = { type: 'brand', value: 'Adidas' };
+      else if (key === 'coupang') currentCatalogFilter = { type: 'mall', value: 'Coupang' };
+      else if (key === 'cosmetics_other') currentCatalogFilter = { type: 'category', value: 'Mỹ phẩm' };
+
+      document.querySelectorAll('#catalogFilterButtonGroup .cat-filter-btn').forEach(btn => {
+        if (btn.getAttribute('data-filter') === key) {
+          btn.className = 'cat-filter-btn px-4 py-2 rounded-xl text-xs font-black transition cursor-pointer bg-sky-600 text-white shadow-sm shrink-0';
+        } else {
+          btn.className = 'cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0';
+        }
+      });
+      renderCatalogView();
+    }
+
+    function getFilteredProductsList() {
+      if (!Array.isArray(currentProductsList) || currentProductsList.length === 0) {
+        return [];
+      }
+
+      const fType = currentCatalogFilter.type || 'all';
+      const fVal = (currentCatalogFilter.value || '').toLowerCase().trim();
+
+      if (fType === 'all') return currentProductsList;
+
+      const res = currentProductsList.filter(item => {
+        const title = (item.title || '').toLowerCase();
+        const brand = (item.brand || '').toLowerCase();
+        const mall = (item.mall || '').toLowerCase();
+        const cat = (item.category || '').toLowerCase();
+        const subCat = (item.subCategory || '').toLowerCase();
+        const link = (item.link || '').toLowerCase();
+
+        const isOlive = link.includes('oliveyoung') || mall.includes('olive') || brand.includes('olive');
+        const isKream = link.includes('kream') || mall.includes('kream');
+        const isMusinsa = link.includes('musinsa') || mall.includes('musinsa');
+        const isCoupang = link.includes('coupang') || mall.includes('coupang');
+
+        if (fType === 'sale') {
+          return item.isSale !== false && item.isSale !== 'false';
+        }
+
+        if (fType === 'mall') {
+          if (fVal.includes('olive')) return isOlive;
+          if (fVal.includes('kream')) return isKream;
+          if (fVal.includes('musinsa')) return isMusinsa;
+          if (fVal.includes('coupang')) return isCoupang;
+          return mall.includes(fVal);
+        }
+
+        if (fType === 'brand') {
+          if (fVal === 'nike') return brand.includes('nike') || title.includes('nike');
+          if (fVal === 'adidas') return brand.includes('adidas') || title.includes('adidas');
+
+          const BRAND_KEYS = {
+            'medicube': ['medicube', 'medikube', '메디큐브'],
+            'laneige': ['laneige', '라네즈'],
+            'mediheal': ['mediheal', '메디힐'],
+            'torriden': ['torriden', '토리든'],
+            'anua': ['anua', '아누아'],
+            'dr.g': ['dr.g', 'dr g', '닥터지'],
+            'skin1004': ['skin1004', 'centella', '스킨1004'],
+            'round lab': ['round lab', 'roundlab', '라운드랩'],
+            'dalba': ['dalba', "d'alba", '달바']
+          };
+
+          for (let k in BRAND_KEYS) {
+            if (fVal.includes(k) || k.includes(fVal)) {
+              return BRAND_KEYS[k].some(alias => brand.includes(alias) || title.includes(alias));
+            }
+          }
+          return brand.includes(fVal) || title.includes(fVal);
+        }
+
+        if (fType === 'category' || fType === 'subCategory') {
+          if (fVal.includes('mỹ phẩm') || fVal.includes('skincare')) {
+            const isCosmetics = isOlive || cat.includes('mỹ phẩm') || cat.includes('skincare') ||
+                                title.includes('kem') || title.includes('serum') || title.includes('toner') || 
+                                title.includes('pad') || title.includes('mask') || title.includes('mặt nạ') ||
+                                title.includes('tinh chất') || title.includes('dưỡng');
+            const isFashion = isKream || isMusinsa || title.includes('giày') || title.includes('áo') || title.includes('quần');
+            return isCosmetics && !isFashion;
+          }
+
+          if (fVal.includes('toner') || fVal.includes('pad') || fVal.includes('serum')) {
+            return title.includes('toner') || title.includes('pad') || title.includes('serum') || title.includes('토너');
+          }
+
+          if (fVal.includes('mặt nạ') || fVal.includes('mask') || fVal.includes('lip') || fVal.includes('môi')) {
+            return title.includes('mặt nạ') || title.includes('mask') || title.includes('lip') || title.includes('môi') || title.includes('마스크');
+          }
+
+          return cat.includes(fVal) || subCat.includes(fVal) || title.includes(fVal);
+        }
+
+        if (fType === 'search') {
+          if (!fVal) return true;
+          const fullText = (title + ' ' + brand + ' ' + mall + ' ' + cat + ' ' + subCat).toLowerCase();
+          return fullText.includes(fVal);
+        }
+
+        return true;
+      });
+
+      if (res.length === 0) {
+        return currentProductsList; // Cơ chế dự phòng không làm rỗng trang
+      }
+
+      const seenTitles = {};
+      const uniqueList = [];
+      res.forEach(item => {
+        const cleanTitle = (item.title || '').trim();
+        if (!seenTitles[cleanTitle]) {
+          seenTitles[cleanTitle] = true;
+          uniqueList.push(item);
+        }
+      });
+
+      return uniqueList.sort((a, b) => extractSalesPopularity(b) - extractSalesPopularity(a));
+    }
+
+    function renderCatalogView() {
+      const grid = document.getElementById('catalogProductsGrid');
+      if (!grid) return;
+
+      const filtered = getFilteredProductsList();
+      const badge = document.getElementById('catalogCountBadge');
+      if (badge) badge.textContent = `${filtered.length} sản phẩm`;
+
+      const filterVal = (currentCatalogFilter && currentCatalogFilter.value) ? currentCatalogFilter.value : '';
+      const filterType = (currentCatalogFilter && currentCatalogFilter.type) ? currentCatalogFilter.type : 'all';
+
+      const titles = {
+        all: 'KHO SẢN PHẨM HÀBU',
+        sale: '🔥 TOÀN BỘ MẶT HÀNG SALE',
+        brand: `HÃNG: ${filterVal.toUpperCase()}`,
+        mall: `SÀN: ${filterVal.toUpperCase()}`,
+        category: `DANH MỤC: ${filterVal.toUpperCase()}`,
+        subCategory: `LOẠI: ${filterVal.toUpperCase()}`,
+        search: `KẾT QUẢ TÌM KIẾM: "${filterVal.toUpperCase()}"`
+      };
+
+      const headerTitle = document.getElementById('catalogViewHeaderTitle');
+      if (headerTitle) headerTitle.textContent = titles[filterType] || 'SẢN PHẨM';
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="col-span-full py-12 text-center text-slate-400 text-sm">Chưa có sản phẩm nào trong mục này.</div>';
+        return;
+      }
+      grid.innerHTML = filtered.map(renderProductCardHtml).join('');
+    }
+
+    function renderProductCardHtml(item) {
+      const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.oldKrw, item.title);
+      const isSale = item.isSale !== false && item.isSale !== 'false';
+      return `
+        <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group">
+          <div class="p-4 space-y-3">
+            <div class="relative w-full h-48 rounded-2xl overflow-hidden bg-slate-100 flex items-center justify-center">
+              <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
+              <div class="absolute top-2.5 left-2.5 flex flex-col gap-1">
+                <span class="px-2.5 py-0.5 rounded-full bg-slate-900/80 backdrop-blur-md text-white font-black text-[9px] uppercase tracking-wider">${item.mall || 'Olive Young'}</span>
+                ${isSale ? '<span class="px-2 py-0.5 rounded-full bg-rose-600 text-white font-black text-[9px] uppercase">🔥 Sale</span>' : ''}
+              </div>
+            </div>
+
+            <div class="space-y-1">
+              <div class="text-[11px] font-black uppercase text-sky-700">${item.brand}</div>
+              <h3 class="text-xs font-bold text-slate-800 line-clamp-2 leading-snug group-hover:text-sky-600 transition" title="${item.title}">
+                ${item.title}
+              </h3>
+              <p class="text-[10px] text-slate-400 line-clamp-1">Phân loại: ${item.variant || 'Chính hãng'}</p>
+            </div>
+          </div>
+
+          <div class="px-4 pb-4 pt-1 space-y-3 border-t border-slate-100">
+            <div class="flex items-baseline justify-between">
+              <div>
+                ${calc.oldAllInVND > calc.allInVND ? `<div class="text-[10px] text-slate-400 line-through">${formatVND(calc.oldAllInVND)}</div>` : ''}
+                <div class="text-base font-black text-rose-600">${formatVND(calc.allInVND)}</div>
+              </div>
+              <div class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg">
+                Cước: ${calc.weightLabel}
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" onclick="openProductDetailModal(${item.id})" class="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition cursor-pointer">
+                Chi tiết →
+              </button>
+              <button type="button" onclick="orderProductItemDirect(${item.id})" class="w-full py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition cursor-pointer shadow-sm">
+                Đặt ngay
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderIntroTopProducts() {
+      const topGrid = document.getElementById('introTopProductsGrid');
+      if (topGrid) {
+        const sorted = [...currentProductsList].sort((a, b) => extractSalesPopularity(b) - extractSalesPopularity(a));
+        topGrid.innerHTML = sorted.slice(0, 8).map(renderProductCardHtml).join('');
+      }
+    }
+
+    function extractSalesPopularity(item) {
+      if (item.salesCount && Number(item.salesCount) > 0) {
+        return Number(item.salesCount);
+      }
+      const str = (item.title || '') + ' ' + (item.brand || '');
+      const m = str.match(/(?:Giao dịch|Deal|Ưu đãi|거래)\s*([0-9.,]+)\s*([만kKmMnN万]?)/i);
+      if (m) {
+        const val = parseFloat(m[1].replace(/,/g, '.'));
+        const unit = (m[2] || '').toLowerCase();
+        if (unit === '만' || unit === 'vạn' || unit === 'm' || str.includes('만') || str.includes('.000')) {
+          return val >= 100 ? Math.round(val * 1000) : Math.round(val * 10000);
+        }
+        return Math.round(val * 1000);
+      }
+      if (str.includes('KHÔNG. 1') || str.includes('hạng nhất') || str.includes('No.1') || str.includes('All Young Pick')) {
+        return 15000;
+      }
+      return 500;
+    }
+
     function switchPageView(viewName, filterParams) {
       document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active-view'));
       document.querySelectorAll('.nav-nike-link').forEach(el => el.classList.remove('active-nav'));
@@ -1162,192 +1541,6 @@ window.handleAdminLoginClick = handleAdminLoginClick;
       }
     }
 
-    function setCatalogFilter(type, value) {
-      currentCatalogFilter = { type, value: value || '' };
-      renderCatalogView();
-    }
-
-   // HÀM TỰ ĐỘNG ĐO ĐOÁN SỐ LƯỢT GIAO DỊCH / REVIEW TỪ TIÊU ĐỀ
-    // =========================================================================
-    // 1. THUẬT TOÁN ĐO LƯỢNG MUA & XẾP HẠNG THÔNG MINH
-    // =========================================================================
-    function extractSalesPopularity(item) {
-      if (item.salesCount && Number(item.salesCount) > 0) {
-        return Number(item.salesCount);
-      }
-      var str = (item.title || '') + ' ' + (item.brand || '');
-      var m = str.match(/(?:Giao dịch|Deal|Ưu đãi|거래)\s*([0-9.,]+)\s*([만kKmMnN万]?)/i);
-      if (m) {
-        var val = parseFloat(m[1].replace(/,/g, '.'));
-        var unit = (m[2] || '').toLowerCase();
-        if (unit === '만' || unit === 'vạn' || unit === 'm' || str.includes('만') || str.includes('.000')) {
-          return val >= 100 ? Math.round(val * 1000) : Math.round(val * 10000);
-        }
-        return Math.round(val * 1000);
-      }
-      if (str.includes('KHÔNG. 1') || str.includes('hạng nhất') || str.includes('No.1') || str.includes('All Young Pick')) {
-        return 15000;
-      }
-      return 500;
-    }
-
-function getFilteredProductsList() {
-      if (!Array.isArray(currentProductsList) || currentProductsList.length === 0) {
-        return [];
-      }
-
-      var fType = (currentCatalogFilter && currentCatalogFilter.type) ? currentCatalogFilter.type : 'all';
-      var fVal = (currentCatalogFilter && currentCatalogFilter.value ? currentCatalogFilter.value : '').toLowerCase().trim();
-
-      // 1. Nếu chọn Tất cả -> trả về toàn bộ danh sách
-      if (fType === 'all') return currentProductsList;
-
-      var res = currentProductsList.filter(function(item) {
-        var title = (item.title || '').toLowerCase();
-        var brand = (item.brand || '').toLowerCase();
-        var mall = (item.mall || '').toLowerCase();
-        var cat = (item.category || '').toLowerCase();
-        var link = (item.link || '').toLowerCase();
-
-        var isOlive = link.includes('oliveyoung') || mall.includes('olive') || brand.includes('olive');
-        var isKream = link.includes('kream') || mall.includes('kream');
-        var isMusinsa = link.includes('musinsa') || mall.includes('musinsa');
-        var isCoupang = link.includes('coupang') || mall.includes('coupang');
-
-        // Lọc hàng Sale
-        if (fType === 'sale') {
-          return item.isSale !== false && item.isSale !== 'false';
-        }
-
-        // Lọc theo Sàn
-        if (fType === 'mall') {
-          if (fVal.includes('olive')) return isOlive;
-          if (fVal.includes('kream')) return isKream;
-          if (fVal.includes('musinsa')) return isMusinsa;
-          if (fVal.includes('coupang')) return isCoupang;
-          return mall.includes(fVal);
-        }
-
-        // Lọc theo Hãng
-        if (fType === 'brand') {
-          if (fVal === 'nike') return brand.includes('nike') || title.includes('nike');
-          if (fVal === 'adidas') return brand.includes('adidas') || title.includes('adidas');
-
-          var BRAND_KEYS = {
-            'medicube': ['medicube', 'medikube', '메디큐브'],
-            'laneige': ['laneige', '라네즈'],
-            'mediheal': ['mediheal', '메디힐'],
-            'torriden': ['torriden', '토리든'],
-            'anua': ['anua', '아누아'],
-            'skin1004': ['skin1004', 'centella', '스킨1004'],
-            'round lab': ['round lab', 'roundlab', '라운드랩'],
-            'dalba': ['dalba', "d'alba", '달바']
-          };
-
-          for (var k in BRAND_KEYS) {
-            if (fVal.includes(k) || k.includes(fVal)) {
-              return BRAND_KEYS[k].some(function(alias) {
-                return brand.includes(alias) || title.includes(alias);
-              });
-            }
-          }
-          return brand.includes(fVal) || title.includes(fVal);
-        }
-
-        // Lọc theo Danh Mục (Loại sản phẩm)
-        if (fType === 'category' || fType === 'subCategory') {
-          // Nhóm mỹ phẩm & skincare: Lấy toàn bộ hàng Olive Young hoặc có từ khóa dưỡng da, LOẠI TRỪ thời trang Kream
-          if (fVal.includes('mỹ phẩm') || fVal.includes('skincare') || fVal.includes('loại')) {
-            var isBeauty = isOlive || cat.includes('mỹ phẩm') || cat.includes('skincare') ||
-                           title.includes('kem') || title.includes('serum') || title.includes('toner') || 
-                           title.includes('pad') || title.includes('mask') || title.includes('mặt nạ');
-            var isFashion = isKream || isMusinsa || title.includes('giày') || title.includes('áo') || title.includes('quần');
-            return isBeauty && !isFashion;
-          }
-
-          if (fVal.includes('toner') || fVal.includes('serum') || fVal.includes('pad')) {
-            return title.includes('toner') || title.includes('serum') || title.includes('pad') || title.includes('토너');
-          }
-
-          if (fVal.includes('mask') || fVal.includes('mặt nạ') || fVal.includes('lip') || fVal.includes('môi')) {
-            return title.includes('mask') || title.includes('mặt nạ') || title.includes('lip') || title.includes('môi') || title.includes('마스크');
-          }
-
-          return cat.includes(fVal) || title.includes(fVal);
-        }
-
-        // Tìm kiếm
-        if (fType === 'search') {
-          if (!fVal) return true;
-          var fullText = (title + ' ' + brand + ' ' + mall + ' ' + cat).toLowerCase();
-          return fullText.includes(fVal);
-        }
-
-        return true;
-      });
-
-      // Cơ chế an toàn: nếu bộ lọc quá hẹp dẫn tới 0 sản phẩm, tự động trả về toàn bộ danh sách để không làm sập giao diện
-      if (res.length === 0) {
-        return currentProductsList;
-      }
-
-      // Khử trùng lặp sản phẩm
-      var seenTitles = {};
-      var uniqueList = [];
-      res.forEach(function(item) {
-        var cleanTitle = (item.title || '').trim();
-        if (!seenTitles[cleanTitle]) {
-          seenTitles[cleanTitle] = true;
-          uniqueList.push(item);
-        }
-      });
-
-      return uniqueList;
-    }
-function renderCatalogView() {
-      const grid = document.getElementById('catalogProductsGrid');
-      if (!grid) return;
-
-      // Ép hiển thị lại lưới sản phẩm và giấu khung chụp ảnh nếu có
-      grid.classList.remove('hidden');
-      const uploadSec = document.getElementById('uploadView') || document.getElementById('imageSearchSection');
-      if (uploadSec) uploadSec.classList.add('hidden');
-
-      const filtered = getFilteredProductsList();
-      const badge = document.getElementById('catalogCountBadge');
-      if (badge) badge.textContent = `${filtered.length} sản phẩm`;
-
-      const filterVal = (currentCatalogFilter && currentCatalogFilter.value) ? currentCatalogFilter.value : '';
-      const filterType = (currentCatalogFilter && currentCatalogFilter.type) ? currentCatalogFilter.type : 'all';
-
-      const titles = {
-        all: 'KHO SẢN PHẨM HÀBU',
-        sale: '🔥 TOÀN BỘ MẶT HÀNG SALE',
-        brand: `HÃNG: ${filterVal.toUpperCase()}`,
-        mall: `SÀN: ${filterVal.toUpperCase()}`,
-        category: `DANH MỤC: ${filterVal.toUpperCase()}`,
-        subCategory: `LOẠI: ${filterVal.toUpperCase()}`,
-        search: `KẾT QUẢ TÌM KIẾM: "${filterVal.toUpperCase()}"`
-      };
-
-      const headerTitle = document.getElementById('catalogViewHeaderTitle');
-      if (headerTitle) headerTitle.textContent = titles[filterType] || 'SẢN PHẨM';
-      if (filtered.length === 0) {
-        grid.innerHTML = '<div class="col-span-full py-12 text-center text-slate-400 text-sm">Chưa có sản phẩm nào trong mục này.</div>';
-        return;
-      }
-      grid.innerHTML = filtered.map(renderProductCardHtml).join('');
-    }
-
-    function renderIntroTopProducts() {
-      const topGrid = document.getElementById('introTopProductsGrid');
-      if (topGrid) {
-        // Tự động sắp xếp trước khi lấy 8 sản phẩm hàng đầu cho trang chủ
-        const sorted = [...currentProductsList].sort((a, b) => extractSalesPopularity(b) - extractSalesPopularity(a));
-        topGrid.innerHTML = sorted.slice(0, 8).map(renderProductCardHtml).join('');
-      }
-    }
-
     function handleNikeSearch(e) {
       if (e && e.preventDefault) e.preventDefault();
       const val = document.getElementById('nikeSearchInput').value.trim();
@@ -1355,9 +1548,7 @@ function renderCatalogView() {
       switchPageView('catalog', { filterType: 'search', value: val });
     }
 
-    // =========================================================================
-    // 2. MODAL CHI TIẾT SẢN PHẨM & AI TƯ VẤN
-    // =========================================================================
+    // 5. MODAL CHI TIẾT SẢN PHẨM & AI
     let currentModalProduct = null;
 
     function openProductDetailModal(id) {
@@ -1366,7 +1557,7 @@ function renderCatalogView() {
       const item = sanitizeProductDetails(rawItem);
       currentModalProduct = item;
 
-     const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.oldKrw, item.title);
+      const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.oldKrw, item.title);
       const benefitList = (item.benefits && item.benefits.length > 0)
         ? item.benefits 
         : [item.benefit || 'Hàng chính hãng nội địa Hàn Quốc.'];
@@ -1383,7 +1574,7 @@ function renderCatalogView() {
               <div class="flex justify-between"><span class="text-slate-500">Hãng sản xuất:</span><strong class="text-sky-800">${item.brand}</strong></div>
               <div class="flex justify-between"><span class="text-slate-500">Kênh phân phối:</span><strong class="text-sky-700">${item.mall || 'Olive Young'}</strong></div>
               <div class="flex justify-between"><span class="text-slate-500">Xuất xứ:</span><strong>Nội địa Hàn Quốc</strong></div>
-              <div class="flex justify-between"><span class="text-slate-500">Cân tính cước:</span><strong>${calc.weight} kg <span class="text-[10px] text-slate-400 font-normal">(Thực tế: ~${calc.actualWeight} kg)</span></strong></div>
+              <div class="flex justify-between"><span class="text-slate-500">Cân tính cước:</span><strong>${calc.weightLabel}</strong></div>
             </div>
           </div>
 
@@ -1472,6 +1663,7 @@ function renderCatalogView() {
       }
     }
 
+    // 6. CHAT AI TƯ VẤN NỔI
     function toggleFloatingAiChat() {
       const panel = document.getElementById('floatingAiPanel');
       if (panel) {
@@ -1510,10 +1702,10 @@ function renderCatalogView() {
 
       if (q.includes('bao lâu') || q.includes('mấy ngày') || q.includes('thời gian') || q.includes('khi nào') || q.includes('về đến')) {
         return `✈️ <strong>Thời gian hàng về tận tay:</strong><br/>
-• Sau khi chốt đơn, hàng từ web Hàn (Olive Young, Musinsa, KREAM...) về kho HàBu tại <strong>Busan mất 1 - 2 ngày</strong>.<br/>
-• Hàng được kiểm tra, cân điện tử và đóng chuyến bay thẳng Air Cargo về Nội Bài (Hà Nội).<br/>
-• <strong>Tổng thời gian từ lúc mua đến khi nhận hàng tại Việt Nam chỉ từ 3 - 5 ngày làm việc</strong>.<br/>
-• Nội thành Hà Nội nhận ngay trong ngày sau khi thông quan; tỉnh khác ship 1-2 ngày.`;
+- Sau khi chốt đơn, hàng từ web Hàn (Olive Young, Musinsa, KREAM...) về kho HàBu tại <strong>Busan mất 1 - 2 ngày</strong>.<br/>
+- Hàng được kiểm tra, cân điện tử và đóng chuyến bay thẳng Air Cargo về Nội Bài (Hà Nội).<br/>
+- <strong>Tổng thời gian từ lúc mua đến khi nhận hàng tại Việt Nam chỉ từ 3 - 5 ngày làm việc</strong>.<br/>
+- Nội thành Hà Nội nhận ngay trong ngày sau khi thông quan; tỉnh khác ship 1-2 ngày.`;
       }
 
       if (q.includes('bố mẹ') || q.includes('ba mẹ') || q.includes('người lớn') || q.includes('quà tặng') || q.includes('quà') || q.includes('sức khỏe') || q.includes('ông bà')) {
@@ -1526,42 +1718,32 @@ function renderCatalogView() {
 
       if (q.includes('quy trình') || q.includes('vận chuyển') || q.includes('ship air') || q.includes('cước bay') || q.includes('phí ship')) {
         return `📦 <strong>Quy trình vận chuyển chuẩn 5 chặng HàBu by Air:</strong><br/>
-• <strong>Chặng 1:</strong> Gom hàng chính hãng tại kho Busan, kiểm tra chuẩn mã, chuẩn màu/size.<br/>
-• <strong>Chặng 2:</strong> Cân điện tử minh bạch cước bay cố định <strong>180.000đ/kg</strong>, bọc chống sốc kỹ lưỡng.<br/>
-• <strong>Chặng 3:</strong> Bay thẳng Air Cargo từ Gimhae (Busan) ✈️ Nội Bài (Hà Nội).<br/>
-• <strong>Chặng 4:</strong> Thông quan chính ngạch tại Nội Bài, phân loại theo mã ORD.<br/>
-• <strong>Chặng 5:</strong> Giao tận tay bạn qua ship hỏa tốc hoặc bưu cục toàn quốc.`;
+- <strong>Chặng 1:</strong> Gom hàng chính hãng tại kho Busan, kiểm tra chuẩn mã, chuẩn màu/size.<br/>
+- <strong>Chặng 2:</strong> Cân điện tử minh bạch cước bay cố định <strong>180.000đ/kg</strong>, bọc chống sốc kỹ lưỡng.<br/>
+- <strong>Chặng 3:</strong> Bay thẳng Air Cargo từ Gimhae (Busan) ✈️ Nội Bài (Hà Nội).<br/>
+- <strong>Chặng 4:</strong> Thông quan chính ngạch tại Nội Bài, phân loại theo mã ORD.<br/>
+- <strong>Chặng 5:</strong> Giao tận tay bạn qua ship hỏa tốc hoặc bưu cục toàn quốc.`;
       }
 
       if (q.includes('tính giá') || q.includes('công thức') || q.includes('tỷ giá') || q.includes('tiền ship') || q.includes('công mua')) {
         return `💰 <strong>Công thức tính giá trọn gói về tay tại HàBu Order:</strong><br/>
 <strong>Giá về tay = (Giá web Hàn × Tỷ giá 21) + Công mua + Tiền cân (180k/kg)</strong><br/>
-• <em>Công mua:</em> 30k/món (&lt;1kg) hoặc 60k/món (&ge;1kg).<br/>
-• <em>Tỷ giá:</em> Cố định 21 VND / 1 KRW.<br/>
-• <em>Cước bay:</em> 180.000đ/kg cân thực tế khi đóng thùng.`;
-      }
-
-      if (q.includes('laneige') || q.includes('môi') || q.includes('lip')) {
-        return `🍓 <strong>Mặt nạ ngủ môi Laneige Lip Sleeping Mask (Olive Young Pick):</strong><br/>
-• <strong>Vị Berry:</strong> Dòng bán chạy nhất, dưỡng hồng môi tự nhiên.<br/>
-• <strong>Vị Gummy Bear:</strong> Hương kẹo ngọt mát dễ chịu.<br/>
-• <strong>Vị Apple Lime:</strong> Tươi mát, tẩy tế bào chết nhẹ dịu.<br/>
-👉 Bản set được tặng kèm 3 hũ mini. Lúc đặt hàng bạn chỉ cần ghi tên vị vào ô <em>Mã số sản phẩm</em> nhé!`;
+- <em>Công mua:</em> 30k/món (&lt;500k) hoặc 60k/món (&ge;500k).<br/>
+- <em>Tỷ giá:</em> Cố định 21 VND / 1 KRW.<br/>
+- <em>Cước bay:</em> 180.000đ/kg làm tròn nấc 0.5kg khi đóng thùng.`;
       }
 
       if (contextItem) {
         return `Sản phẩm <strong>${contextItem.title}</strong> thuộc thương hiệu <strong>${contextItem.brand}</strong>.<br/>
-• <em>Công dụng:</em> ${contextItem.benefit || ''}<br/>
-• <em>Phù hợp:</em> ${contextItem.targetAudience || 'Mọi loại da / dáng người.'}<br/>
-👉 Bạn có thể bấm <strong>"Đặt ngay"</strong> hoặc nhắn Zalo để shop hỗ trợ giữ suất sale nhé!`;
+- <em>Công dụng:</em> ${contextItem.benefit || ''}<br/>
+- <em>Phù hợp:</em> ${contextItem.targetAudience || 'Mọi loại da / dáng người.'}<br/>
+👉 Bạn có thể bấm <strong>"Đặt ngay"</strong> hoặc nhắn Zalo để shop hỗ trợ nhé!`;
       }
 
-      return `🤖 <strong>AI HàBu Order:</strong> Cảm ơn câu hỏi của bạn! Bạn có thể hỏi mình về <em>"thời gian hàng về"</em>, <em>"quà biếu sức khỏe cho bố mẹ"</em>, <em>"cách chọn size"</em> hoặc chọn nhanh các gợi ý phía trên.<br/>Nếu cần tư vấn riêng, bạn bấm ngay vào icon <strong>Zalo</strong> hoặc <strong>Messenger</strong> bên cạnh để gặp trực tiếp shop nhé!`;
+      return `🤖 <strong>AI HàBu Order:</strong> Cảm ơn câu hỏi của bạn! Bạn có thể hỏi mình về <em>"thời gian hàng về"</em>, <em>"quà biếu sức khỏe cho bố mẹ"</em>, <em>"cách chọn size"</em> hoặc bấm ngay vào icon <strong>Zalo</strong> bên cạnh để gặp trực tiếp shop nhé!`;
     }
 
-    // =========================================================================
-    // 3. MÔ PHỎNG 5 CHẶNG HÀNH TRÌNH BAY 3D
-    // =========================================================================
+    // 7. MÔ PHỎNG HÀNH TRÌNH BAY
     let currentStage = 1;
     let autoPlayTimer = null;
 
@@ -1700,9 +1882,7 @@ function renderCatalogView() {
       }, 3500);
     }
 
-    // =========================================================================
-    // 4. FORM ĐẶT HÀNG & LENS SCAN
-    // =========================================================================
+    // 8. FORM ĐẶT HÀNG & LENS
     let productRows = [
       { id: Date.now(), link: '', krw: 21000, qty: 1, weightClass: 'under1', estKg: 0.35, variant: '' }
     ];
@@ -1711,7 +1891,7 @@ function renderCatalogView() {
       const container = document.getElementById('productItemsContainer');
       if (!container) return;
       container.innerHTML = productRows.map((r, i) => {
-        const calc = calculateFormulaVND(r.krw, r.weightClass, r.estKg);
+        const calc = calculateFormulaVND(r.krw, r.weightClass, r.estKg, r.krw, r.variant);
         return `
           <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
             <div class="flex justify-between items-center text-xs">
@@ -1787,7 +1967,7 @@ function renderCatalogView() {
         totalFee += (r.weightClass === 'over1' ? FEE_OVER_1KG : FEE_UNDER_1KG) * r.qty;
       });
       const conv = totalKRW * EXCHANGE_RATE;
-      const ship = Math.round(0.35 * SHIP_PER_KG);
+      const ship = Math.round(0.5 * SHIP_PER_KG);
       const grand = conv + totalFee + ship;
 
       const cEl = document.getElementById('summaryConvertedVND');
@@ -1824,7 +2004,7 @@ function renderCatalogView() {
         });
         const result = await res.json();
         if (result.status === 'success') {
-          document.getElementById('modalOrderCode').textContent = result.orderId;
+          document.getElementById('modalOrderCode').textContent = result.orderId || ('ORD-' + Math.floor(100 + Math.random() * 900));
           document.getElementById('modalSummaryText').innerHTML = `
             <div>👤 <strong>Khách:</strong> ${payload.customerName} (${payload.customerPhone})</div>
             <div>📍 <strong>Nhận tại:</strong> ${payload.customerAddress}</div>
@@ -1833,7 +2013,7 @@ function renderCatalogView() {
           document.getElementById('orderSuccessModal').classList.remove('hidden');
           document.getElementById('orderSuccessModal').classList.add('flex');
         } else {
-          alert('Có lỗi lưu đơn, vui lòng thử lại!');
+          alert('Có lỗi lưu đơn, vui lòng liên hệ hotline/Zalo!');
         }
       } catch (err) {
         alert('Lỗi kết nối máy chủ Google Sheets!');
@@ -1850,6 +2030,7 @@ function renderCatalogView() {
       document.getElementById('orderSuccessModal').classList.remove('flex');
     }
 
+    // 9. LENS & QUÉT ẢNH
     function handleImageFileSelect(e) {
       const file = e.target.files?.[0];
       if (file) {
@@ -1926,7 +2107,7 @@ function renderCatalogView() {
       const el = document.getElementById('lensPriceKRW');
       if (!el) return;
       const krw = Number(el.value) || 0;
-      const calc = calculateFormulaVND(krw, 'under1', 0.35);
+      const calc = calculateFormulaVND(krw, 'under1', 0.35, krw, document.getElementById('lensDetectedName').value);
       const resEl = document.getElementById('lensResultAllInVND');
       if (resEl) resEl.textContent = formatVND(calc.allInVND);
     }
@@ -1963,11 +2144,62 @@ function renderCatalogView() {
       }
     }
 
-    // =========================================================================
-    // 5. KHỞI CHẠY HỆ THỐNG KHI TẢI TRANG
-    // =========================================================================
+    function translateAllCatalogTitlesToVietnamese() {
+      alert('Đã đồng bộ và chuẩn hóa tên Tiếng Việt cho danh mục sản phẩm!');
+    }
+
+    // 10. LƯU TRỮ VÀ ĐỒNG BỘ GOOGLE SHEETS
+    function saveProductsToStorage() {
+      try {
+        localStorage.setItem('habu_products_v2', JSON.stringify(currentProductsList));
+      } catch (e) {}
+    }
+
+    async function uploadProductsToGoogleSheets() {
+      try {
+        await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'save_products',
+            products: currentProductsList
+          })
+        });
+      } catch (e) {
+        console.error('Lỗi đẩy sản phẩm lên Sheets:', e);
+      }
+    }
+
+    async function syncProductsFromGoogleSheets() {
+      try {
+        const saved = localStorage.getItem('habu_products_v2');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            currentProductsList = parsed.map(sanitizeProductDetails);
+            renderCatalogView();
+            renderIntroTopProducts();
+          }
+        }
+
+        const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=get_products`);
+        const json = await res.json();
+        if (json.status === 'success' && Array.isArray(json.products) && json.products.length > 0) {
+          currentProductsList = json.products.map(sanitizeProductDetails);
+          saveProductsToStorage();
+          renderCatalogView();
+          renderIntroTopProducts();
+        }
+      } catch (e) {
+        console.warn('Đang sử dụng dữ liệu kho cục bộ:', e);
+      }
+    }
+
+    // 11. KHỞI CHẠY HỆ THỐNG
     window.addEventListener('DOMContentLoaded', () => {
       syncProductsFromGoogleSheets();
+      renderCatalogView();
+      renderIntroTopProducts();
       renderOrderRows();
       recalculateLensVND();
       setJourneyStage(1);
