@@ -1436,34 +1436,38 @@ let selectedProductIds = new Set();
       });
       renderCatalogView();
     }
-
-    function getFilteredProductsList() {
+function getFilteredProductsList() {
       if (!Array.isArray(currentProductsList) || currentProductsList.length === 0) {
         return [];
       }
 
-      const fType = currentCatalogFilter.type || 'all';
-      const fVal = (currentCatalogFilter.value || '').toLowerCase().trim();
+      var fType = (currentCatalogFilter && currentCatalogFilter.type) ? currentCatalogFilter.type : 'all';
+      var fVal = (currentCatalogFilter && currentCatalogFilter.value ? currentCatalogFilter.value : '').toLowerCase().trim();
 
+      // 1. Chọn Tất cả -> Trả toàn bộ kho
       if (fType === 'all') return currentProductsList;
 
-      const res = currentProductsList.filter(item => {
-        const title = (item.title || '').toLowerCase();
-        const brand = (item.brand || '').toLowerCase();
-        const mall = (item.mall || '').toLowerCase();
-        const cat = (item.category || '').toLowerCase();
-        const subCat = (item.subCategory || '').toLowerCase();
-        const link = (item.link || '').toLowerCase();
+      var res = currentProductsList.filter(function(item) {
+        if (!item) return false;
 
-        const isOlive = link.includes('oliveyoung') || mall.includes('olive') || brand.includes('olive');
-        const isKream = link.includes('kream') || mall.includes('kream');
-        const isMusinsa = link.includes('musinsa') || mall.includes('musinsa');
-        const isCoupang = link.includes('coupang') || mall.includes('coupang');
+        var title = (item.title || '').toLowerCase();
+        var brand = (item.brand || '').toLowerCase();
+        var mall = (item.mall || '').toLowerCase();
+        var cat = (item.category || '').toLowerCase();
+        var subCat = (item.subCategory || '').toLowerCase();
+        var link = (item.link || '').toLowerCase();
 
+        var isOlive = link.includes('oliveyoung') || mall.includes('olive') || brand.includes('olive');
+        var isKream = link.includes('kream') || mall.includes('kream');
+        var isMusinsa = link.includes('musinsa') || mall.includes('musinsa');
+        var isCoupang = link.includes('coupang') || mall.includes('coupang');
+
+        // Lọc hàng Sale
         if (fType === 'sale') {
           return item.isSale !== false && item.isSale !== 'false';
         }
 
+        // Lọc theo Sàn CHUẨN XÁC TUYỆT ĐỐI (Không lẫn lộn)
         if (fType === 'mall') {
           if (fVal.includes('olive')) return isOlive;
           if (fVal.includes('kream')) return isKream;
@@ -1472,11 +1476,12 @@ let selectedProductIds = new Set();
           return mall.includes(fVal);
         }
 
+        // Lọc theo Hãng
         if (fType === 'brand') {
           if (fVal === 'nike') return brand.includes('nike') || title.includes('nike');
           if (fVal === 'adidas') return brand.includes('adidas') || title.includes('adidas');
 
-          const BRAND_KEYS = {
+          var BRAND_KEYS = {
             'medicube': ['medicube', 'medikube', '메디큐브'],
             'laneige': ['laneige', '라네즈'],
             'mediheal': ['mediheal', '메디힐'],
@@ -1488,21 +1493,23 @@ let selectedProductIds = new Set();
             'dalba': ['dalba', "d'alba", '달바']
           };
 
-          for (let k in BRAND_KEYS) {
+          for (var k in BRAND_KEYS) {
             if (fVal.includes(k) || k.includes(fVal)) {
-              return BRAND_KEYS[k].some(alias => brand.includes(alias) || title.includes(alias));
+              return BRAND_KEYS[k].some(function(alias) {
+                return brand.includes(alias) || title.includes(alias);
+              });
             }
           }
           return brand.includes(fVal) || title.includes(fVal);
         }
 
+        // Lọc theo Loại sản phẩm
         if (fType === 'category' || fType === 'subCategory') {
           if (fVal.includes('mỹ phẩm') || fVal.includes('skincare')) {
-            const isCosmetics = isOlive || cat.includes('mỹ phẩm') || cat.includes('skincare') ||
-                                title.includes('kem') || title.includes('serum') || title.includes('toner') || 
-                                title.includes('pad') || title.includes('mask') || title.includes('mặt nạ') ||
-                                title.includes('tinh chất') || title.includes('dưỡng');
-            const isFashion = isKream || isMusinsa || title.includes('giày') || title.includes('áo') || title.includes('quần');
+            var isCosmetics = isOlive || cat.includes('mỹ phẩm') || cat.includes('skincare') ||
+                              title.includes('kem') || title.includes('serum') || title.includes('toner') || 
+                              title.includes('pad') || title.includes('mask') || title.includes('mặt nạ');
+            var isFashion = isKream || isMusinsa || title.includes('giày') || title.includes('áo') || title.includes('quần');
             return isCosmetics && !isFashion;
           }
 
@@ -1517,32 +1524,30 @@ let selectedProductIds = new Set();
           return cat.includes(fVal) || subCat.includes(fVal) || title.includes(fVal);
         }
 
+        // Tìm kiếm
         if (fType === 'search') {
           if (!fVal) return true;
-          const fullText = (title + ' ' + brand + ' ' + mall + ' ' + cat + ' ' + subCat).toLowerCase();
+          var fullText = (title + ' ' + brand + ' ' + mall + ' ' + cat + ' ' + subCat).toLowerCase();
           return fullText.includes(fVal);
         }
 
         return true;
       });
 
-      if (res.length === 0) {
-        return currentProductsList; // Cơ chế dự phòng không làm rỗng trang
-      }
-
-      const seenTitles = {};
-      const uniqueList = [];
-      res.forEach(item => {
-        const cleanTitle = (item.title || '').trim();
+      // KHỬ TRÙNG SẢN PHẨM
+      var seenTitles = {};
+      var uniqueList = [];
+      res.forEach(function(item) {
+        var cleanTitle = (item.title || '').trim();
         if (!seenTitles[cleanTitle]) {
           seenTitles[cleanTitle] = true;
           uniqueList.push(item);
         }
       });
 
-      return uniqueList.sort((a, b) => extractSalesPopularity(b) - extractSalesPopularity(a));
+      return uniqueList;
     }
-
+    
     function renderCatalogView() {
       const grid = document.getElementById('catalogProductsGrid');
       if (!grid) return;
