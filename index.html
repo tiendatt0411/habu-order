@@ -761,9 +761,24 @@
       </div>
 
       <div class="bg-white p-6 rounded-3xl border border-slate-200 space-y-4">
-        <div class="flex justify-between items-center pb-2 border-b border-slate-100">
-          <span class="text-sm font-black uppercase text-slate-900">Danh sách sản phẩm hiện có (Bấm để xóa):</span>
-          <span id="adminTotalCountText" class="text-xs text-slate-500 font-bold"></span>
+        <div class="pb-2 border-b border-slate-100">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 w-full">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-black uppercase text-slate-900">Quản lý kho:</span>
+              <span id="adminTotalCountText" class="text-xs text-slate-500 font-bold"></span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="selectAllAdminProducts(true)" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer">
+                ✓ Chọn tất cả
+              </button>
+              <button type="button" onclick="selectAllAdminProducts(false)" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer">
+                ✕ Bỏ chọn
+              </button>
+              <button type="button" onclick="deleteSelectedProductsByAdmin()" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-black shadow-sm transition cursor-pointer">
+                🗑️ Xóa các mục đã chọn (<span id="selectedCountBadge">0</span>)
+              </button>
+            </div>
+          </div>
         </div>
         <div id="adminProductManageList" class="space-y-2.5 max-h-96 overflow-y-auto custom-scrollbar pr-1"></div>
       </div>
@@ -1174,24 +1189,98 @@
       updateAdminStatusUI();
       alert('Đã đăng xuất khỏi tài khoản Quản trị!');
     }
+let selectedProductIds = new Set();
 
     function renderAdminManageList() {
       const box = document.getElementById('adminProductManageList');
       if (!box) return;
-      box.innerHTML = currentProductsList.map((p) => `
-        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3 text-xs">
-          <div class="flex items-center gap-3 min-w-0">
-            <img src="${p.image || ''}" alt="" class="w-12 h-12 rounded-xl object-cover bg-white shrink-0 border border-slate-200" />
-            <div class="min-w-0 truncate">
-              <div class="font-bold text-slate-900 truncate">${p.title}</div>
-              <div class="text-[11px] text-slate-500">${p.brand || ''} • ${p.mall || ''} • <strong>${(p.krw || 0).toLocaleString()} ₩</strong></div>
+
+      if (!currentProductsList || currentProductsList.length === 0) {
+        box.innerHTML = '<div class="p-6 text-center text-slate-400 text-xs">Kho hàng hiện đang trống.</div>';
+        updateSelectedBadge();
+        return;
+      }
+
+      box.innerHTML = currentProductsList.map((p) => {
+        const isChecked = selectedProductIds.has(p.id) ? 'checked' : '';
+        return `
+          <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3 text-xs hover:bg-white transition">
+            <div class="flex items-center gap-3 min-w-0">
+              <input 
+                type="checkbox" 
+                class="w-4 h-4 text-sky-600 rounded border-slate-300 cursor-pointer" 
+                value="${p.id}" 
+                ${isChecked} 
+                onchange="toggleSelectProduct(${p.id}, this.checked)"
+              />
+              <img src="${p.image || ''}" alt="" class="w-12 h-12 rounded-xl object-cover bg-white shrink-0 border border-slate-200" onerror="this.src='https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80'" />
+              <div class="min-w-0 truncate">
+                <div class="font-bold text-slate-900 truncate">${p.title}</div>
+                <div class="text-[11px] text-slate-500">${p.brand || ''} • ${p.mall || ''} • <strong>${(p.krw || 0).toLocaleString()} ₩</strong></div>
+              </div>
             </div>
+            <button type="button" onclick="deleteProductByAdmin(${p.id})" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-black text-xs shrink-0 transition cursor-pointer">
+              Xóa lẻ
+            </button>
           </div>
-          <button type="button" onclick="deleteProductByAdmin(${p.id})" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-xs shrink-0 transition cursor-pointer shadow-sm">
-            🗑️ Xóa món này
-          </button>
-        </div>
-      `).join('');
+        `;
+      }).join('');
+
+      updateSelectedBadge();
+    }
+
+    function toggleSelectProduct(id, isChecked) {
+      if (isChecked) {
+        selectedProductIds.add(id);
+      } else {
+        selectedProductIds.delete(id);
+      }
+      updateSelectedBadge();
+    }
+
+    function selectAllAdminProducts(status) {
+      if (status) {
+        currentProductsList.forEach(p => selectedProductIds.add(p.id));
+      } else {
+        selectedProductIds.clear();
+      }
+      renderAdminManageList();
+    }
+
+    function updateSelectedBadge() {
+      const badge = document.getElementById('selectedCountBadge');
+      if (badge) badge.textContent = selectedProductIds.size;
+    }
+
+    async function deleteSelectedProductsByAdmin() {
+      if (!isAdminLoggedIn) {
+        alert('Bạn không có quyền thực hiện thao tác này!');
+        return;
+      }
+
+      if (selectedProductIds.size === 0) {
+        alert('Vui lòng tích chọn ít nhất 1 sản phẩm để xóa!');
+        return;
+      }
+
+      const count = selectedProductIds.size;
+      if (!confirm(`Bạn có chắc chắn muốn xóa ${count} sản phẩm đã chọn khỏi website và Google Sheets?`)) {
+        return;
+      }
+
+      currentProductsList = currentProductsList.filter(p => !selectedProductIds.has(p.id));
+      selectedProductIds.clear();
+
+      saveProductsToStorage();
+      renderAdminManageList();
+      renderCatalogView();
+      renderIntroTopProducts();
+
+      const countEl = document.getElementById('adminTotalCountText');
+      if (countEl) countEl.textContent = `Tổng: ${currentProductsList.length} món`;
+
+      await uploadProductsToGoogleSheets();
+      alert(`Đã xóa thành công ${count} sản phẩm!`);
     }
 
     async function deleteProductByAdmin(productId) {
@@ -1202,14 +1291,20 @@
       const target = currentProductsList.find(p => p.id === productId);
       if (!target) return;
 
-      if (confirm(`Bạn có chắc chắn muốn xóa sản phẩm:\n"${target.title}" khỏi website?`)) {
+      if (confirm(`Bạn có chắc muốn xóa sản phẩm:\n"${target.title}"?`)) {
         currentProductsList = currentProductsList.filter(p => p.id !== productId);
+        selectedProductIds.delete(productId);
+
         saveProductsToStorage();
         renderAdminManageList();
         renderCatalogView();
         renderIntroTopProducts();
+
+        const countEl = document.getElementById('adminTotalCountText');
+        if (countEl) countEl.textContent = `Tổng: ${currentProductsList.length} món`;
+
         await uploadProductsToGoogleSheets();
-        alert('Đã xóa và cập nhật đồng bộ cho mọi khách hàng!');
+        alert('Đã xóa món này thành công!');
       }
     }
 
