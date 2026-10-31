@@ -1020,23 +1020,24 @@
     ];
 
     // 1. THUẬT TOÁN ƯỚC LƯỢNG CÂN NẶNG CHUẨN (LÀM TRÒN BƯỚC 0.5KG)
-function estimateSmartWeight(title, category, fallbackKg) {
+// 1. QUY TẮC CÂN NẶNG TOÀN DIỆN CHO TẤT CẢ MẶT HÀNG (BƯỚC NHẢY 0.5KG)
+// 1. QUY TẮC CÂN NẶNG TOÀN DIỆN CHO TẤT CẢ MẶT HÀNG (BƯỚC NHẢY 0.5KG)
+    function estimateSmartWeight(title, category, fallbackKg) {
       const t = (title || '').toLowerCase();
       const c = (category || '').toLowerCase();
 
-      // Cân nặng thực tế ước tính (kg)
-      let actualKg = 0.25; // Mặc định son môi, serum, mặt nạ miếng nhẹ
+      let actualKg = 0.25; // Mặc định mỹ phẩm phổ thông: serum, kem dưỡng, son dưỡng
 
-      // 1. ÁO KHOÁC / ÁO PHAO / HOODIE (Nặng ~0.85kg -> Tính 1.0kg)
+      // Nhóm 1: Áo khoác, áo phao, hoodie, áo tweed, đồ đông nặng
       if (
         t.includes('áo khoác') || t.includes('jacket') || t.includes('hoodie') || 
         t.includes('padding') || t.includes('phao') || t.includes('windbreaker') ||
         t.includes('재킷') || t.includes('점퍼') || t.includes('패딩') || 
-        t.includes('코트') || t.includes('후드') || t.includes('트위드')
+        t.includes('코트') || t.includes('후드') || t.includes('트위드') || t.includes('베스트')
       ) {
         actualKg = 0.85;
       } 
-      // 2. GIÀY DÉP / SNEAKER (Nặng ~0.95kg -> Tính 1.0kg)
+      // Nhóm 2: Giày dép, sneaker thể thao
       else if (
         t.includes('giày') || t.includes('sneaker') || t.includes('shoes') || c.includes('giày') || 
         t.includes('samba') || t.includes('force') || t.includes('asics') ||
@@ -1044,28 +1045,29 @@ function estimateSmartWeight(title, category, fallbackKg) {
       ) {
         actualKg = 0.95;
       } 
-      // 3. MẶT NẠ (HỘP 10 MIẾNG / SET MASK): CHỈ TÍNH 0.35KG -> LÀM TRÒN RA ĐÚNG 0.5KG (GIÁ VỀ TAY ~300K)
+      // Nhóm 3: Mặt nạ (hộp 10 miếng, set mask, mặt nạ ngủ) -> Giữ ở mức nhẹ để ra đúng 0.5kg
       else if (
         t.includes('mask') || t.includes('mặt nạ') || t.includes('마스크') || 
         t.includes('pack') || t.includes('sheet') || t.includes('10+1') || t.includes('10매')
       ) {
         actualKg = 0.35;
       }
-      // 4. CHỈ DUY NHẤT HỘP TONER PAD TO HOẶC COMBO KÈM LÕI REFILL MỚI TÍNH 0.55KG -> RA 1.0KG (GIÁ > 800K)
+      // Nhóm 4: Toner Pad hộp to, combo có lõi Refill thay thế
       else if (
         t.includes('toner pad') || t.includes('토너패드') || t.includes('hộp to') || 
         (t.includes('pad') && (t.includes('refill') || t.includes('리필') || t.includes('100매')))
       ) {
         actualKg = 0.55;
       } 
+      // Nhóm 5: Cân nặng có sẵn trong dữ liệu
       else if (fallbackKg && Number(fallbackKg) > 0) {
         actualKg = Number(fallbackKg);
       }
 
-      // QUY TẮC LÀM TRÒN BƯỚC NHẢY 0.5KG:
-      // <= 0.5kg -> tính 0.5kg
-      // > 0.5kg đến 1.0kg -> tính 1.0kg
-      // > 1.0kg đến 1.5kg -> tính 1.5kg
+      // Quy tắc nấc làm tròn trần 0.5kg:
+      // <= 0.5kg -> 0.5kg
+      // 0.51kg - 1.0kg -> 1.0kg
+      // 1.01kg - 1.5kg -> 1.5kg
       let billedKg = Math.ceil(actualKg * 2) / 2;
       if (billedKg < 0.5) billedKg = 0.5;
 
@@ -1077,17 +1079,25 @@ function estimateSmartWeight(title, category, fallbackKg) {
         displayLabel: billedKg.toFixed(1).replace('.0', '') + ' kg'
       };
     }
-    // 2. CÔNG THỨC TÍNH GIÁ TRỌN GÓI VỀ TAY HÀBU
+
+    // 2. CÔNG THỨC TÍNH GIÁ ÁP DỤNG ĐỒNG BỘ TOÀN SÀN
     function calculateFormulaVND(krw, weightClass, estKg, oldKrw, itemTitle) {
-      const priceKRW = parseInt(krw, 10) || 0;
-      const originKRW = parseInt(oldKrw, 10) || priceKRW;
-      
+      let priceKRW = parseInt(krw, 10) || 0;
+      let originKRW = parseInt(oldKrw, 10) || priceKRW;
+      const t = (itemTitle || '').toLowerCase();
+
+      // Đồng bộ mức giá deal sale thực tế cho hộp mặt nạ lẻ nếu dữ liệu bị cào nhầm giá niêm yết chưa sale
+      if ((t.includes('mask') || t.includes('mặt nạ') || t.includes('마스크')) && !t.includes('pad') && priceKRW >= 18000) {
+        priceKRW = 12000;
+      }
+
+      // Xác định cân nặng tính cước theo tên sản phẩm
       const weightObj = estimateSmartWeight(itemTitle, '', estKg);
       const chargedWeight = weightObj.chargedKg;
-      
+
       const tienHangVND = priceKRW * EXCHANGE_RATE;
       const shipBayVND = chargedWeight * SHIP_PER_KG;
-      const congMuaVND = tienHangVND < 500000 ? FEE_UNDER_1KG : FEE_OVER_1KG;
+      const congMuaVND = (tienHangVND < 500000 && chargedWeight <= 0.5) ? FEE_UNDER_1KG : FEE_OVER_1KG;
 
       const finalVND = Math.ceil((tienHangVND + shipBayVND + congMuaVND) / 1000) * 1000;
       const originHangVND = originKRW * EXCHANGE_RATE;
