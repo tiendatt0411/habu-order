@@ -1020,20 +1020,39 @@
     ];
 
     // 1. THUẬT TOÁN ƯỚC LƯỢNG CÂN NẶNG CHUẨN (LÀM TRÒN BƯỚC 0.5KG)
-    function estimateSmartWeight(title, category, fallbackKg) {
+function estimateSmartWeight(title, category, fallbackKg) {
       const t = (title || '').toLowerCase();
       const c = (category || '').toLowerCase();
 
-      // Cân nặng cơ sở thực tế (kg)
-      let actualKg = 0.25; // Mặc định mỹ phẩm nhẹ: hũ môi 20g, serum, mặt nạ miếng
+      // Cân nặng thực tế ước tính (kg)
+      let actualKg = 0.25; // Mặc định mỹ phẩm nhẹ: son môi, serum, mặt nạ miếng
 
-      if (t.includes('áo khoác') || t.includes('jacket') || t.includes('hoodie') || t.includes('padding') || t.includes('phao') || t.includes('windbreaker')) {
-        actualKg = 0.85; // Áo khoác thực tế ~0.85kg
-      } else if (t.includes('giày') || t.includes('sneaker') || t.includes('shoes') || c.includes('giày') || t.includes('samba') || t.includes('force') || t.includes('asics')) {
-        actualKg = 0.95; // Giày dép thực tế ~0.95kg
-      } else if (t.includes('toner pad') || t.includes('토너패드') || t.includes('pad') || t.includes('set') || t.includes('hộp to') || t.includes('1+1') || t.includes('기획')) {
-        actualKg = 0.55; // Toner pad hộp to hoặc set quà thực tế ~0.55kg
-      } else if (fallbackKg && Number(fallbackKg) > 0) {
+      // Áo khoác dày, áo phao, áo tweed, hoodie (Việt + Hàn + Anh)
+      if (
+        t.includes('áo khoác') || t.includes('jacket') || t.includes('hoodie') || 
+        t.includes('padding') || t.includes('phao') || t.includes('windbreaker') ||
+        t.includes('재킷') || t.includes('점퍼') || t.includes('패딩') || 
+        t.includes('코트') || t.includes('후드') || t.includes('트위드') || t.includes('베스트')
+      ) {
+        actualKg = 0.85; // Cân thực tế ~0.85kg -> làm tròn trần thành 1.0kg
+      } 
+      // Giày dép, sneaker (Việt + Hàn + Anh)
+      else if (
+        t.includes('giày') || t.includes('sneaker') || t.includes('shoes') || c.includes('giày') || 
+        t.includes('samba') || t.includes('force') || t.includes('asics') ||
+        t.includes('신발') || t.includes('스니커즈') || t.includes('운동화') || t.includes('러닝화')
+      ) {
+        actualKg = 0.95; // Cân thực tế ~0.95kg -> làm tròn trần thành 1.0kg
+      } 
+      // Toner Pad hộp to, set combo 1+1, set quà tặng kèm
+      else if (
+        t.includes('toner pad') || t.includes('토너패드') || t.includes('pad') || 
+        t.includes('set') || t.includes('hộp to') || t.includes('1+1') || 
+        t.includes('기획') || t.includes('리필') || t.includes('refill')
+      ) {
+        actualKg = 0.55; // Cân thực tế ~0.55kg -> làm tròn trần thành 1.0kg (đảm bảo giá về tay > 800k)
+      } 
+      else if (fallbackKg && Number(fallbackKg) > 0) {
         actualKg = Number(fallbackKg);
       }
 
