@@ -2295,8 +2295,109 @@ function extractSalesPopularity(item) {
       }
     }
 
-    function translateAllCatalogTitlesToVietnamese() {
-      alert('Đã đồng bộ và chuẩn hóa tên Tiếng Việt cho danh mục sản phẩm!');
+    async function translateAllCatalogTitlesToVietnamese() {
+      const btn = document.getElementById('translateAllBtn');
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = '⏳ Đang dịch tên sang Tiếng Việt...';
+      }
+
+      // Từ điển thuật ngữ thương mại & mỹ phẩm Hàn -> Việt
+      const dict = [
+        // Thương hiệu & Sàn
+        { kr: /메디힐/gi, vi: 'Mediheal' },
+        { kr: /메디큐브/gi, vi: 'Medicube' },
+        { kr: /라네즈/gi, vi: 'Laneige' },
+        { kr: /토리든/gi, vi: 'Torriden' },
+        { kr: /닥터지/gi, vi: 'Dr.G' },
+        { kr: /아누아/gi, vi: 'Anua' },
+        { kr: /스킨1004/gi, vi: 'Skin1004' },
+        { kr: /라운드랩/gi, vi: 'Round Lab' },
+        { kr: /달바/gi, vi: "d'Alba" },
+        { kr: /올리브영/gi, vi: 'Olive Young' },
+        { kr: /무신사/gi, vi: 'Musinsa' },
+
+        // Danh mục & Dòng sản phẩm
+        { kr: /토너패드/gi, vi: 'Toner Pad' },
+        { kr: /패드/gi, vi: 'Pad' },
+        { kr: /마스크팩/gi, vi: 'Mặt nạ giấy' },
+        { kr: /마스크/gi, vi: 'Mặt nạ' },
+        { kr: /립 슬리핑 마스크/gi, vi: 'Mặt nạ ngủ môi' },
+        { kr: /립밤|립케어/gi, vi: 'Dưỡng môi' },
+        { kr: /세럼/gi, vi: 'Serum' },
+        { kr: /앰플/gi, vi: 'Tinh chất Ampoule' },
+        { kr: /크림/gi, vi: 'Kem dưỡng' },
+        { kr: /수분크림/gi, vi: 'Kem cấp ẩm' },
+        { kr: /선크림|선 젤|선스크린/gi, vi: 'Kem chống nắng' },
+        { kr: /클렌징폼|클렌징/gi, vi: 'Sữa rửa mặt' },
+        { kr: /토너/gi, vi: 'Nước hoa hồng (Toner)' },
+        { kr: /에센스/gi, vi: 'Tinh chất Essence' },
+        { kr: /미스트/gi, vi: 'Xịt khoáng' },
+
+        // Thời trang & Phụ kiện
+        { kr: /재킷|자켓/gi, vi: 'Áo khoác Jacket' },
+        { kr: /점퍼/gi, vi: 'Áo khoác Jumper' },
+        { kr: /패딩/gi, vi: 'Áo phao lông vũ' },
+        { kr: /코트/gi, vi: 'Áo măng tô Coat' },
+        { kr: /후드/gi, vi: 'Áo Hoodie' },
+        { kr: /맨투맨/gi, vi: 'Áo nỉ chui đầu' },
+        { kr: /티셔츠/gi, vi: 'Áo thun T-shirt' },
+        { kr: /셔츠/gi, vi: 'Áo sơ mi' },
+        { kr: /팬츠|바지/gi, vi: 'Quần' },
+        { kr: /데님/gi, vi: 'Quần Jeans Denim' },
+        { kr: /스니커즈|운동화|신발/gi, vi: 'Giày Sneaker' },
+
+        // Quy cách, Số lượng, Quà tặng
+        { kr: /10\/10\+1\s*매/gi, vi: 'Set 10 tặng 1 miếng' },
+        { kr: /10\+1\s*매/gi, vi: 'Set 10 tặng 1 miếng' },
+        { kr: /100\s*매/gi, vi: 'Hộp 100 miếng' },
+        { kr: /더블기획/gi, vi: 'Set đôi siêu ưu đãi' },
+        { kr: /기획세트|기획/gi, vi: 'Set quà tặng kèm' },
+        { kr: /단품/gi, vi: 'Bản lẻ' },
+        { kr: /리필/gi, vi: 'Lõi thay thế (Refill)' },
+        { kr: /골라담기/gi, vi: 'Tự chọn loại' },
+        { kr: /1등|No\.1|1위/gi, vi: 'Bán chạy số 1' },
+        { kr: /피부 고민별/gi, vi: 'cho từng vấn đề da' },
+        { kr: /업그레이드 리뉴얼/gi, vi: 'Bản nâng cấp mới' },
+        { kr: /대용량/gi, vi: 'Dung tích lớn' },
+        { kr: /저분자 히알루론산/gi, vi: 'Hyaluronic Acid phân tử nhỏ' },
+        { kr: /글로우 토닝 부스터/gi, vi: 'Glow Toning Booster làm sáng da' },
+        { kr: /세라마이드아토/gi, vi: 'Ceramide Ato phục hồi da' },
+        { kr: /와인셀러|와인냉장고/gi, vi: 'Tủ bảo quản rượu vang mini' }
+      ];
+
+      let translatedCount = 0;
+
+      currentProductsList.forEach(item => {
+        let text = item.title || '';
+        let originalText = text;
+
+        dict.forEach(rule => {
+          text = text.replace(rule.kr, rule.vi);
+        });
+
+        // Dọn dẹp dấu ngoặc kép thừa sau khi ghép từ
+        text = text.replace(/\s+/g, ' ').trim();
+
+        if (text !== originalText) {
+          item.title = text;
+          translatedCount++;
+        }
+      });
+
+      // Lưu cập nhật vào Storage và vẽ lại giao diện
+      saveProductsToStorage();
+      renderCatalogView();
+      renderIntroTopProducts();
+      if (typeof renderAdminManageList === 'function') renderAdminManageList();
+
+      if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>🌐 Dịch tất cả tên SP sang Tiếng Việt</span>';
+      }
+
+      await uploadProductsToGoogleSheets();
+      alert(`🎉 Đã dịch thành công ${translatedCount} tên sản phẩm sang Tiếng Việt và đồng bộ dữ liệu!`);
     }
 
     // 10. LƯU TRỮ VÀ ĐỒNG BỘ GOOGLE SHEETS
