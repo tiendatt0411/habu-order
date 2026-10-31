@@ -1025,32 +1025,38 @@ function estimateSmartWeight(title, category, fallbackKg) {
       const c = (category || '').toLowerCase();
 
       // Cân nặng thực tế ước tính (kg)
-      let actualKg = 0.25; // Mặc định mỹ phẩm nhẹ: son môi, serum, mặt nạ miếng
+      let actualKg = 0.25; // Mặc định son môi, serum, mặt nạ miếng nhẹ
 
-      // Áo khoác dày, áo phao, áo tweed, hoodie (Việt + Hàn + Anh)
+      // 1. ÁO KHOÁC / ÁO PHAO / HOODIE (Nặng ~0.85kg -> Tính 1.0kg)
       if (
         t.includes('áo khoác') || t.includes('jacket') || t.includes('hoodie') || 
         t.includes('padding') || t.includes('phao') || t.includes('windbreaker') ||
         t.includes('재킷') || t.includes('점퍼') || t.includes('패딩') || 
-        t.includes('코트') || t.includes('후드') || t.includes('트위드') || t.includes('베스트')
+        t.includes('코트') || t.includes('후드') || t.includes('트위드')
       ) {
-        actualKg = 0.85; // Cân thực tế ~0.85kg -> làm tròn trần thành 1.0kg
+        actualKg = 0.85;
       } 
-      // Giày dép, sneaker (Việt + Hàn + Anh)
+      // 2. GIÀY DÉP / SNEAKER (Nặng ~0.95kg -> Tính 1.0kg)
       else if (
         t.includes('giày') || t.includes('sneaker') || t.includes('shoes') || c.includes('giày') || 
         t.includes('samba') || t.includes('force') || t.includes('asics') ||
         t.includes('신발') || t.includes('스니커즈') || t.includes('운동화') || t.includes('러닝화')
       ) {
-        actualKg = 0.95; // Cân thực tế ~0.95kg -> làm tròn trần thành 1.0kg
+        actualKg = 0.95;
       } 
-      // Toner Pad hộp to, set combo 1+1, set quà tặng kèm
+      // 3. MẶT NẠ (HỘP 10 MIẾNG / SET MASK): CHỈ TÍNH 0.35KG -> LÀM TRÒN RA ĐÚNG 0.5KG (GIÁ VỀ TAY ~300K)
       else if (
-        t.includes('toner pad') || t.includes('토너패드') || t.includes('pad') || 
-        t.includes('set') || t.includes('hộp to') || t.includes('1+1') || 
-        t.includes('기획') || t.includes('리필') || t.includes('refill')
+        t.includes('mask') || t.includes('mặt nạ') || t.includes('마스크') || 
+        t.includes('pack') || t.includes('sheet') || t.includes('10+1') || t.includes('10매')
       ) {
-        actualKg = 0.55; // Cân thực tế ~0.55kg -> làm tròn trần thành 1.0kg (đảm bảo giá về tay > 800k)
+        actualKg = 0.35;
+      }
+      // 4. CHỈ DUY NHẤT HỘP TONER PAD TO HOẶC COMBO KÈM LÕI REFILL MỚI TÍNH 0.55KG -> RA 1.0KG (GIÁ > 800K)
+      else if (
+        t.includes('toner pad') || t.includes('토너패드') || t.includes('hộp to') || 
+        (t.includes('pad') && (t.includes('refill') || t.includes('리필') || t.includes('100매')))
+      ) {
+        actualKg = 0.55;
       } 
       else if (fallbackKg && Number(fallbackKg) > 0) {
         actualKg = Number(fallbackKg);
@@ -1071,7 +1077,6 @@ function estimateSmartWeight(title, category, fallbackKg) {
         displayLabel: billedKg.toFixed(1).replace('.0', '') + ' kg'
       };
     }
-
     // 2. CÔNG THỨC TÍNH GIÁ TRỌN GÓI VỀ TAY HÀBU
     function calculateFormulaVND(krw, weightClass, estKg, oldKrw, itemTitle) {
       const priceKRW = parseInt(krw, 10) || 0;
@@ -1464,14 +1469,25 @@ function estimateSmartWeight(title, category, fallbackKg) {
       grid.innerHTML = filtered.map(renderProductCardHtml).join('');
     }
 
-    function renderProductCardHtml(item) {
+  function renderProductCardHtml(item) {
       const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.oldKrw, item.title);
       const isSale = item.isSale !== false && item.isSale !== 'false';
+      
+      // Fallback ảnh an toàn nếu item không có ảnh hoặc link ảnh bị chết
+      const defaultImg = 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80';
+      const imgSrc = item.image && item.image.trim() ? item.image : defaultImg;
+
       return `
         <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group">
           <div class="p-4 space-y-3">
             <div class="relative w-full h-48 rounded-2xl overflow-hidden bg-slate-100 flex items-center justify-center">
-              <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy" />
+              <img 
+                src="${imgSrc}" 
+                alt="${item.title}" 
+                class="w-full h-full object-cover group-hover:scale-105 transition duration-500" 
+                loading="lazy" 
+                onerror="this.onerror=null; this.src='${defaultImg}';"
+              />
               <div class="absolute top-2.5 left-2.5 flex flex-col gap-1">
                 <span class="px-2.5 py-0.5 rounded-full bg-slate-900/80 backdrop-blur-md text-white font-black text-[9px] uppercase tracking-wider">${item.mall || 'Olive Young'}</span>
                 ${isSale ? '<span class="px-2 py-0.5 rounded-full bg-rose-600 text-white font-black text-[9px] uppercase">🔥 Sale</span>' : ''}
@@ -1479,11 +1495,11 @@ function estimateSmartWeight(title, category, fallbackKg) {
             </div>
 
             <div class="space-y-1">
-              <div class="text-[11px] font-black uppercase text-sky-700">${item.brand}</div>
+              <div class="text-[11px] font-black uppercase text-sky-700">${item.brand || 'CHÍNH HÃNG'}</div>
               <h3 class="text-xs font-bold text-slate-800 line-clamp-2 leading-snug group-hover:text-sky-600 transition" title="${item.title}">
                 ${item.title}
               </h3>
-              <p class="text-[10px] text-slate-400 line-clamp-1">Phân loại: ${item.variant || 'Chính hãng'}</p>
+              <p class="text-[10px] text-slate-400 line-clamp-1">Phân loại: ${item.variant || 'Chính hãng từ Hàn Quốc'}</p>
             </div>
           </div>
 
@@ -1518,25 +1534,31 @@ function estimateSmartWeight(title, category, fallbackKg) {
         topGrid.innerHTML = sorted.slice(0, 8).map(renderProductCardHtml).join('');
       }
     }
+function extractSalesPopularity(item) {
+      let score = 500;
+      const str = ((item.title || '') + ' ' + (item.brand || '') + ' ' + (item.mall || '')).toLowerCase();
 
-    function extractSalesPopularity(item) {
-      if (item.salesCount && Number(item.salesCount) > 0) {
-        return Number(item.salesCount);
+      // Ưu tiên cao nhất cho hàng Olive Young và các brand mỹ phẩm hot
+      if (str.includes('olive') || str.includes('mediheal') || str.includes('laneige') || str.includes('medicube') || str.includes('torriden')) {
+        score += 20000;
       }
-      const str = (item.title || '') + ' ' + (item.brand || '');
-      const m = str.match(/(?:Giao dịch|Deal|Ưu đãi|거래)\s*([0-9.,]+)\s*([만kKmMnN万]?)/i);
+
+      if (item.salesCount && Number(item.salesCount) > 0) {
+        return score + Number(item.salesCount);
+      }
+
+      const m = str.match(/(?:giao dịch|deal|ưu đãi|거래)\s*([0-9.,]+)\s*([만kmn万]?)/i);
       if (m) {
         const val = parseFloat(m[1].replace(/,/g, '.'));
         const unit = (m[2] || '').toLowerCase();
         if (unit === '만' || unit === 'vạn' || unit === 'm' || str.includes('만') || str.includes('.000')) {
-          return val >= 100 ? Math.round(val * 1000) : Math.round(val * 10000);
+          score += val >= 100 ? Math.round(val * 1000) : Math.round(val * 10000);
+        } else {
+          score += Math.round(val * 1000);
         }
-        return Math.round(val * 1000);
       }
-      if (str.includes('KHÔNG. 1') || str.includes('hạng nhất') || str.includes('No.1') || str.includes('All Young Pick')) {
-        return 15000;
-      }
-      return 500;
+
+      return score;
     }
 
     function switchPageView(viewName, filterParams) {
