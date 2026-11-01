@@ -1438,117 +1438,47 @@ let selectedProductIds = new Set();
       renderCatalogView();
     }
 function getFilteredProductsList() {
-      if (!Array.isArray(currentProductsList) || currentProductsList.length === 0) {
-        return [];
-      }
+  if (!Array.isArray(currentProductsList) || currentProductsList.length === 0) {
+    return [];
+  }
+  if (!currentCatalogFilter || currentCatalogFilter.type === 'all') {
+    return currentProductsList;
+  }
 
-      var fType = (currentCatalogFilter && currentCatalogFilter.type) ? currentCatalogFilter.type : 'all';
-      var fVal = (currentCatalogFilter && currentCatalogFilter.value ? currentCatalogFilter.value : '').toLowerCase().trim();
+  const { type, value } = currentCatalogFilter;
+  const rawVal = (value || '').trim().toLowerCase();
+  // Xóa sạch dấu chấm, khoảng trắng, gạch nối để gõ "dr g", "dr.g" hay "drg" đều khớp
+  const cleanVal = rawVal.replace(/[\.\-\_\s]+/g, '');
 
-      // 1. Chọn Tất cả -> Trả toàn bộ kho
-      if (fType === 'all') return currentProductsList;
+  if (type === 'search') {
+    return currentProductsList.filter(p => {
+      const full = `${p.title || ''} ${p.brand || ''} ${p.category || ''} ${p.mall || ''}`.toLowerCase();
+      const cleanFull = full.replace(/[\.\-\_\s]+/g, '');
+      return cleanFull.includes(cleanVal);
+    });
+  }
 
-      var res = currentProductsList.filter(function(item) {
-        if (!item) return false;
+  if (type === 'brand') {
+    return currentProductsList.filter(p => {
+      const b = (p.brand || '').toLowerCase().replace(/[\.\-\_\s]+/g, '');
+      return b.includes(cleanVal);
+    });
+  }
 
-        var title = (item.title || '').toLowerCase();
-        var brand = (item.brand || '').toLowerCase();
-        var mall = (item.mall || '').toLowerCase();
-        var cat = (item.category || '').toLowerCase();
-        var subCat = (item.subCategory || '').toLowerCase();
-        var link = (item.link || '').toLowerCase();
+  if (type === 'mall') {
+    return currentProductsList.filter(p => (p.mall || '').toLowerCase() === rawVal);
+  }
 
-        var isOlive = link.includes('oliveyoung') || mall.includes('olive') || brand.includes('olive');
-        var isKream = link.includes('kream') || mall.includes('kream');
-        var isMusinsa = link.includes('musinsa') || mall.includes('musinsa');
-        var isCoupang = link.includes('coupang') || mall.includes('coupang');
+  if (type === 'category') {
+    return currentProductsList.filter(p => (p.category || '').toLowerCase() === rawVal);
+  }
 
-        // Lọc hàng Sale
-        if (fType === 'sale') {
-          return item.isSale !== false && item.isSale !== 'false';
-        }
+  if (type === 'sale') {
+    return currentProductsList.filter(p => p.isSale);
+  }
 
-        // Lọc theo Sàn CHUẨN XÁC TUYỆT ĐỐI (Không lẫn lộn)
-        if (fType === 'mall') {
-          if (fVal.includes('olive')) return isOlive;
-          if (fVal.includes('kream')) return isKream;
-          if (fVal.includes('musinsa')) return isMusinsa;
-          if (fVal.includes('coupang')) return isCoupang;
-          return mall.includes(fVal);
-        }
-
-        // Lọc theo Hãng
-        if (fType === 'brand') {
-          if (fVal === 'nike') return brand.includes('nike') || title.includes('nike');
-          if (fVal === 'adidas') return brand.includes('adidas') || title.includes('adidas');
-
-          var BRAND_KEYS = {
-            'medicube': ['medicube', 'medikube', '메디큐브'],
-            'laneige': ['laneige', '라네즈'],
-            'mediheal': ['mediheal', '메디힐'],
-            'torriden': ['torriden', '토리든'],
-            'anua': ['anua', '아누아'],
-            'dr.g': ['dr.g', 'dr g', '닥터지'],
-            'skin1004': ['skin1004', 'centella', '스킨1004'],
-            'round lab': ['round lab', 'roundlab', '라운드랩'],
-            'dalba': ['dalba', "d'alba", '달바']
-          };
-
-          for (var k in BRAND_KEYS) {
-            if (fVal.includes(k) || k.includes(fVal)) {
-              return BRAND_KEYS[k].some(function(alias) {
-                return brand.includes(alias) || title.includes(alias);
-              });
-            }
-          }
-          return brand.includes(fVal) || title.includes(fVal);
-        }
-
-        // Lọc theo Loại sản phẩm
-        if (fType === 'category' || fType === 'subCategory') {
-          if (fVal.includes('mỹ phẩm') || fVal.includes('skincare')) {
-            var isCosmetics = isOlive || cat.includes('mỹ phẩm') || cat.includes('skincare') ||
-                              title.includes('kem') || title.includes('serum') || title.includes('toner') || 
-                              title.includes('pad') || title.includes('mask') || title.includes('mặt nạ');
-            var isFashion = isKream || isMusinsa || title.includes('giày') || title.includes('áo') || title.includes('quần');
-            return isCosmetics && !isFashion;
-          }
-
-          if (fVal.includes('toner') || fVal.includes('pad') || fVal.includes('serum')) {
-            return title.includes('toner') || title.includes('pad') || title.includes('serum') || title.includes('토너');
-          }
-
-          if (fVal.includes('mặt nạ') || fVal.includes('mask') || fVal.includes('lip') || fVal.includes('môi')) {
-            return title.includes('mặt nạ') || title.includes('mask') || title.includes('lip') || title.includes('môi') || title.includes('마스크');
-          }
-
-          return cat.includes(fVal) || subCat.includes(fVal) || title.includes(fVal);
-        }
-
-        // Tìm kiếm
-        if (fType === 'search') {
-          if (!fVal) return true;
-          var fullText = (title + ' ' + brand + ' ' + mall + ' ' + cat + ' ' + subCat).toLowerCase();
-          return fullText.includes(fVal);
-        }
-
-        return true;
-      });
-
-      // KHỬ TRÙNG SẢN PHẨM
-      var seenTitles = {};
-      var uniqueList = [];
-      res.forEach(function(item) {
-        var cleanTitle = (item.title || '').trim();
-        if (!seenTitles[cleanTitle]) {
-          seenTitles[cleanTitle] = true;
-          uniqueList.push(item);
-        }
-      });
-
-      return uniqueList;
-    }
-    
+  return currentProductsList;
+}
     function renderCatalogView() {
       const grid = document.getElementById('catalogProductsGrid');
       if (!grid) return;
@@ -2426,81 +2356,101 @@ async function translateAllCatalogTitlesToVietnamese() {
         btn.innerHTML = '<span>⏳ Đang chuẩn hóa tiếng Việt toàn bộ...</span>';
       }
 
+      // 1. TỪ ĐIỂN THƯƠNG HIỆU MỞ RỘNG (ĐẦY ĐỦ CÁC HÃNG TRÊN WEB)
       const brandMap = {
-        '메디힐': 'Mediheal',
+        '라네즈': 'Laneige',
+        '닥터지': 'Dr.G',
         '바이오던스': 'Biodance',
         '어노브': 'UNOVE',
         '바이오힐보': 'Bioheal BOH',
+        '메디힐': 'Mediheal',
         '이니스프리': 'Innisfree',
         '제로이드': 'Zeroid',
         '피노': 'Fino',
+        '오리온': 'Orion',
+        '농심': 'Nongshim',
+        '해태': 'Haitai',
+        '롯데': 'Lotte',
+        '동원': 'Dongwon',
+        '고려홍삼': 'Hồng Sâm',
+        '정관장': 'Cheong Kwan Jang',
         '웰라쥬': 'Wellage',
         '에스트라': 'Aestura',
         '라로슈포제': 'La Roche-Posay',
         '아누아': 'Anua',
         '일리윤': 'Illiyoon',
-        '달바': "d'Alba",
+        '달ba|달바': "d'Alba",
         '시튜에아': 'Situea'
       };
 
+      // 2. TỪ ĐIỂN TÊN MỸ PHẨM & ĐỒ ĂN HÀN QUỐC
       const termRules = [
-        // Chuẩn hóa quy cách đóng gói hộp / set
-        { r: /10\/10\+1매|10\+1매|10\+1\s*Miếng/gi, v: 'Hộp 10 Tặng 1 Miếng' },
-        { r: /7\+1\s*기획|7\+1매|7\+1\s*Miếng/gi, v: 'Hộp 7 Tặng 1 Miếng' },
-        { r: /1매\s*Tính\s*năng\s*cao|1매/gi, v: 'Hộp 10 Tặng 1 Miếng' },
-        { r: /2종/gi, v: 'Set 2 Loại' },
-        { r: /1&1\s*2입기획|1\+1|2입/gi, v: 'Set Đôi 2 Hộp' },
-        { r: /골라담기/gi, v: 'Tự Chọn Loại' },
+        // Mỹ phẩm Laneige & Skincare
+        { r: /크림스킨/gi, v: 'Nước Hoa Hồng Dưỡng Ẩm Cream Skin' },
+        { r: /립\s*슬리핑\s*마스크/gi, v: 'Ủ Môi Mặt Nạ Ngủ Lip Sleeping Mask' },
+        { r: /슬리핑\s*마스크/gi, v: 'Mặt Nạ Ngủ Sleeping Mask' },
+        { r: /네오\s*쿠션/gi, v: 'Phấn Nước Phủ Kiềm Dầu Neo Cushion' },
+        { r: /워터뱅크/gi, v: 'Cấp Nước Water Bank' },
+        
+        // Dr.G & Trị mụn / Dịu da
+        { r: /레드\s*블레미쉬\s*클리어\s*수딩\s*크림/gi, v: 'Kem Dưỡng Dịu Da Mụn Red Blemish Clear Soothing Cream' },
+        { r: /레드\s*블레미쉬/gi, v: 'Red Blemish Dịu Da Phục Hồi' },
+        { r: /그린\s*마일드\s*업\s*선/gi, v: 'Kem Chống Nắng Dịu Nhẹ Green Mild Up Sun' },
+        { r: /브라이트닝\s*필링\s*젤/gi, v: 'Tẩy Tế Bào Chết Sáng Da Brightening Peeling Gel' },
 
-        // Mỹ phẩm - Dòng & Loại sản phẩm
-        { r: /에센셜\s*마스크팩|마스크팩|마스크/gi, v: 'Mặt Nạ Dưỡng Da' },
-        { r: /콜라겐\/캐비어\s*PDRN/gi, v: 'Collagen & Caviar PDRN Căng Bóng' },
-        { r: /딥\s*데미지\s*리페어\s*헤어\s*마스크\s*\(트리트먼트\/헤어팩\)/gi, v: 'Ủ Tóc Phục Hồi Hư Tổn Deep Damage Treatment' },
-        { r: /리프팅크림\/콜라겐젤마스크/gi, v: 'Kem Nâng Cơ & Mặt Nạ Collagen Gel' },
-        { r: /대용량/gi, v: 'Dung Tích Lớn' },
-        { r: /레티놀\s*시카\s*흔적\s*앰플/gi, v: 'Tinh Chất Retinol Cica Mờ Thâm Ampoule' },
-        { r: /인텐시브\s*크림/gi, v: 'Kem Dưỡng Ẩm Chuyên Sâu Intensive Cream' },
-        { r: /프리미엄\s*터치\s*헤어\s*마스크/gi, v: 'Ủ Tóc Phục Hồi Cao Cấp Premium Touch' },
-        { r: /글린트\s*립\s*글레이즈/gi, v: 'Son Bóng Dưỡng Môi Glint Lip Glaze' }
+        // Đồ ăn vặt & Coupang
+        { r: /초코파이/gi, v: 'Bánh Chocopie' },
+        { r: /다이제/gi, v: 'Bánh Quy Lúa Mạch Diget' },
+        { r: /비쵸비/gi, v: 'Bánh Quy Kẹp Socola Bichobi' },
+        { r: /파래전병/gi, v: 'Bánh Bích Quy Rong Biển Truyền Thống' },
+        { r: /첵스\s*초코/gi, v: 'Ngũ Cốc Socola Chex Choco' },
+        { r: /신라면/gi, v: 'Mì Tôm Cay Shin Ramyun' },
+
+        // Quy cách đóng gói
+        { r: /리미티드/gi, v: 'Bản Giới Hạn' },
+        { r: /기획세트|기획/gi, v: 'Set Quà Tặng' },
+        { r: /골라담기/gi, v: 'Tự Chọn Loại' },
+        { r: /(\d+)\s*봉/gi, v: '$1 Gói' },
+        { r: /(\d+)\s*개입|(\d+)\s*개/gi, v: '$1 Chiếc/Gói' }
       ];
 
       let count = 0;
       currentProductsList.forEach(p => {
         let title = p.title || '';
         let brand = p.brand || '';
+        const originalRaw = title;
 
-        // 1. Dọn sạch ngoặc vuông quảng cáo: [11월 올영픽], [블프특가/곰돌이무드등 증정]...
+        // Xóa các ngoặc quảng cáo
         title = title.replace(/\[[^\]]*\]/g, ' ');
 
-        // 2. Chuyển đổi Brand chuẩn
+        // 1. Chuẩn hóa Brand
         for (let kr in brandMap) {
           const reg = new RegExp(kr, 'gi');
           if (reg.test(brand)) brand = brandMap[kr];
           if (reg.test(title)) title = title.replace(reg, brandMap[kr]);
         }
 
-        // 3. Khử lặp Brand ở đầu tiêu đề
-        if (brand) {
-          const bReg = new RegExp('^(' + brand + ')\\s+(' + brand + ')', 'i');
-          title = title.replace(bReg, '$1');
-        }
-
-        // 4. Dịch các thuật ngữ
+        // 2. Chuẩn hóa thuật ngữ
         termRules.forEach(rule => {
           title = title.replace(rule.r, rule.v);
         });
 
-        // 5. Quét sạch tiếng Hàn còn sót và dọn dấu thừa
-        title = title
-          .replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '')
-          .replace(/^[\s\/\+\,\-]+/, '')
-          .replace(/[\s\/\+\,\-]+$/, '')
-          .replace(/\s+/g, ' ')
-          .trim();
+        // 3. Khử tiếng Hàn thừa nhưng CHỐNG XÓA TRẮNG TIÊU ĐỀ
+        let testClean = title.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '').replace(/[\+\,\/\(\)]/g, ' ').replace(/\s+/g, ' ').trim();
+        
+        // Nếu sau khi xóa tiếng Hàn mà tiêu đề chỉ còn trơ trọi số/dung tích (dưới 6 ký tự hoặc toàn số)
+        if (testClean.length < 5 || /^[\d\s\.\,mlgkgx]+$/i.test(testClean)) {
+          // Ghép thêm Tên thương hiệu và tiền tố để tên không bao giờ bị cụt ngủn
+          title = `${brand || 'Hàn Quốc'} ${testClean || 'Sản phẩm nội địa chính hãng'}`.trim();
+        } else {
+          title = testClean;
+        }
+
+        // Dọn sạch dấu rác ở đầu và đuôi
+        title = title.replace(/^[\s\/\+\,\-]+/, '').replace(/[\s\/\+\,\-]+$/, '').replace(/\s+/g, ' ').trim();
 
         p.title = title;
-        p.brand = brand;
-        p.variant = 'Nguyên hộp / Nguyên set chính hãng';
+        p.brand = brand || p.brand;
         count++;
       });
 
@@ -2515,7 +2465,7 @@ async function translateAllCatalogTitlesToVietnamese() {
       }
 
       await uploadProductsToGoogleSheets();
-      alert(`🎉 Đã đồng bộ và dịch chuẩn toàn bộ ${count} sản phẩm!`);
+      alert(`🎉 Đã chuẩn hóa toàn bộ ${count} sản phẩm! Tên sản phẩm và tìm kiếm đã hoạt động chính xác.`);
     }
     // 10. LƯU TRỮ VÀ ĐỒNG BỘ GOOGLE SHEETS
     function saveProductsToStorage() {
