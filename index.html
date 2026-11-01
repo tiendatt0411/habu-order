@@ -1098,21 +1098,28 @@
     // 2. CÔNG THỨC TÍNH GIÁ ÁP DỤNG ĐỒNG BỘ TOÀN SÀN
 function calculateFormulaVND(krw, weightClass, estKg, oldKrw, title) {
       var rawKrw = parseInt(krw, 10) || 0;
+
+      // CHỐNG CÀO NHẦM MÃ SỐ / SỐ GRAM THÀNH GIÁ TIỀN TỶ
+      // Nếu giá KRW vượt quá 500.000 Won (đối với sâm/mỹ phẩm thông thường), chặn trần hợp lý
+      if (rawKrw > 3000000) {
+        rawKrw = 25000; // Reset về mức giá sàn chuẩn tránh văng giá tiền tỷ
+      }
+
       var rate = 21; // Tỷ giá 21 VND / 1 KRW
       var basePrice = rawKrw * rate;
 
-      // Công mua: 30k cho món dưới 300k, 50k cho món từ 300k trở lên
+      // Công mua: 30k cho đơn dưới 300k, 50k cho đơn từ 300k trở lên
       var serviceFee = basePrice < 300000 ? 30000 : 50000;
 
-      // Cước bay: 180.000đ/kg (mặc định 0.5kg nếu nhẹ)
+      // Cước vận chuyển
       var weight = parseFloat(estKg) || 0.5;
       if (weightClass === '1kg' || weight >= 1.0) weight = 1.0;
       else weight = 0.5;
       var shippingFee = weight * 180000;
 
       var allInVND = Math.round((basePrice + serviceFee + shippingFee) / 1000) * 1000;
-
       var oldRawKrw = parseInt(oldKrw, 10) || Math.round(rawKrw * 1.2);
+      if (oldRawKrw > 3000000) oldRawKrw = Math.round(rawKrw * 1.2);
       var oldAllInVND = Math.round(((oldRawKrw * rate) + serviceFee + shippingFee) / 1000) * 1000;
 
       return {
@@ -1124,7 +1131,7 @@ function calculateFormulaVND(krw, weightClass, estKg, oldKrw, title) {
         oldAllInVND: oldAllInVND > allInVND ? oldAllInVND : allInVND,
         weight: weight,
         chargedKg: weight,
-        weightLabel: 'Cước: ' + weight + ' kg'
+        weightLabel: weight + ' kg' // Bỏ chữ "Cước:" ở đây để không bị lặp thành "Cước: Cước:"
       };
     }
     function formatVND(num) {
@@ -2445,9 +2452,15 @@ async function translateAllCatalogTitlesToVietnamese() {
         });
 
         // 5. Loại bỏ ký tự tiếng Hàn lẻ tẻ còn sót lại
-        title = title.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '').replace(/\(\s*\)/g, '').replace(/\s+/g, ' ').trim();
-        variant = variant.replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '').replace(/\(\s*\)/g, '').replace(/\s+/g, ' ').trim();
-
+       // Xóa sạch tiếng Hàn và các dấu +, /, phẩy mồ côi
+        title = title
+          .replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '')
+          .replace(/[\+\,\/]\s*[\+\,\/]/g, ', ')
+          .replace(/[\+\,\/]\s*$/g, '')
+          .replace(/^\s*[\+\,\/]/g, '')
+          .replace(/\(\s*\)/g, '')
+          .replace(/\s+/g, ' ')
+          .trim();
         // Ghép tên chuẩn đẹp nếu thiếu
         if (!variant) variant = 'Bản chính hãng nội địa';
 
