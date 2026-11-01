@@ -2547,6 +2547,60 @@ async function notifyTelegramOrder(orderData) {
     console.error("Lỗi khi gửi thông báo Telegram:", err);
   }
 }
+    // =======================================================
+// TỰ ĐỘNG BẮN THÔNG BÁO VỀ TELEGRAM KHI KHÁCH BẤM GỬI ĐƠN
+// =======================================================
+const TELEGRAM_BOT_TOKEN = "9133212799:AAFQCX8GJ6bydm1zTm2jZQAKqXnOogr6Wmk";
+const TELEGRAM_CHAT_ID = "8609051076";
+
+window.addEventListener("DOMContentLoaded", () => {
+  const submitBtn = document.getElementById("submitOrderBtn");
+  if (!submitBtn) return;
+
+  submitBtn.addEventListener("click", () => {
+    setTimeout(async () => {
+      // 1. Tự động lấy thông tin khách nhập trên form
+      const nameInput = document.querySelector('input[placeholder*="Tên"], input[name*="name"], #customerName');
+      const phoneInput = document.querySelector('input[placeholder*="thoại"], input[name*="phone"], #customerPhone');
+      const addressInput = document.querySelector('input[placeholder*="chỉ"], textarea[placeholder*="chỉ"], #customerAddress');
+      const totalEl = document.getElementById("summaryGrandTotalVND");
+
+      const customerName = nameInput ? nameInput.value.trim() : "Khách đặt web";
+      const customerPhone = phoneInput ? phoneInput.value.trim() : "";
+      const customerAddress = addressInput ? addressInput.value.trim() : "Không ghi địa chỉ";
+      const totalVND = totalEl ? totalEl.innerText.trim() : "0 đ";
+
+      // Nếu khách chưa nhập số điện thoại thì không gửi thông báo
+      if (!customerPhone) return;
+
+      const timeNow = new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
+
+      const textMsg =
+        `🛒 *CÓ ĐƠN HÀNG MỚI TỪ WEB!*\n\n` +
+        `👤 *Khách:* ${customerName}\n` +
+        `📞 *SĐT:* ${customerPhone}\n` +
+        `📍 *Địa chỉ:* ${customerAddress}\n` +
+        `💰 *Tổng tiền:* ${totalVND}\n` +
+        `⏰ *Thời gian:* ${timeNow}`;
+
+      // 2. Gửi thẳng về Telegram
+      try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: textMsg,
+            parse_mode: "Markdown"
+          })
+        });
+        console.log("Đã gửi đơn hàng về Telegram!");
+      } catch (err) {
+        console.error("Lỗi gửi Telegram:", err);
+      }
+    }, 600);
+  });
+});
   </script>
 </body>
 </html>
