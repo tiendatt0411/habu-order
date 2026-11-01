@@ -1715,9 +1715,13 @@ function openProductDetailModal(id) {
       const modal = document.getElementById('productDetailModal');
       if (!body) return;
 
+      const ratingScore = item.rating ? parseFloat(item.rating).toFixed(1) : '4.9';
+      const reviewCount = item.reviews ? Number(item.reviews).toLocaleString('vi-VN') : '1.250';
+      const summaryText = item.summary || 'Sản phẩm nội địa Hàn Quốc chính hãng, được tuyển chọn kỹ lưỡng theo đánh giá và xu hướng tiêu dùng tại Hàn.';
+
       body.innerHTML = `
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-          <!-- Cột ảnh sản phẩm -->
+          <!-- Cột ảnh & Nguồn -->
           <div class="space-y-3">
             <div class="rounded-2xl overflow-hidden bg-slate-100 h-72 flex items-center justify-center border border-slate-200 relative">
               <img 
@@ -1730,55 +1734,65 @@ function openProductDetailModal(id) {
               <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-white font-bold text-xs uppercase">
                 ${item.mall || 'Hàn Quốc'}
               </span>
+              ${item.isRetailCalc ? `<span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-emerald-600/90 text-white font-black text-[11px] shadow">Giá tách lẻ từ Set</span>` : ''}
             </div>
 
+            <!-- Bảng thông số kỹ thuật -->
             <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2">
               <div class="font-extrabold text-slate-900 uppercase text-[11px] border-b border-slate-200 pb-1">
-                📋 Thông tin sản phẩm:
+                📋 Thông số cơ bản:
               </div>
-              <div class="flex justify-between"><span class="text-slate-500">Thương hiệu:</span><span class="font-bold text-slate-800">${item.brand || 'Nội địa Hàn'}</span></div>
-              <div class="flex justify-between"><span class="text-slate-500">Phân loại / Quy cách:</span><span class="font-bold text-slate-800">${item.variant || 'Bản chính hãng'}</span></div>
-              <div class="flex justify-between"><span class="text-slate-500">Loại sản phẩm:</span><span class="font-bold text-slate-800">${item.category || 'Mỹ phẩm / Skincare'}</span></div>
-              <div class="flex justify-between"><span class="text-slate-500">Nguồn sàn:</span><span class="font-bold text-sky-600">${item.mall || 'Olive Young Korea'}</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Thương hiệu:</span><span class="font-bold text-slate-800">${item.brand || 'Chính hãng'}</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Phân loại / Quy cách:</span><span class="font-bold text-slate-800">${item.variant || 'Bản tiêu chuẩn'}</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Loại sản phẩm:</span><span class="font-bold text-slate-800">${item.category || 'Mỹ phẩm / Thời trang'}</span></div>
+              <div class="flex justify-between"><span class="text-slate-500">Nguồn sàn gốc:</span><span class="font-bold text-sky-600">${item.mall || 'Korea Official'}</span></div>
+              ${item.totalSetKrw && item.isRetailCalc ? `<div class="flex justify-between border-t border-slate-200 pt-1 text-[11px]"><span class="text-slate-400">Giá gốc cả set (${item.unitCount} món):</span><span class="font-bold text-slate-600">${Number(item.totalSetKrw).toLocaleString()} KRW</span></div>` : ''}
             </div>
           </div>
 
-          <!-- Cột thông tin chi tiết, đánh giá và giá -->
+          <!-- Cột thông tin, Rate, Review & Giá -->
           <div class="space-y-4">
             <div>
               <span class="text-xs font-black uppercase text-sky-600 tracking-wider">${item.brand || 'CHÍNH HÃNG'}</span>
               <h2 class="text-base font-black text-slate-900 mt-1 leading-snug">${item.title}</h2>
             </div>
 
-            <!-- Khu vực đánh giá thực tế -->
+            <!-- Số sao & Lượt đánh giá thực tế -->
             <div class="p-3 rounded-2xl bg-amber-50/70 border border-amber-200/60 flex items-center justify-between">
               <div class="flex items-center gap-2">
                 <span class="text-amber-500 text-sm">★★★★★</span>
-                <span class="text-xs font-black text-slate-900">4.9 / 5.0</span>
+                <span class="text-xs font-black text-slate-900">${ratingScore} / 5.0</span>
               </div>
-              <span class="text-[11px] text-slate-500 font-semibold">(Hơn 1.200 đánh giá tại Hàn)</span>
+              <span class="text-[11px] text-slate-600 font-bold">(${reviewCount} lượt đánh giá thực tế trên web Hàn)</span>
             </div>
 
-            <!-- Bảng tính cước và chi phí -->
-            <div class="p-3.5 rounded-2xl bg-sky-50/50 border border-sky-100 text-xs space-y-2">
+            <!-- Tóm tắt cơ bản về sản phẩm -->
+            <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 leading-relaxed">
+              <span class="font-bold text-slate-800">💡 Mô tả tóm tắt:</span> ${summaryText}
+            </div>
+
+            <!-- Khung tính giá trọn gói -->
+            <div class="p-3.5 rounded-2xl bg-sky-50/60 border border-sky-100 text-xs space-y-2">
               <div class="flex justify-between items-center">
-                <span class="text-slate-500">Cân nặng tính cước:</span>
+                <span class="text-slate-500">Cân nặng dự kiến:</span>
                 <span class="font-black text-sky-700 bg-sky-100 px-2 py-0.5 rounded-md">${calc.weightLabel}</span>
               </div>
               <div class="flex justify-between items-center">
-                <span class="text-slate-500">Giá gốc niêm yết:</span>
+                <span class="text-slate-500">Giá niêm yết cũ:</span>
                 <span class="text-slate-400 line-through">${calc.oldAllInVND > calc.allInVND ? formatVND(calc.oldAllInVND) : ''}</span>
               </div>
               <div class="flex justify-between items-baseline pt-1 border-t border-sky-100">
-                <span class="text-xs font-black text-slate-800 uppercase">Giá về tay trọn gói:</span>
+                <span class="text-xs font-black text-slate-800 uppercase">
+                  ${item.isRetailCalc ? 'Giá 1 món về tay:' : 'Giá về tay trọn gói:'}
+                </span>
                 <span class="text-2xl font-black text-rose-600">${formatVND(calc.allInVND)}</span>
               </div>
             </div>
 
-            <!-- Nút liên kết mua hàng -->
+            <!-- Các nút hành động -->
             <div class="grid grid-cols-2 gap-2 pt-2">
               <a href="${item.link || '#'}" target="_blank" rel="noopener noreferrer" class="py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs text-center transition">
-                Xem link gốc ↗
+                Xem link web Hàn ↗
               </a>
               <button onclick="orderProductItemDirect(${item.id}); closeProductDetailModal();" class="py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs transition shadow-md shadow-sky-600/20 cursor-pointer">
                 Đặt mua ngay
