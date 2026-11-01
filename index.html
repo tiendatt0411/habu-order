@@ -1096,43 +1096,37 @@
     }
 
     // 2. CÔNG THỨC TÍNH GIÁ ÁP DỤNG ĐỒNG BỘ TOÀN SÀN
-    function calculateFormulaVND(krw, weightClass, estKg, oldKrw, itemTitle) {
-      let priceKRW = parseInt(krw, 10) || 0;
-      let originKRW = parseInt(oldKrw, 10) || priceKRW;
-      const t = (itemTitle || '').toLowerCase();
+function calculateFormulaVND(krw, weightClass, estKg, oldKrw, title) {
+      var rawKrw = parseInt(krw, 10) || 0;
+      var rate = 21; // Tỷ giá 21 VND / 1 KRW
+      var basePrice = rawKrw * rate;
 
-      // Đồng bộ mức giá deal sale thực tế cho hộp mặt nạ lẻ nếu dữ liệu bị cào nhầm giá niêm yết chưa sale
-      if ((t.includes('mask') || t.includes('mặt nạ') || t.includes('마스크')) && !t.includes('pad') && priceKRW >= 18000) {
-        priceKRW = 12000;
-      }
+      // Công mua: 30k cho món dưới 300k, 50k cho món từ 300k trở lên
+      var serviceFee = basePrice < 300000 ? 30000 : 50000;
 
-      // Xác định cân nặng tính cước theo tên sản phẩm
-      const weightObj = estimateSmartWeight(itemTitle, '', estKg);
-      const chargedWeight = weightObj.chargedKg;
+      // Cước bay: 180.000đ/kg (mặc định 0.5kg nếu nhẹ)
+      var weight = parseFloat(estKg) || 0.5;
+      if (weightClass === '1kg' || weight >= 1.0) weight = 1.0;
+      else weight = 0.5;
+      var shippingFee = weight * 180000;
 
-      const tienHangVND = priceKRW * EXCHANGE_RATE;
-      const shipBayVND = chargedWeight * SHIP_PER_KG;
-      const congMuaVND = (tienHangVND < 500000 && chargedWeight <= 0.5) ? FEE_UNDER_1KG : FEE_OVER_1KG;
+      var allInVND = Math.round((basePrice + serviceFee + shippingFee) / 1000) * 1000;
 
-      const finalVND = Math.ceil((tienHangVND + shipBayVND + congMuaVND) / 1000) * 1000;
-      const originHangVND = originKRW * EXCHANGE_RATE;
-      const finalOldVND = Math.ceil((originHangVND + shipBayVND + congMuaVND) / 1000) * 1000;
+      var oldRawKrw = parseInt(oldKrw, 10) || Math.round(rawKrw * 1.2);
+      var oldAllInVND = Math.round(((oldRawKrw * rate) + serviceFee + shippingFee) / 1000) * 1000;
 
       return {
-        convertedVND: tienHangVND,
-        buyingFee: congMuaVND,
-        shipVND: shipBayVND,
-        noWeightVND: tienHangVND + congMuaVND,
-        allInVND: finalVND,
-        oldAllInVND: finalOldVND > finalVND ? finalOldVND : finalVND,
-        weight: chargedWeight,
-        actualWeight: weightObj.actualWeight,
-        chargedKg: chargedWeight,
-        billedKg: chargedWeight,
-        weightLabel: weightObj.displayLabel
+        convertedVND: basePrice,
+        buyingFee: serviceFee,
+        shipVND: shippingFee,
+        noWeightVND: basePrice + serviceFee,
+        allInVND: allInVND,
+        oldAllInVND: oldAllInVND > allInVND ? oldAllInVND : allInVND,
+        weight: weight,
+        chargedKg: weight,
+        weightLabel: 'Cước: ' + weight + ' kg'
       };
     }
-
     function formatVND(num) {
       return Math.round(num || 0).toLocaleString('vi-VN') + ' đ';
     }
