@@ -2475,6 +2475,43 @@ function openProductDetailModal(id) {
       setJourneyStage(1);
       startAutoJourney();
     });
+ // =======================================================
+  // KẾT NỐI TỰ ĐỘNG VỚI GOOGLE APPS SCRIPT KHO SẢN PHẨM & ĐƠN HÀNG
+  // =======================================================
+  const GOOGLE_SHEET_API = "https://script.google.com/macros/s/AKfycbzt22aihXB9fUkZyduRF06YBkccFAT-B-FPYKzpqW8mC9O-mdqlX_B4s7CLem9nr9Mj/exec";
+
+  // 1. Tự động kéo sản phẩm từ Sheet về khi khách truy cập web
+  async function loadProductsFromGoogleSheet() {
+    try {
+      console.log("Đang đồng bộ dữ liệu từ Google Sheet...");
+      const res = await fetch(GOOGLE_SHEET_API);
+      const data = await res.json();
+
+      if (Array.isArray(data) && data.length > 0) {
+        console.log("Đã tải thành công " + data.length + " sản phẩm từ Google Sheet!");
+        currentProductsList = data;
+        localStorage.setItem('habu_products_v2', JSON.stringify(data));
+
+        // Tự động làm mới lại toàn bộ giao diện sản phẩm trên màn hình
+        if (typeof renderCatalogView === 'function') renderCatalogView();
+        if (typeof renderIntroTopProducts === 'function') renderIntroTopProducts();
+        if (typeof renderProducts === 'function') renderProducts();
+        if (typeof renderCatalog === 'function') renderCatalog();
+        if (typeof renderFilteredProducts === 'function') renderFilteredProducts();
+      } else {
+        console.warn("Google Sheet chưa có sản phẩm hoặc trả về mảng rỗng.");
+      }
+    } catch (err) {
+      console.error("Không thể kết nối với Google Sheet, sử dụng dữ liệu cục bộ:", err);
+    }
+  }
+
+  // 2. Kích hoạt tải dữ liệu ngay khi trang web vừa tải xong HTML
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadProductsFromGoogleSheet);
+  } else {
+    loadProductsFromGoogleSheet();
+  }
   </script>
 </body>
 </html>
