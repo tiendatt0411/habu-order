@@ -2520,146 +2520,53 @@ const TELEGRAM_CHAT_ID = "8609051076";
 async function notifyTelegramOrder(orderData) {
   try {
     const timeNow = new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
-    
-    // Soạn nội dung tin nhắn gửi về điện thoại
-    const textMsg = 
-      `🛒 *CÓ ĐƠN HÀNG MỚI TỪ WEB!*\n\n` +
-      `👤 *Khách hàng:* ${orderData.customerName || orderData.name || 'Khách vãng lai'}\n` +
-      `📞 *Số điện thoại:* ${orderData.customerPhone || orderData.phone || 'Không có'}\n` +
-      `📍 *Địa chỉ:* ${orderData.customerAddress || orderData.address || 'Giao tại kho'}\n` +
-      `💰 *Tổng tiền:* ${(orderData.grandTotalVND || orderData.totalVND || 0).toLocaleString()} VNĐ\n\n` +
-      `📦 *Danh sách sản phẩm:*\n${orderData.itemsDetail || 'Xem chi tiết đơn'}\n\n` +
-      `⏰ *Thời gian:* ${timeNow}`;
 
-    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    // Tránh lỗi hiển thị ký tự đặc biệt trên Telegram
+    const safeHtml = (str) => String(str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-    await fetch(url, {
+    // 1. Lấy danh sách sản phẩm từ orderData hoặc biến productRows của trang
+    const items = (orderData && Array.isArray(orderData.items) && orderData.items.length > 0)
+      ? orderData.items
+      : ((typeof productRows !== 'undefined' && Array.isArray(productRows)) ? productRows : []);
+
+    let itemsText = "<i>(Không có thông tin chi tiết sản phẩm)</i>";
+    if (items.length > 0) {
+      itemsText = items.map((it, idx) => {
+        const name = it.title || it.name || it.productTitle || `Sản phẩm #${idx + 1}`;
+        const qty = it.qty || it.quantity || 1;
+        const variant = it.variant ? ` [${it.variant}]` : '';
+        return `${idx + 1}. <b>${safeHtml(name)}</b>${safeHtml(variant)} (SL: <b>${qty}</b>)`;
+      }).join("\n");
+    }
+
+    const customerName = orderData.customerName || orderData.name || 'Khách vãng lai';
+    const customerPhone = orderData.customerPhone || orderData.phone || 'Không có';
+    const customerAddress = orderData.customerAddress || orderData.address || 'Giao tại kho';
+    const totalVND = Number(orderData.grandTotalVND || orderData.totalVND || 0).toLocaleString('vi-VN');
+
+    // 2. Soạn nội dung tin nhắn HTML gửi về Telegram
+    const htmlMsg = 
+      `🛒 <b>CÓ ĐƠN HÀNG MỚI TỪ WEB!</b>\n\n` +
+      `👤 <b>Khách hàng:</b> ${safeHtml(customerName)}\n` +
+      `📞 <b>Số điện thoại:</b> <code>${safeHtml(customerPhone)}</code>\n` +
+      `📍 <b>Địa chỉ:</b> ${safeHtml(customerAddress)}\n\n` +
+      `📦 <b>SẢN PHẨM ĐẶT:</b>\n${itemsText}\n\n` +
+      `💰 <b>Tổng tiền:</b> <b>${totalVND} VNĐ</b>\n` +
+      `⏰ <b>Thời gian:</b> ${timeNow}`;
+
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chat_id: TELEGRAM_CHAT_ID,
-        text: textMsg,
-        parse_mode: "Markdown"
+        text: htmlMsg,
+        parse_mode: "HTML"
       })
     });
-    console.log("Đã bắn thông báo về Telegram thành công!");
   } catch (err) {
-    console.error("Lỗi khi gửi thông báo Telegram:", err);
+    console.error("Lỗi gửi thông báo Telegram:", err);
   }
 }
-// =======================================================
-// MODULE GỬI ĐƠN HÀNG VỀ TELEGRAM (BẢN AN TOÀN TUYỆT ĐỐI)
-// =======================================================
-(function () {
-  var BOT_TOKEN = "9133212799:AAFQCX8GJ6bydm1zTm2jZQAKqXnOogr6Wmk";
-  var CHAT_ID = "8609051076";
-
-  // Hàm chuyển đổi ký tự tránh lỗi định dạng HTML của Telegram
-  function escapeHTML(str) {
-    if (!str) return "";
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
-  }
-
-  function initTelegramAlert() {
-    var submitBtn = document.getElementById("submitOrderBtn");
-    if (!submitBtn) return;
-
-    submitBtn.addEventListener("click", function () {
-      setTimeout(async function () {
-        // 1. Quét thông tin khách hàng từ các ô input
-        var allInputs = Array.from(document.querySelectorAll("form input, form textarea"));
-        var nameInput = allInputs.find(i => /tên|name/i.test(i.id || i.placeholder || i.name));
-        var phoneInput = allInputs.find(i => /thoại|phone|sdt|tel/i.test(i.id || i.placeholder || i.name));
-        var addrInput = allInputs.find(i => /chỉ|addr/i.test(i.id || i.placeholder || i.name));
-
-        var customerName = nameInput && nameInput.value.trim() ? nameInput.value.trim() : "Khách đặt web";
-        var customerPhone = phoneInput && phoneInput.value.trim() ? phoneInput.value.trim() : "";
-        var customerAddress = addrInput && addrInput.value.trim() ? addrInput.value.trim() : "Chưa ghi địa chỉ";
-
-        var totalEl = document.getElementById("summaryGrandTotalVND");
-        var totalVND = totalEl && totalEl.innerText.trim() ? totalEl.innerText.trim() : "0 đ";
-
-        // Bỏ qua nếu form chưa điền số điện thoại
-        if (!customerPhone) return;
-
-        // 2. Thu thập danh sách sản phẩm khách đặt
-        var itemsList = [];
-
-        // Kiểm tra các biến giỏ hàng phổ biến trong JavaScript
-        var sourceCart = window.currentCart || window.cart || window.orderRows || window.orderItemsList || null;
-
-        if (Array.isArray(sourceCart) && sourceCart.length > 0) {
-          itemsList = sourceCart.map(function (it, idx) {
-            var title = it.title || it.name || "Sản phẩm";
-            var qty = it.qty || it.quantity || it.count || 1;
-            var price = it.allInVND || it.priceVND || it.price;
-            var priceStr = price ? " (" + Number(price).toLocaleString("vi-VN") + " đ)" : "";
-            return (idx + 1) + ". <b>" + escapeHTML(title) + "</b> x" + qty + priceStr;
-          });
-        } else {
-          // Dự phòng: Quét các hàng hiển thị trên bảng giỏ hàng ở màn hình đặt hàng
-          var rows = document.querySelectorAll("#orderRows tr, .order-item-row, #orderItemsTable tbody tr");
-          if (rows.length > 0) {
-            rows.forEach(function (r, idx) {
-              var text = r.innerText.replace(/\s+/g, " ").trim();
-              if (text && !text.toLowerCase().includes("tổng")) {
-                itemsList.push((idx + 1) + ". " + escapeHTML(text));
-              }
-            });
-          }
-        }
-
-        var productListHtml = itemsList.length > 0 
-          ? itemsList.join("\n") 
-          : "<i>(Xem danh sách sản phẩm trực tiếp trên Google Sheet/Admin)</i>";
-
-        var timeNow = new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
-
-        // Tạo nội dung tin nhắn dạng HTML
-        var htmlMsg =
-          "🛒 <b>CÓ ĐƠN HÀNG MỚI TỪ WEB!</b>\n\n" +
-          "👤 <b>Khách:</b> " + escapeHTML(customerName) + "\n" +
-          "📞 <b>SĐT:</b> <code>" + escapeHTML(customerPhone) + "</code>\n" +
-          "📍 <b>Địa chỉ:</b> " + escapeHTML(customerAddress) + "\n\n" +
-          "📦 <b>DANH SÁCH SẢN PHẨM:</b>\n" +
-          productListHtml + "\n\n" +
-          "💰 <b>Tổng thanh toán:</b> <b style='color:#e11d48'>" + escapeHTML(totalVND) + "</b>\n" +
-          "⏰ <b>Thời gian:</b> " + timeNow;
-
-        // 3. Gửi về Telegram
-        try {
-          var response = await fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: CHAT_ID,
-              text: htmlMsg,
-              parse_mode: "HTML"
-            })
-          });
-
-          var resData = await response.json();
-          if (resData.ok) {
-            console.log("✅ Đã gửi đơn hàng chi tiết về Telegram!");
-          } else {
-            console.error("❌ Telegram API từ chối:", resData.description);
-          }
-        } catch (err) {
-          console.error("❌ Lỗi mạng gửi Telegram:", err);
-        }
-      }, 500);
-    });
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initTelegramAlert);
-  } else {
-    initTelegramAlert();
-  }
-})();
   </script>
 </body>
 </html>
