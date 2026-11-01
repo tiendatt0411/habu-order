@@ -2320,172 +2320,87 @@ async function translateAllCatalogTitlesToVietnamese() {
       const btn = document.getElementById('translateAllBtn');
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<span>⏳ Đang quét sạch tiếng Hàn & chuẩn hóa...</span>';
+        btn.innerHTML = '<span>⏳ Đang chuẩn hóa tiếng Việt toàn bộ...</span>';
       }
 
-      // 1. TỪ ĐIỂN TỰ ĐỘNG KHÔNG CẦN QUA API (CHỐNG CHẶN CORS)
       const brandMap = {
+        '메디힐': 'Mediheal',
+        '바이오던스': 'Biodance',
+        '어노브': 'UNOVE',
+        '바이오힐보': 'Bioheal BOH',
+        '이니스프리': 'Innisfree',
+        '제로이드': 'Zeroid',
+        '피노': 'Fino',
         '웰라쥬': 'Wellage',
         '에스트라': 'Aestura',
         '라로슈포제': 'La Roche-Posay',
         '아누아': 'Anua',
-        '토리든': 'Torriden',
-        '메디힐': 'Mediheal',
-        '메디큐브': 'Medicube',
-        '식물나라': 'Shikmulnara',
         '일리윤': 'Illiyoon',
-        '유시몰': 'Euthymol',
-        '피지오겔': 'Physiogel',
-        '닥터지': 'Dr.G',
-        '라운드랩': 'Round Lab',
         '달바': "d'Alba",
-        '스킨1004': 'Skin1004',
-        '헤라': 'Hera',
-        '클리오': 'Clio',
-        '롬앤': 'Romand',
-        '페리페라': 'Peripera',
-        '정샘물': 'Jung Saem Mool',
-        '코스알엑스': 'COSRX',
-        '아이소이': 'isoi',
-        '구달': 'Goodal',
-        '넘버즈인': 'numbuzin',
-        '마녀공장': 'Manyo Factory',
-        '브이티': 'VT Cosmetics',
-        '스파오': 'SPAO',
-        '나이키': 'Nike',
-        '아디다스': 'Adidas',
-        '아식스': 'Asics',
-        '노스페이스': 'The North Face'
+        '시튜에아': 'Situea'
       };
 
       const termRules = [
-        // Khử sạch các tàn dư nửa nạc nửa mỡ cũ
-        { r: /Set quà tặng/gi, v: '' },
-        { r: /Bản lẻ 1 món/gi, v: '' },
-        { r: /Set \d+ món/gi, v: '' },
-
-        // Mỹ phẩm - Dòng sản phẩm
-        { r: /시카플라스트\s*멀티\s*리페어/gi, v: 'Cicaplast B5 Phục Hồi Đa Năng' },
-        { r: /시카플라스트/gi, v: 'Cicaplast B5' },
-        { r: /아토베리어\s*365/gi, v: 'Atobarrier 365' },
-        { r: /리얼\s*히알루로닉\s*블루\s*100/gi, v: 'Real Hyaluronic Blue 100 Cấp Ẩm Chuyên Sâu' },
-        { r: /리얼\s*히알루로닉/gi, v: 'Real Hyaluronic' },
-        { r: /피디알엔\s*히알루론산/gi, v: 'PDRN Hyaluronic Căng Bóng' },
-        { r: /피디알엔/gi, v: 'PDRN' },
-        { r: /다이브인\s*저분자\s*히알루론산/gi, v: 'Dive-In Hyaluronic Acid Phân Tử Nhỏ' },
-        { r: /다이브인/gi, v: 'Dive-In' },
-        { r: /티트리\s*진정/gi, v: 'Tràm Trà Dịu Da Teatree' },
-        { r: /마데카소사이드/gi, v: 'Madecassoside Rau Má' },
-        { r: /세라마이드아토|세라마이드\s*아토/gi, v: 'Ceramide Ato Dưỡng Ẩm Chuyên Sâu' },
-
-        // Loại sản phẩm
-        { r: /크림/gi, v: 'Kem Dưỡng' },
-        { r: /앰플/gi, v: 'Tinh Chất Ampoule' },
-        { r: /세럼/gi, v: 'Serum' },
-        { r: /토너패드|패드/gi, v: 'Toner Pad' },
-        { r: /토너/gi, v: 'Nước Hoa Hồng Toner' },
-        { r: /에센스/gi, v: 'Essence' },
-        { r: /미스트/gi, v: 'Xịt Khoáng Mist' },
-        { r: /수분\s*캡슐\s*미스트/gi, v: 'Xịt Khoáng Viên Nang Cấp Nước' },
-        { r: /클렌징폼|클렌징/gi, v: 'Sữa Rửa Mặt' },
-        { r: /선크림|선 젤|선스크린/gi, v: 'Kem Chống Nắng' },
-        { r: /마스크팩|마스크/gi, v: 'Mặt Nạ Giấy' },
-        { r: /립\s*에센스|립밤|립케어/gi, v: 'Dưỡng Môi' },
-        { r: /치약/gi, v: 'Kem Đánh Răng' },
-        { r: /트리트먼트/gi, v: 'Dầu Ủ Dưỡng Tóc Treatment' },
-
-        // Quy cách, Set, Quà tặng
-        { r: /(\d+)\s*입/gi, v: 'Set $1 chai/tuýp' },
-        { r: /더블\s*기획|더블/gi, v: 'Set Đôi Tiết Kiệm' },
-        { r: /기획세트|기획/gi, v: 'Set Ưu Đãi' },
-        { r: /단품/gi, v: 'Bản Đơn' },
-        { r: /리필/gi, v: 'Lõi Refill' },
+        // Chuẩn hóa quy cách đóng gói hộp / set
+        { r: /10\/10\+1매|10\+1매|10\+1\s*Miếng/gi, v: 'Hộp 10 Tặng 1 Miếng' },
+        { r: /7\+1\s*기획|7\+1매|7\+1\s*Miếng/gi, v: 'Hộp 7 Tặng 1 Miếng' },
+        { r: /1매\s*Tính\s*năng\s*cao|1매/gi, v: 'Hộp 10 Tặng 1 Miếng' },
+        { r: /2종/gi, v: 'Set 2 Loại' },
+        { r: /1&1\s*2입기획|1\+1|2입/gi, v: 'Set Đôi 2 Hộp' },
         { r: /골라담기/gi, v: 'Tự Chọn Loại' },
-        { r: /10\/10\+1\s*매|10\+1\s*매/gi, v: 'Set 10 Tặng 1 Miếng' },
-        { r: /(\d+)\s*매/gi, v: '$1 Miếng' },
 
-        // Nông sản & Coupang
-        { r: /금산인삼/gi, v: 'Nhân Sâm Geumsan' },
-        { r: /햇수삼|수삼/gi, v: 'Sâm Tươi' },
-        { r: /홍삼정/gi, v: 'Cao Hồng Sâm' },
-        { r: /홍삼정과/gi, v: 'Hồng Sâm Tẩm Mật' },
-        { r: /세척\s*무세척/gi, v: 'Đã Rửa / Chưa Rửa' },
-        { r: /세척/gi, v: 'Đã Rửa Sạch' },
-        { r: /무세척/gi, v: 'Chưa Rửa' },
-        { r: /난발삼/gi, v: 'Sâm Dáng Tự Nhiên' },
-        { r: /원삼/gi, v: 'Sâm Thân Thẳng Đẹp' },
-        { r: /(\d+)\s*년근/gi, v: '$1 Năm Tuổi' },
-        { r: /(\d+)\s*뿌리/gi, v: '$1 Củ' },
-        { r: /선물세트/gi, v: 'Hộp Quà Biếu Cao Cấp' },
-        { r: /바구니\s*포장/gi, v: 'Đóng Giỏ Mây' },
-        { r: /쿠폰할인/gi, v: '' }
+        // Mỹ phẩm - Dòng & Loại sản phẩm
+        { r: /에센셜\s*마스크팩|마스크팩|마스크/gi, v: 'Mặt Nạ Dưỡng Da' },
+        { r: /콜라겐\/캐비어\s*PDRN/gi, v: 'Collagen & Caviar PDRN Căng Bóng' },
+        { r: /딥\s*데미지\s*리페어\s*헤어\s*마스크\s*\(트리트먼트\/헤어팩\)/gi, v: 'Ủ Tóc Phục Hồi Hư Tổn Deep Damage Treatment' },
+        { r: /리프팅크림\/콜라겐젤마스크/gi, v: 'Kem Nâng Cơ & Mặt Nạ Collagen Gel' },
+        { r: /대용량/gi, v: 'Dung Tích Lớn' },
+        { r: /레티놀\s*시카\s*흔적\s*앰플/gi, v: 'Tinh Chất Retinol Cica Mờ Thâm Ampoule' },
+        { r: /인텐시브\s*크림/gi, v: 'Kem Dưỡng Ẩm Chuyên Sâu Intensive Cream' },
+        { r: /프리미엄\s*터치\s*헤어\s*마스크/gi, v: 'Ủ Tóc Phục Hồi Cao Cấp Premium Touch' },
+        { r: /글린트\s*립\s*글레이즈/gi, v: 'Son Bóng Dưỡng Môi Glint Lip Glaze' }
       ];
 
       let count = 0;
-
       currentProductsList.forEach(p => {
         let title = p.title || '';
         let brand = p.brand || '';
-        let variant = p.variant || '';
 
-        // 1. Dọn sạch rác, ngoặc vuông quảng cáo
+        // 1. Dọn sạch ngoặc vuông quảng cáo: [11월 올영픽], [블프특가/곰돌이무드등 증정]...
         title = title.replace(/\[[^\]]*\]/g, ' ');
-        variant = variant.replace(/\[[^\]]*\]/g, ' ');
 
-        // 2. Bổ sung các Brand còn thiếu (Biodance, Illiyoon...)
-        const extBrandMap = {
-          '바이오던스': 'Biodance',
-          '일리윤': 'Illiyoon',
-          '웰라쥬': 'Wellage',
-          '에스트라': 'Aestura',
-          '메디힐': 'Mediheal'
-        };
-        for (let kr in extBrandMap) {
+        // 2. Chuyển đổi Brand chuẩn
+        for (let kr in brandMap) {
           const reg = new RegExp(kr, 'gi');
-          if (reg.test(brand)) brand = extBrandMap[kr];
-          if (reg.test(title)) title = title.replace(reg, extBrandMap[kr]);
+          if (reg.test(brand)) brand = brandMap[kr];
+          if (reg.test(title)) title = title.replace(reg, brandMap[kr]);
         }
 
-        // 3. Khử triệt để lặp tên thương hiệu (IlliyoonIlliyoon -> Illiyoon)
-        title = title.replace(/(Illiyoon)+/gi, 'Illiyoon')
-                     .replace(/(Mediheal)+/gi, 'Mediheal')
-                     .replace(/(Biodance)+/gi, 'Biodance')
-                     .replace(/(Aestura)+/gi, 'Aestura');
+        // 3. Khử lặp Brand ở đầu tiêu đề
+        if (brand) {
+          const bReg = new RegExp('^(' + brand + ')\\s+(' + brand + ')', 'i');
+          title = title.replace(bReg, '$1');
+        }
 
-        // 4. Áp dụng từ điển dịch thuật
+        // 4. Dịch các thuật ngữ
         termRules.forEach(rule => {
           title = title.replace(rule.r, rule.v);
-          variant = variant.replace(rule.r, rule.v);
         });
 
-        // 5. Làm sạch dấu gạch chéo, dấu cộng, dấu phẩy thừa ở đầu và cuối
+        // 5. Quét sạch tiếng Hàn còn sót và dọn dấu thừa
         title = title
           .replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '')
-          .replace(/^[\s\/\+\,\-]+/, '') // Xóa sạch dấu /, +, - mồ côi ở ĐẦU câu
-          .replace(/[\s\/\+\,\-]+$/, '') // Xóa dấu thừa ở CUỐI câu
-          .replace(/[\+\,\/]\s*[\+\,\/]/g, ', ')
+          .replace(/^[\s\/\+\,\-]+/, '')
+          .replace(/[\s\/\+\,\-]+$/, '')
           .replace(/\s+/g, ' ')
           .trim();
 
-        // 6. KHÔI PHỤC GIÁ NGUYÊN SET & XÓA BỎ "BÁN LẺ 1 MÓN"
-        if (p.totalSetKrw && p.totalSetKrw > p.krw) {
-          p.krw = p.totalSetKrw; // Lấy lại đúng giá cả set/hộp gốc
-        }
-        delete p.isRetailCalc;
-        delete p.unitCount;
-
-        // Xóa sạch chữ "Bán lẻ 1 món"
-        variant = variant.replace(/Bán lẻ 1 món[^\)]*\)?/gi, '')
-                         .replace(/Bán lẻ 1 món/gi, '')
-                         .trim();
-        if (!variant || variant === '') variant = 'Hàng chính hãng Olive Young';
-
         p.title = title;
         p.brand = brand;
-        p.variant = variant;
+        p.variant = 'Nguyên hộp / Nguyên set chính hãng';
         count++;
       });
-      // 6. Ghi đè vào Storage và Render lại toàn bộ web ngay lập tức
+
       saveProductsToStorage();
       renderCatalogView();
       renderIntroTopProducts();
@@ -2497,7 +2412,7 @@ async function translateAllCatalogTitlesToVietnamese() {
       }
 
       await uploadProductsToGoogleSheets();
-      alert(`🎉 ĐÃ XỬ LÝ DỨT ĐIỂM!\nToàn bộ ${count} sản phẩm đã được lọc sạch tiếng Hàn 100% sang Tiếng Việt.`);
+      alert(`🎉 Đã đồng bộ và dịch chuẩn toàn bộ ${count} sản phẩm!`);
     }
     // 10. LƯU TRỮ VÀ ĐỒNG BỘ GOOGLE SHEETS
     function saveProductsToStorage() {
