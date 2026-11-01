@@ -2000,8 +2000,7 @@ function openProductDetailModal(id) {
 
     function orderProductItemDirect(id) {
   // Ép kiểu String để luôn tìm trúng sản phẩm dù ID là số hay chuỗi
-  const item = currentProductsList.find(p => String(p.id).trim() === String(id).trim());
-  if (!item) {
+const item = currentProductsList.find(p => String(p.id).trim() === String(id).trim());  if (!item) {
     console.warn("Không tìm thấy sản phẩm có ID:", id);
     return;
   }
