@@ -1462,62 +1462,63 @@ function getFilteredProductsList() {
       grid.innerHTML = filtered.map(renderProductCardHtml).join('');
     }
 
-  function renderProductCardHtml(item) {
-      const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.oldKrw, item.title);
-      const isSale = item.isSale !== false && item.isSale !== 'false';
-      
-      // Fallback ảnh an toàn nếu item không có ảnh hoặc link ảnh bị chết
-      const defaultImg = 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80';
-      const imgSrc = item.image && item.image.trim() ? item.image : defaultImg;
+function renderProductCardHtml(item) {
+  const calc = calculateFormulaVND(item.krw, item.weightClass, item.estKg, item.oldKrw, item.title);
+  const isSale = item.isSale !== false && item.isSale !== 'false';
+  
+  // Fallback ảnh an toàn nếu item không có ảnh hoặc link ảnh bị chết
+  const defaultImg = 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80';
+  const imgSrc = item.image && item.image.trim() ? item.image : defaultImg;
 
-      return `
-        <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group">
-          <div class="p-4 space-y-3">
-            <div class="relative w-full h-48 rounded-2xl overflow-hidden bg-slate-100 flex items-center justify-center">
-              <img 
-                src="${imgSrc}" 
-                alt="${item.title}" 
-                class="w-full h-full object-cover group-hover:scale-105 transition duration-500" 
-                loading="lazy" 
-                onerror="this.onerror=null; this.src='${defaultImg}';"
-              />
-              <div class="absolute top-2.5 left-2.5 flex flex-col gap-1">
-                <span class="px-2.5 py-0.5 rounded-full bg-slate-900/80 backdrop-blur-md text-white font-black text-[9px] uppercase tracking-wider">${item.mall || 'Olive Young'}</span>
-                ${isSale ? '<span class="px-2 py-0.5 rounded-full bg-rose-600 text-white font-black text-[9px] uppercase">🔥 Sale</span>' : ''}
-              </div>
-            </div>
-
-            <div class="space-y-1">
-              <div class="text-[11px] font-black uppercase text-sky-700">${item.brand || 'CHÍNH HÃNG'}</div>
-              <h3 class="text-xs font-bold text-slate-800 line-clamp-2 leading-snug group-hover:text-sky-600 transition" title="${item.title}">
-                ${item.title}
-              </h3>
-              <p class="text-[10px] text-slate-400 line-clamp-1">Phân loại: ${item.variant || 'Chính hãng từ Hàn Quốc'}</p>
-            </div>
-          </div>
-
-          <div class="px-4 pb-4 pt-1 space-y-3 border-t border-slate-100">
-            <div class="flex items-baseline justify-between">
-              <div>
-                ${calc.oldAllInVND > calc.allInVND ? `<div class="text-[10px] text-slate-400 line-through">${formatVND(calc.oldAllInVND)}</div>` : ''}
-                <div class="text-base font-black text-rose-600">${formatVND(calc.allInVND)}</div>
-              </div>
-              <div class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg">
-                Cước: ${calc.weightLabel}
-              </div>
-            </div>
-
-       <div class="grid grid-cols-2 gap-2">
-            <button type="button" onclick="openProductDetailModal('${item.id}')" class="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs">
-              Chi tiết →
-            </button>
-            <button type="button" onclick="orderProductItemDirect('${item.id}')" class="w-full py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs">
-              Đặt ngay
-            </button>
+  return `
+    <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group">
+      <div class="p-4 space-y-3">
+        <div class="relative w-full h-48 rounded-2xl overflow-hidden bg-slate-100 flex items-center justify-center">
+          <img 
+            src="${imgSrc}" 
+            alt="${item.title}" 
+            class="w-full h-full object-cover group-hover:scale-105 transition duration-500" 
+            loading="lazy" 
+            onerror="this.onerror=null; this.src='${defaultImg}';"
+          />
+          <div class="absolute top-2.5 left-2.5 flex flex-col gap-1">
+            <span class="px-2.5 py-0.5 rounded-full bg-slate-900/80 backdrop-blur-md text-white font-black text-[9px] uppercase tracking-wider">${item.mall || 'Olive Young'}</span>
+            ${isSale ? '<span class="px-2 py-0.5 rounded-full bg-rose-600 text-white font-black text-[9px] uppercase">🔥 Sale</span>' : ''}
           </div>
         </div>
-      `;
-    }
+
+        <div class="space-y-1">
+          <div class="text-[11px] font-black uppercase text-sky-700">${item.brand || 'CHÍNH HÃNG'}</div>
+          <h3 class="text-xs font-bold text-slate-800 line-clamp-2 leading-snug group-hover:text-sky-600 transition" title="${item.title}">
+            ${item.title}
+          </h3>
+          <p class="text-[10px] text-slate-400 line-clamp-1">Phân loại: ${item.variant || 'Chính hãng từ Hàn Quốc'}</p>
+        </div>
+      </div>
+
+      <div class="px-4 pb-4 pt-1 space-y-3 border-t border-slate-100">
+        <div class="flex items-baseline justify-between">
+          <div>
+            ${calc.oldAllInVND > calc.allInVND ? `<div class="text-[10px] text-slate-400 line-through">${formatVND(calc.oldAllInVND)}</div>` : ''}
+            <div class="text-base font-black text-rose-600">${formatVND(calc.allInVND)}</div>
+          </div>
+          <div class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg">
+            Cước: ${calc.weightLabel}
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" onclick="openProductDetailModal('${item.id}')" class="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs">
+            Chi tiết →
+          </button>
+          <button type="button" onclick="orderProductItemDirect('${item.id}')" class="w-full py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs">
+            Đặt ngay
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+}
 
     function renderIntroTopProducts() {
       const topGrid = document.getElementById('introTopProductsGrid');
