@@ -2042,29 +2042,76 @@ function openProductDetailModal(id) {
         btn.textContent = '⏳ Đang lưu đơn...';
       }
 
-      const payload = {
-        customerName: document.getElementById('customerName').value.trim(),
-        customerPhone: document.getElementById('customerPhone').value.trim(),
-        customerAddress: document.getElementById('customerAddress').value.trim(),
-        items: productRows,
-        grandTotalVND: document.getElementById('summaryGrandTotalVND').textContent
+      // Chuẩn hóa danh sách sản phẩm để gửi cho cả Sheet lẫn Telegram
+    const formattedItems = (Array.isArray(productRows) ? productRows : []).map((r, i) => {
+      const pTitle = r.title || r.name || r.productTitle || `Sản phẩm #${i + 1}`;
+      const pVariant = r.variant ? ` [${r.variant}]` : '';
+      const pQty = r.qty || 1;
+      return {
+        ...r,
+        title: pTitle,
+        name: pTitle,
+        productName: pTitle,
+        fullName: `${pTitle}${pVariant} (SL: ${pQty})`
       };
+    });
 
-      try {
-        const res = await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify(payload)
-        });
-        const result = await res.json();
-        if (result.status === 'success') {
-          document.getElementById('modalOrderCode').textContent = result.orderId || ('ORD-' + Math.floor(100 + Math.random() * 900));
-          document.getElementById('modalSummaryText').innerHTML = `
-            <div>👤 <strong>Khách:</strong> ${payload.customerName} (${payload.customerPhone})</div>
-            <div>📍 <strong>Nhận tại:</strong> ${payload.customerAddress}</div>
-            <div>💰 <strong>Giá trọn gói:</strong> <span class="text-rose-600 font-black">${payload.grandTotalVND}</span></div>
-          `;
-          document.getElementById('orderSuccessModal').classList.remove('hidden');
+    const payload = {
+      customerName: document.getElementById('customerName').value.trim(),
+      customerPhone: document.getElementById('customerPhone').value.trim(),
+      customerAddress: document.getElementById('customerAddress').value.trim(),
+      items: formattedItems,
+      grandTotalVND: document.getElementById('summaryGrandTotalVND').textContent
+    };
+
+    try {
+      const res = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json();
+      if (result.status === 'success') {
+        const orderIdCode = result.orderId || ('ORD-' + Math.floor(100 + Math.random() * 900));
+        document.getElementById('modalOrderCode').textContent = orderIdCode;
+        document.getElementById('modalSummaryText').innerHTML = `
+          <div>👤 <strong>Khách:</strong> ${payload.customerName} (${payload.customerPhone})</div>
+          <div>📍 <strong>Nhận tại:</strong> ${payload.customerAddress}</div>
+          <div>💰 <strong>Giá trọn gói:</strong> <span class="text-rose-600 font-black">${payload.grandTotalVND}</span></div>
+        `;
+        document.getElementById('orderSuccessModal').classList.remove('hidden');
+
+        // BẮN THÔNG BÁO TỨC THÌ VỀ TELEGRAM
+        (async () => {
+          try {
+            const botToken = "9133212799:AAFQCX8GJ6bydm1zTm2jZQAKqXnOogr6Wmk";
+            const chatId = "8609051076";
+            const timeStr = new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
+            const itemsText = formattedItems.map((it, idx) => `${idx + 1}. <b>${it.title}</b>${it.variant ? ` [${it.variant}]` : ''} — SL: <b>${it.qty || 1}</b>`).join("\n");
+            
+            const teleMsg = 
+              `🛒 <b>CÓ ĐƠN HÀNG MỚI TỪ WEB!</b>\n\n` +
+              `🆔 <b>Mã đơn:</b> <code>${orderIdCode}</code>\n` +
+              `👤 <b>Khách hàng:</b> ${payload.customerName}\n` +
+              `📞 <b>SĐT:</b> <code>${payload.customerPhone}</code>\n` +
+              `📍 <b>Địa chỉ:</b> ${payload.customerAddress}\n\n` +
+              `📦 <b>SẢN PHẨM ĐẶT:</b>\n${itemsText || '<i>(Không có chi tiết)</i>'}\n\n` +
+              `💰 <b>Tổng tiền:</b> <b>${payload.grandTotalVND}</b>\n` +
+              `⏰ <b>Thời gian:</b> ${timeStr}`;
+
+            await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                chat_id: chatId,
+                text: teleMsg,
+                parse_mode: 'HTML'
+              })
+            });
+          } catch (tErr) {
+            console.error("Lỗi gửi Telegram:", tErr);
+          }
+        })();
           document.getElementById('orderSuccessModal').classList.add('flex');
         } else {
           alert('Có lỗi lưu đơn, vui lòng liên hệ hotline/Zalo!');
