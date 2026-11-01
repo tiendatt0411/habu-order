@@ -1999,20 +1999,29 @@ function openProductDetailModal(id) {
     }
 
     function orderProductItemDirect(id) {
-      const item = currentProductsList.find(p => p.id === id);
-      if (!item) return;
-      productRows[0] = {
-        id: Date.now(),
-        link: item.link,
-        krw: item.krw,
-        qty: 1,
-        weightClass: item.weightClass,
-        estKg: item.estKg,
-        variant: item.variant
-      };
-      switchPageView('order');
-      renderOrderRows();
-    }
+  // Ép kiểu String để luôn tìm trúng sản phẩm dù ID là số hay chuỗi
+  const item = currentProductsList.find(p => String(p.id).trim() === String(id).trim());
+  if (!item) {
+    console.warn("Không tìm thấy sản phẩm có ID:", id);
+    return;
+  }
+  
+  // Gán đầy đủ thuộc tính, ĐẶC BIỆT LÀ TITLE
+  productRows[0] = {
+    id: item.id || Date.now(),
+    title: item.title || item.name || "Sản phẩm",
+    link: item.link || "",
+    krw: item.krw || 0,
+    qty: 1,
+    weightClass: item.weightClass || "under_05",
+    estKg: item.estKg || 0.25,
+    variant: item.variant || "Chính hãng từ Hàn Quốc"
+  };
+
+  switchPageView('order');
+  renderOrderRows();
+  if (typeof recalculateOrderSummary === 'function') recalculateOrderSummary();
+}
 
     function recalculateOrderSummary() {
       let totalKRW = 0, totalFee = 0;
