@@ -2511,6 +2511,42 @@ function openProductDetailModal(id) {
   } else {
     loadProductsFromGoogleSheet();
   }
+    // =======================================================
+// THÔNG BÁO ĐƠN HÀNG TỨC THÌ QUA TELEGRAM BOT
+// =======================================================
+const TELEGRAM_BOT_TOKEN = "9133212799:AAFQCX8GJ6bydm1zTm2jZQAKqXnOogr6Wmk";
+const TELEGRAM_CHAT_ID = "8609051076";
+
+async function notifyTelegramOrder(orderData) {
+  try {
+    const timeNow = new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
+    
+    // Soạn nội dung tin nhắn gửi về điện thoại
+    const textMsg = 
+      `🛒 *CÓ ĐƠN HÀNG MỚI TỪ WEB!*\n\n` +
+      `👤 *Khách hàng:* ${orderData.customerName || orderData.name || 'Khách vãng lai'}\n` +
+      `📞 *Số điện thoại:* ${orderData.customerPhone || orderData.phone || 'Không có'}\n` +
+      `📍 *Địa chỉ:* ${orderData.customerAddress || orderData.address || 'Giao tại kho'}\n` +
+      `💰 *Tổng tiền:* ${(orderData.grandTotalVND || orderData.totalVND || 0).toLocaleString()} VNĐ\n\n` +
+      `📦 *Danh sách sản phẩm:*\n${orderData.itemsDetail || 'Xem chi tiết đơn'}\n\n` +
+      `⏰ *Thời gian:* ${timeNow}`;
+
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+    await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: textMsg,
+        parse_mode: "Markdown"
+      })
+    });
+    console.log("Đã bắn thông báo về Telegram thành công!");
+  } catch (err) {
+    console.error("Lỗi khi gửi thông báo Telegram:", err);
+  }
+}
   </script>
 </body>
 </html>
