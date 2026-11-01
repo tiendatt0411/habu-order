@@ -2428,48 +2428,63 @@ async function translateAllCatalogTitlesToVietnamese() {
         let brand = p.brand || '';
         let variant = p.variant || '';
 
-        // 1. Dọn sạch ngoặc vuông rác ban đầu: [단독], [수지 PICK], [1+1]...
+        // 1. Dọn sạch rác, ngoặc vuông quảng cáo
         title = title.replace(/\[[^\]]*\]/g, ' ');
         variant = variant.replace(/\[[^\]]*\]/g, ' ');
 
-        // 2. Chuyển đổi tên Brand chuẩn
-        for (let kr in brandMap) {
+        // 2. Bổ sung các Brand còn thiếu (Biodance, Illiyoon...)
+        const extBrandMap = {
+          '바이오던스': 'Biodance',
+          '일리윤': 'Illiyoon',
+          '웰라쥬': 'Wellage',
+          '에스트라': 'Aestura',
+          '메디힐': 'Mediheal'
+        };
+        for (let kr in extBrandMap) {
           const reg = new RegExp(kr, 'gi');
-          if (reg.test(brand)) brand = brandMap[kr];
-          if (reg.test(title)) title = title.replace(reg, brandMap[kr]);
+          if (reg.test(brand)) brand = extBrandMap[kr];
+          if (reg.test(title)) title = title.replace(reg, extBrandMap[kr]);
         }
 
-        // 3. Khử lặp Brand ở đầu tiêu đề (ví dụ: Aestura Aestura -> Aestura)
-        if (brand) {
-          const bRegex = new RegExp('^(' + brand + ')\\s+(' + brand + ')', 'i');
-          title = title.replace(bRegex, '$1');
-        }
+        // 3. Khử triệt để lặp tên thương hiệu (IlliyoonIlliyoon -> Illiyoon)
+        title = title.replace(/(Illiyoon)+/gi, 'Illiyoon')
+                     .replace(/(Mediheal)+/gi, 'Mediheal')
+                     .replace(/(Biodance)+/gi, 'Biodance')
+                     .replace(/(Aestura)+/gi, 'Aestura');
 
-        // 4. Quét qua bộ từ điển chuẩn hóa toàn bộ thuật ngữ
+        // 4. Áp dụng từ điển dịch thuật
         termRules.forEach(rule => {
           title = title.replace(rule.r, rule.v);
           variant = variant.replace(rule.r, rule.v);
         });
 
-        // 5. Loại bỏ ký tự tiếng Hàn lẻ tẻ còn sót lại
-       // Xóa sạch tiếng Hàn và các dấu +, /, phẩy mồ côi
+        // 5. Làm sạch dấu gạch chéo, dấu cộng, dấu phẩy thừa ở đầu và cuối
         title = title
           .replace(/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/g, '')
+          .replace(/^[\s\/\+\,\-]+/, '') // Xóa sạch dấu /, +, - mồ côi ở ĐẦU câu
+          .replace(/[\s\/\+\,\-]+$/, '') // Xóa dấu thừa ở CUỐI câu
           .replace(/[\+\,\/]\s*[\+\,\/]/g, ', ')
-          .replace(/[\+\,\/]\s*$/g, '')
-          .replace(/^\s*[\+\,\/]/g, '')
-          .replace(/\(\s*\)/g, '')
           .replace(/\s+/g, ' ')
           .trim();
-        // Ghép tên chuẩn đẹp nếu thiếu
-        if (!variant) variant = 'Bản chính hãng nội địa';
+
+        // 6. KHÔI PHỤC GIÁ NGUYÊN SET & XÓA BỎ "BÁN LẺ 1 MÓN"
+        if (p.totalSetKrw && p.totalSetKrw > p.krw) {
+          p.krw = p.totalSetKrw; // Lấy lại đúng giá cả set/hộp gốc
+        }
+        delete p.isRetailCalc;
+        delete p.unitCount;
+
+        // Xóa sạch chữ "Bán lẻ 1 món"
+        variant = variant.replace(/Bán lẻ 1 món[^\)]*\)?/gi, '')
+                         .replace(/Bán lẻ 1 món/gi, '')
+                         .trim();
+        if (!variant || variant === '') variant = 'Hàng chính hãng Olive Young';
 
         p.title = title;
         p.brand = brand;
         p.variant = variant;
         count++;
       });
-
       // 6. Ghi đè vào Storage và Render lại toàn bộ web ngay lập tức
       saveProductsToStorage();
       renderCatalogView();
