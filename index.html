@@ -947,92 +947,44 @@
     let currentCatalogFilter = { type: 'all', value: '' };
 
     // KHO SẢN PHẨM KHỞI TẠO MẶC ĐỊNH
-    let currentProductsList = [
-      {
-        id: 101,
-        title: "[Olive Young 1등] [업그레이드 리뉴얼/81관왕 No.1] 메디힐 더마 토너패드 100매 7종 피부 고민별 골라 담기 (Toner Pad Mediheal 100 miếng kèm lõi)",
-        brand: "Mediheal",
-        category: "Mỹ phẩm",
-        subCategory: "Toner Pad",
-        mall: "Olive Young",
-        krw: 28900,
-        oldKrw: 39900,
-        weightClass: "under1",
-        estKg: 0.6,
-        isSale: true,
-        salesCount: 15400,
-        variant: "Hộp 100 miếng + Lõi Refill",
-        link: "https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000171207",
-        image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80",
-        benefit: "Làm dịu da mụn, tẩy tế bào chết nhẹ và cấp ẩm tức thì.",
-        benefits: ["Sản phẩm săn sale trực tiếp trên Olive Young Hàn Quốc.", "Hộp to tiện dụng kèm nhíp gắp hợp vệ sinh."],
-        targetAudience: "Mọi loại da, da mụn, da nhạy cảm cần làm dịu tức thì.",
-        usageGuide: "Dùng sau bước rửa mặt, đắp lên 2 bên má hoặc lau nhẹ theo chiều cấu trúc da."
-      },
-      {
-        id: 102,
-        title: "[KHÔNG. 1 trong 15 năm liên tiếp] Mediheal Essential Mask Pack 10/10+1 Sheet Special 7 loại cho bạn lựa chọn",
-        brand: "Mediheal",
-        category: "Mỹ phẩm",
-        subCategory: "Mặt nạ",
-        mall: "Olive Young",
-        krw: 12000,
-        oldKrw: 20000,
-        weightClass: "under1",
-        estKg: 0.35,
-        isSale: true,
-        salesCount: 28900,
-        variant: "Hộp 10 miếng tặng 1",
-        link: "https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000165507",
-        image: "https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=600&q=80",
-        benefit: "Dưỡng chất dồi dào, cấp ẩm sâu và phục hồi da cấp tốc.",
-        benefits: ["Mặt nạ quốc dân bán chạy nhất tại Olive Young Hàn Quốc.", "Chất liệu sợi cellulose ôm khít khuôn mặt."],
-        targetAudience: "Phù hợp mọi loại da cần phục hồi mệt mỏi.",
-        usageGuide: "Đắp trong 15 - 20 phút rồi vỗ nhẹ cho dưỡng chất thẩm thấu."
-      },
-      {
-        id: 103,
-        title: "[October All Young Pick/+3 Loại Mini] Mặt nạ ngủ môi Laneige 20g Lip Sleeping Mask Berry",
-        brand: "Laneige",
-        category: "Mỹ phẩm",
-        subCategory: "Mặt nạ",
-        mall: "Olive Young",
-        krw: 18000,
-        oldKrw: 24000,
-        weightClass: "under1",
-        estKg: 0.2,
-        isSale: true,
-        salesCount: 19800,
-        variant: "Hũ 20g kèm 3 hũ mini",
-        link: "https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000155609",
-        image: "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&w=600&q=80",
-        benefit: "Tẩy tế bào chết môi ban đêm, nuôi dưỡng môi hồng hào căng bóng.",
-        benefits: ["Chiết xuất quả mọng giàu Vitamin C dưỡng môi hồng tự nhiên.", "Tặng kèm 3 hũ mini tiện mang theo du lịch."],
-        targetAudience: "Người có đôi môi khô ráp, hay bong tróc vảy môi.",
-        usageGuide: "Thoa một lớp dày lên môi trước khi đi ngủ, sáng hôm sau lau nhẹ bằng khăn mềm."
-      },
-      {
-        id: 104,
-        title: "[Giao dịch 806.000] Nike Air Force 1 '07 Low White",
-        brand: "Nike",
-        category: "Thời trang",
-        subCategory: "Giày dép",
-        mall: "KREAM",
-        krw: 129000,
-        oldKrw: 139000,
-        weightClass: "under1",
-        estKg: 0.95,
-        isSale: false,
-        salesCount: 806000,
-        variant: "Trắng All White Chính Hãng",
-        link: "https://kream.co.kr/products/28",
-        image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=600&q=80",
-        benefit: "Mẫu giày sneaker kinh điển, phong cách trẻ trung năng động.",
-        benefits: ["Hàng kiểm định chính hãng 100% qua KREAM Hàn Quốc.", "Đầy đủ tag, hộp nguyên bản."],
-        targetAudience: "Tín đồ thời trang streetwear, thể thao.",
-        usageGuide: "Vui lòng ghi chú size giày (tính theo mm hoặc US) khi đặt hàng."
+// DÁN LINK GOOGLE APPS SCRIPT CỦA BẠN VÀO ĐÂY:
+    const GOOGLE_SHEET_API = "DÁN_LINK_WEB_APP_URL_CỦA_BẠN_VÀO_ĐÂY";
+
+    // 1. Tự động đồng bộ lên Google Sheet khi bạn lưu hoặc dịch sản phẩm
+    async function syncToGoogleSheet() {
+      if (!GOOGLE_SHEET_API || GOOGLE_SHEET_API.includes("DÁN_LINK")) return;
+      try {
+        await fetch(GOOGLE_SHEET_API, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(currentProductsList)
+        });
+        console.log("Đã đồng bộ lên Google Sheet!");
+      } catch (e) {
+        console.error("Lỗi đồng bộ Sheet:", e);
       }
-    ];
+    }
+
+    // 2. Tự động kéo sản phẩm từ Sheet về cho khách hàng khi họ mở web
+    async function loadProductsFromGoogleSheet() {
+      if (!GOOGLE_SHEET_API || GOOGLE_SHEET_API.includes("DÁN_LINK")) return;
+      try {
+        const res = await fetch(GOOGLE_SHEET_API);
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          currentProductsList = data;
+          localStorage.setItem('habu_products_v2', JSON.stringify(data));
+          if (typeof renderCatalogView === 'function') renderCatalogView();
+          if (typeof renderIntroTopProducts === 'function') renderIntroTopProducts();
+        }
+      } catch (e) {
+        console.log("Dùng dữ liệu cục bộ:", e);
+      }
+    }
+
+    // Tự chạy khi khách truy cập web
+    window.addEventListener('DOMContentLoaded', loadProductsFromGoogleSheet);
 
     // 1. THUẬT TOÁN ƯỚC LƯỢNG CÂN NẶNG CHUẨN (LÀM TRÒN BƯỚC 0.5KG)
 // 1. QUY TẮC CÂN NẶNG TOÀN DIỆN CHO TẤT CẢ MẶT HÀNG (BƯỚC NHẢY 0.5KG)
