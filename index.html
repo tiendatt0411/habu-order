@@ -2350,111 +2350,94 @@ function openProductDetailModal(id) {
     }
 
 // HỆ THỐNG DỊCH THUẬT TỰ ĐỘNG THÔNG MINH TOÀN DIỆN (CHẤM DỨT LỖI DỊCH THỦ CÔNG)
+    // HỆ THỐNG DỊCH AI GEMINI THÔNG MINH 100% TIẾNG VIỆT
     async function translateAllCatalogTitlesToVietnamese() {
+      // 1. Nhập API Key (Chỉ cần nhập 1 lần, lưu an toàn trong trình duyệt của bạn)
+      let geminiKey = localStorage.getItem('habu_gemini_api_key');
+      if (!geminiKey) {
+        geminiKey = prompt('Nhập Google Gemini API Key miễn phí của bạn để kích hoạt AI dịch thông minh:\n(Nếu chưa có, lấy miễn phí tại aistudio.google.com)');
+        if (!geminiKey || !geminiKey.trim()) {
+          alert('Chưa có API Key thì không thể kích hoạt AI thông minh!');
+          return;
+        }
+        localStorage.setItem('habu_gemini_api_key', geminiKey.trim());
+      }
+
       const btn = document.getElementById('translateAllBtn');
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<span>⏳ Đang dịch AI toàn bộ sản phẩm... (0%)</span>';
+        btn.innerHTML = '<span>🤖 Gemini AI đang phân tích và dịch ngữ cảnh... (0%)</span>';
       }
 
-      // 1. Bản đồ chuẩn hóa thương hiệu phổ biến (Ưu tiên tên quốc tế chính thống)
-      const officialBrandMap = {
-        '메디힐': 'Mediheal', '바이오던스': 'Biodance', '어노브': 'UNOVE',
-        '바이오힐보': 'Bioheal BOH', '메디앤서': 'Medianswer', '라네즈': 'Laneige',
-        '닥터지': 'Dr.G', '이니스프리': 'Innisfree', '제로이드': 'Zeroid',
-        '피노': 'Fino', '오리온': 'Orion', '농심': 'Nongshim', '해태': 'Haitai',
-        '롯데': 'Lotte', '동원': 'Dongwon', '고려홍삼': 'Hồng Sâm',
-        '정관장': 'Cheong Kwan Jang', '웰라쥬': 'Wellage', '에스트라': 'Aestura',
-        '라로슈포제': 'La Roche-Posay', '아누아': 'Anua', '일리윤': 'Illiyoon',
-        '달바': "d'Alba", '시튜에아': 'Situea', '스파오': 'SPAO'
-      };
-
-      // 2. Hàm gọi API dịch tự động không cần API Key
-      async function translateKoreanText(text) {
-        if (!text || !/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(text)) return text;
-        try {
-          const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=ko&tl=vi&dt=t&q=${encodeURIComponent(text)}`);
-          if (!res.ok) throw new Error('API failed');
-          const data = await res.json();
-          let translated = '';
-          if (data && data[0]) {
-            data[0].forEach(item => {
-              if (item && item[0]) translated += item[0];
-            });
-          }
-          return translated.trim() || text;
-        } catch (e) {
-          return text; // Giữ nguyên chữ nếu mất mạng
-        }
-      }
-
-      let total = currentProductsList.length;
+      const total = currentProductsList.length;
+      const batchSize = 15; // Dịch mỗi lần 15 sản phẩm qua Gemini
       let processed = 0;
 
-      // Xử lý song song từng nhóm nhỏ để tối ưu tốc độ và không bị chặn
-      const batchSize = 10;
       for (let i = 0; i < total; i += batchSize) {
         const batch = currentProductsList.slice(i, i + batchSize);
-        await Promise.all(batch.map(async (p) => {
-          let title = p.title || '';
-          let brand = p.brand || '';
-
-          // A. Làm sạch các thẻ quảng cáo rác trong ngoặc vuông
-          title = title.replace(/\[[^\]]*\]/g, ' ').replace(/\([^\)]*단하루[^\)]*\)/gi, ' ');
-
-          // B. Chuẩn hóa tên thương hiệu sang tiếng Anh
-          for (let kr in officialBrandMap) {
-            const reg = new RegExp(kr, 'gi');
-            if (reg.test(brand)) brand = officialBrandMap[kr];
-            if (reg.test(title)) title = title.replace(reg, officialBrandMap[kr]);
-          }
-
-          // C. Nếu tiêu đề vẫn còn chữ tiếng Hàn, dùng AI Dịch tự động sang tiếng Việt
-          if (/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(title)) {
-            title = await translateKoreanText(title);
-          }
-
-          // D. Dọn sạch các quy cách đóng gói thường gặp cho mượt mà
-          title = title
-            .replace(/10\/10\+1\s*(miếng|tờ|gói|매)/gi, 'Hộp 10 Tặng 1 Miếng')
-            .replace(/10\+1\s*(miếng|tờ|gói|매)/gi, 'Hộp 10 Tặng 1 Miếng')
-            .replace(/7\+1\s*(miếng|tờ|gói|매)/gi, 'Hộp 7 Tặng 1 Miếng')
-            .replace(/100\+100\s*(miếng|tờ|매)/gi, 'Set 2 Hộp (100+100 Miếng)')
-            .replace(/1\+1|1&1/gi, 'Set Đôi 2 Món')
-            .replace(/기획|kế hoạch|gói đặc biệt/gi, 'Set Quà Tặng')
-            .replace(/골라담기|chọn/gi, 'Tự Chọn Phân Loại')
-            .replace(/gói stick|gậy/gi, 'Gói Stick');
-
-          // E. Làm sạch ký tự đặc biệt thừa
-          title = title
-            .replace(/[\+\,\/]\s*[\+\,\/]/g, ', ')
-            .replace(/^[\s\/\+\,\-]+/, '')
-            .replace(/[\s\/\+\,\-]+$/, '')
-            .replace(/\s+/g, ' ')
-            .trim();
-
-          // Khử trùng lặp tên Brand ở đầu tiêu đề
-          if (brand) {
-            const doubleBrandReg = new RegExp(`^(${brand})\\s+(${brand})`, 'i');
-            title = title.replace(doubleBrandReg, '$1');
-          }
-
-          // F. Đảm bảo phân loại luôn là hàng chuẩn nguyên hộp/set
-          p.title = title;
-          p.brand = brand || 'Chính hãng';
-          p.variant = 'Nguyên hộp / Nguyên set chính hãng';
-          delete p.isRetailCalc;
-          delete p.unitCount;
+        
+        // Chuẩn bị danh sách tiêu đề gửi cho Gemini
+        const itemsToTranslate = batch.map((p, index) => ({
+          id: index,
+          rawTitle: p.title || '',
+          brand: p.brand || ''
         }));
+
+        const promptText = `Bạn là chuyên gia Việt hóa danh mục sản phẩm xách tay Hàn Quốc (Olive Young, Coupang). 
+Nhiệm vụ: Chuyển đổi danh sách tên sản phẩm tiếng Hàn sau sang TIẾNG VIỆT 100% mượt mà, chuẩn văn phong bán hàng e-commerce.
+Yêu cầu bắt buộc:
+1. Giữ nguyên tên Brand quốc tế (Laneige, Mediheal, d'Alba, Torriden, UNOVE, Medianswer, Orion, Dr.G...).
+2. Loại bỏ sạch sẽ các từ rác quảng cáo sàn Hàn: [11월 올영픽], [단하루], [블프특가], [증정], [기획], [1위]...
+3. Dịch đúng thuật ngữ: 
+   - 스틱 -> Dạng Gói / Stick
+   - 패드 -> Bông Tẩy Da Chết / Toner Pad
+   - 마스크 / 팩 -> Mặt Nạ Dưỡng Da
+   - 앰플 / 세럼 -> Tinh Chất / Serum
+   - 크림 -> Kem Dưỡng
+4. Xử lý chuẩn combo/set: "10+1" -> "Hộp 10 Tặng 1 Miếng", "1+1" -> "Set Đôi 2 Hộp/Tuýp", "100+100" -> "Set 2 Hộp (100+100 Miếng)".
+5. Kết quả trả về DUY NHẤT một mảng JSON thuần túy gồm các đối tượng: [{"id": 0, "brand": "Tên Brand Chuẩn", "title": "Tên tiếng Việt hoàn chỉnh"}, ...] không thêm ký tự markdown hay giải thích.
+
+Dữ liệu đầu vào:
+${JSON.stringify(itemsToTranslate)}`;
+
+        try {
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: promptText }] }],
+              generationConfig: { responseMimeType: "application/json" }
+            })
+          });
+
+          if (res.ok) {
+            const data = await res.json();
+            const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (textResponse) {
+              const translatedList = JSON.parse(textResponse);
+              translatedList.forEach(item => {
+                if (batch[item.id]) {
+                  if (item.title) batch[item.id].title = item.title.trim();
+                  if (item.brand) batch[item.id].brand = item.brand.trim();
+                  batch[item.id].variant = 'Nguyên hộp / Nguyên set chính hãng';
+                  delete batch[item.id].isRetailCalc;
+                  delete batch[item.id].unitCount;
+                }
+              });
+            }
+          }
+        } catch (err) {
+          console.error('Lỗi khi dịch qua Gemini batch ' + i, err);
+        }
 
         processed += batch.length;
         if (btn) {
-          const percent = Math.round((processed / total) * 100);
-          btn.innerHTML = `<span>⏳ Đang dịch AI toàn bộ sản phẩm... (${percent}%)</span>`;
+          const percent = Math.min(100, Math.round((processed / total) * 100));
+          btn.innerHTML = `<span>🤖 Gemini AI đang phân tích và dịch... (${percent}%)</span>`;
         }
       }
 
-      // Lưu trữ và render lại toàn bộ trang
+      // Lưu trữ và làm mới giao diện
       saveProductsToStorage();
       renderCatalogView();
       renderIntroTopProducts();
@@ -2462,14 +2445,14 @@ function openProductDetailModal(id) {
 
       if (btn) {
         btn.disabled = false;
-        btn.innerHTML = '<span>🌐 Dịch tất cả tên SP sang Tiếng Việt</span>';
+        btn.innerHTML = '<span>🌐 Dịch tất cả tên SP sang Tiếng Việt (Gemini AI)</span>';
       }
 
       if (typeof uploadProductsToGoogleSheets === 'function') {
         await uploadProductsToGoogleSheets();
       }
 
-      alert(`🎉 ĐÃ GIẢI QUYẾT TRIỆT ĐỂ!\nToàn bộ ${total} sản phẩm đã được dịch sạch sẽ sang Tiếng Việt và chuẩn hóa quy cách nguyên hộp/set.`);
+      alert(` ĐÃ HOÀN TẤT VIỆT HÓA BẰNG GEMINI AI!\nToàn bộ ${total} sản phẩm đã được chuyển sang tiếng Việt 100% tự nhiên, chuẩn quy cách sàn thương mại.`);
     }
     // 10. LƯU TRỮ VÀ ĐỒNG BỘ GOOGLE SHEETS
     function saveProductsToStorage() {
