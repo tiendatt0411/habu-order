@@ -2042,17 +2042,26 @@ function openProductDetailModal(id) {
         btn.textContent = '⏳ Đang lưu đơn...';
       }
 
-      // Chuẩn hóa danh sách sản phẩm để gửi cho cả Sheet lẫn Telegram
+// Chuẩn hóa danh sách sản phẩm: tra tên thật từ currentProductsList bằng ID
+    const allProds = (typeof currentProductsList !== 'undefined' && Array.isArray(currentProductsList)) 
+      ? currentProductsList 
+      : [];
+
     const formattedItems = (Array.isArray(productRows) ? productRows : []).map((r, i) => {
-      const pTitle = r.title || r.name || r.productTitle || `Sản phẩm #${i + 1}`;
+      // 1. Tìm thông tin gốc của sản phẩm qua ID
+      const matched = allProds.find(p => String(p.id) === String(r.id)) || {};
+      
+      // 2. Lấy tên chính xác từ sản phẩm gốc hoặc thuộc tính có sẵn
+      const realTitle = matched.title || matched.name || r.title || r.productName || r.name || `Sản phẩm #${i + 1}`;
       const pVariant = r.variant ? ` [${r.variant}]` : '';
       const pQty = r.qty || 1;
+      
       return {
         ...r,
-        title: pTitle,
-        name: pTitle,
-        productName: pTitle,
-        fullName: `${pTitle}${pVariant} (SL: ${pQty})`
+        title: realTitle,
+        name: realTitle,
+        productName: realTitle,
+        fullName: `${realTitle}${pVariant} (SL: ${pQty})`
       };
     });
 
