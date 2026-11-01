@@ -2548,45 +2548,42 @@ async function notifyTelegramOrder(orderData) {
   }
 }
 // =======================================================
-// TỰ ĐỘNG BẮN THÔNG BÁO VỀ TELEGRAM KHI KHÁCH BẤM GỬI ĐƠN (AN TOÀN TUYỆT ĐỐI)
+// TỰ ĐỘNG GỬI ĐƠN VỀ TELEGRAM (BẢN CHUẨN XÁC ĐÃ FIX)
 // =======================================================
 (function() {
   var BOT_TOKEN = "9133212799:AAFQCX8GJ6bydm1zTm2jZQAKqXnOogr6Wmk";
   var CHAT_ID = "8609051076";
 
-  function initTelegramOrderAlert() {
+  function bindTelegramAlert() {
     var submitBtn = document.getElementById("submitOrderBtn");
     if (!submitBtn) return;
 
-    // Gỡ bỏ sự kiện cũ nếu có để tránh gửi trùng
-    submitBtn.onclick = null;
-
     submitBtn.addEventListener("click", function() {
       setTimeout(async function() {
-        var nameInput = document.querySelector('input[placeholder*="Tên"], input[name*="name"], #customerName');
-        var phoneInput = document.querySelector('input[placeholder*="thoại"], input[name*="phone"], #customerPhone');
-        var addressInput = document.querySelector('input[placeholder*="chỉ"], textarea[placeholder*="chỉ"], #customerAddress');
+        // Tìm tự động tất cả các ô input trên form đặt hàng
+        var allInputs = Array.from(document.querySelectorAll("form input, form textarea"));
+        
+        var nameVal = (allInputs.find(i => /tên|name/i.test(i.id || i.placeholder || i.name)) || {}).value || "Khách đặt web";
+        var phoneVal = (allInputs.find(i => /thoại|phone|sdt|tel/i.test(i.id || i.placeholder || i.name)) || {}).value || "";
+        var addrVal = (allInputs.find(i => /chỉ|addr/i.test(i.id || i.placeholder || i.name)) || {}).value || "Không ghi địa chỉ";
+        
         var totalEl = document.getElementById("summaryGrandTotalVND");
-
-        var customerName = nameInput ? nameInput.value.trim() : "Khách đặt web";
-        var customerPhone = phoneInput ? phoneInput.value.trim() : "";
-        var customerAddress = addressInput ? addressInput.value.trim() : "Không ghi địa chỉ";
         var totalVND = totalEl ? totalEl.innerText.trim() : "0 đ";
 
-        if (!customerPhone) return;
+        console.log("Đang kích hoạt gửi đơn về Telegram với SĐT:", phoneVal);
 
         var timeNow = new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
 
         var textMsg =
           "🛒 *CÓ ĐƠN HÀNG MỚI TỪ WEB!*\n\n" +
-          "👤 *Khách:* " + customerName + "\n" +
-          "📞 *SĐT:* " + customerPhone + "\n" +
-          "📍 *Địa chỉ:* " + customerAddress + "\n" +
-          "💰 *Tổng tiền:* " + totalVND + "\n" +
+          "👤 *Khách:* " + nameVal + "\n" +
+          "📞 *SĐT:* " + (phoneVal || "Chưa nhập SĐT") + "\n" +
+          "📍 *Địa chỉ:* " + addrVal + "\n" +
+          "💰 *Tổng thanh toán:* " + totalVND + "\n" +
           "⏰ *Thời gian:* " + timeNow;
 
         try {
-          await fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage", {
+          var res = await fetch("https://api.telegram.org/bot" + BOT_TOKEN + "/sendMessage", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -2595,18 +2592,23 @@ async function notifyTelegramOrder(orderData) {
               parse_mode: "Markdown"
             })
           });
-          console.log("Đã gửi đơn hàng về Telegram!");
+          var data = await res.json();
+          if (data.ok) {
+            console.log("✅ Đã bắn thông báo Telegram thành công!");
+          } else {
+            console.error("❌ Telegram API trả lỗi:", data);
+          }
         } catch (err) {
-          console.error("Lỗi gửi Telegram:", err);
+          console.error("❌ Lỗi mạng khi gọi Telegram:", err);
         }
-      }, 600);
+      }, 500);
     });
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initTelegramOrderAlert);
+    document.addEventListener("DOMContentLoaded", bindTelegramAlert);
   } else {
-    initTelegramOrderAlert();
+    bindTelegramAlert();
   }
 })();
   </script>
