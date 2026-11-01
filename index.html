@@ -2319,82 +2319,32 @@ async function translateAllCatalogTitlesToVietnamese() {
       const btn = document.getElementById('translateAllBtn');
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<span>⏳ Đang dịch tự động qua AI Google...</span>';
+        btn.innerHTML = '<span>⏳ Đang dịch chuẩn hóa toàn bộ...</span>';
       }
 
-      // 1. TỪ ĐIỂN CHUẨN HÓA ĐA SÀN (Mỹ phẩm, Thời trang Musinsa/KREAM, Đồ Coupang)
-      const multiPlatformDict = [
-        // Sâm & Thực phẩm Coupang
-        { kr: /금산인삼/gi, vi: 'Nhân sâm Geumsan' },
-        { kr: /햇수삼|수삼/gi, vi: 'Sâm tươi' },
-        { kr: /홍삼정과/gi, vi: 'Hồng sâm tẩm mật' },
-        { kr: /홍삼정|홍삼/gi, vi: 'Hồng sâm' },
-        { kr: /세척\s*무세척/gi, vi: 'Đã rửa / Chưa rửa' },
-        { kr: /세척/gi, vi: 'Đã rửa sạch' },
-        { kr: /무세척/gi, vi: 'Chưa rửa' },
-        { kr: /난발삼/gi, vi: 'Sâm tự nhiên nhiều nhánh' },
-        { kr: /원삼/gi, vi: 'Sâm củ thẳng' },
-        { kr: /가정용/gi, vi: 'Dùng gia đình' },
-        { kr: /선물세트/gi, vi: 'Hộp quà biếu cao cấp' },
-        { kr: /바구니\s*포장/gi, vi: 'Đóng gói giỏ mây' },
-        { kr: /국내산/gi, vi: 'Nội địa Hàn Quốc' },
-        { kr: /(\d+)\s*년근/gi, vi: '$1 năm tuổi' },
-        { kr: /(\d+)\s*뿌리/gi, vi: '$1 củ' },
-        { kr: /(\d+)\s*포/gi, vi: '$1 gói' },
-
-        // Thời trang Musinsa & KREAM
-        { kr: /오버핏/gi, vi: 'Dáng rộng Overfit' },
-        { kr: /레더|비건레더/gi, vi: 'Da nhân tạo Vegan Leather' },
-        { kr: /자켓|재킷/gi, vi: 'Áo khoác Jacket' },
-        { kr: /점퍼/gi, vi: 'Áo khoác Jumper' },
-        { kr: /아노락/gi, vi: 'Áo gió Anorak' },
-        { kr: /후드티|후드/gi, vi: 'Áo nỉ có mũ Hoodie' },
-        { kr: /맨투맨/gi, vi: 'Áo Sweater nỉ chui đầu' },
-        { kr: /티셔츠/gi, vi: 'Áo phông T-Shirt' },
-        { kr: /셔츠/gi, vi: 'Áo sơ mi' },
-        { kr: /데님 팬츠|데님팬츠|데님/gi, vi: 'Quần bò Jeans' },
-        { kr: /카고 팬츠|카고팬츠|카고/gi, vi: 'Quần túi hộp Cargo' },
-        { kr: /슬랙스/gi, vi: 'Quần tây Slacks' },
-        { kr: /트레이닝 팬츠/gi, vi: 'Quần thể thao Training' },
-        { kr: /바지|팬츠/gi, vi: 'Quần' },
-        { kr: /스니커즈|운동화/gi, vi: 'Giày thể thao' },
-        { kr: /신발/gi, vi: 'Giày' },
-        { kr: /블랙/gi, vi: 'Đen' },
-        { kr: /화이트/gi, vi: 'Trắng' },
-        { kr: /그레이/gi, vi: 'Xám' },
-
-        // Mỹ phẩm Olive Young
-        { kr: /토너패드|패드/gi, vi: 'Toner Pad' },
-        { kr: /마스크팩|마스크/gi, vi: 'Mặt nạ dưỡng da' },
-        { kr: /선크림|선 젤|선스크린/gi, vi: 'Kem chống nắng' },
-        { kr: /수분크림|보습크림/gi, vi: 'Kem dưỡng ẩm' },
-        { kr: /클렌징폼|클렌징/gi, vi: 'Sữa rửa mặt' },
-        { kr: /세럼/gi, vi: 'Serum' },
-        { kr: /앰플/gi, vi: 'Ampoule' },
-        { kr: /토너/gi, vi: 'Nước hoa hồng (Toner)' },
-        { kr: /에센스/gi, vi: 'Tinh chất' },
-        { kr: /립밤|립케어|립글로스/gi, vi: 'Son dưỡng môi' },
-        { kr: /더블기획/gi, vi: 'Set đôi siêu hời' },
-        { kr: /기획세트|기획/gi, vi: 'Set quà tặng' },
-        { kr: /리필/gi, vi: 'Lõi Refill thay thế' },
-        { kr: /단품/gi, vi: 'Bản lẻ' },
-        { kr: /대용량/gi, vi: 'Dung tích lớn' },
-        { kr: /골라담기/gi, vi: 'Tự chọn loại' }
-      ];
-
-      // Làm sạch ký tự rác, thẻ quảng cáo
-      function preCleanKoreanTitle(raw) {
+      // 1. HÀM DỌN RÁC & LÀM SẠCH TIÊU ĐỀ HÀN TRƯỚC KHI DỊCH
+      function cleanRawKoreanTitle(raw, brand) {
         if (!raw) return '';
         let t = raw;
-        t = t.replace(/\[(?:단독|기획|NEW|1위|한정|올영픽|10월|11월|12월|증정|특가|쿠폰할인|무료배송)[^\]]*\]/gi, ' ');
-        multiPlatformDict.forEach(rule => {
-          t = t.replace(rule.kr, rule.vi);
-        });
+
+        // Xóa sạch toàn bộ các loại ngoặc vuông quảng cáo [단독], [수지 PICK], [1+1 기획]...
+        t = t.replace(/\[[^\]]*\]/g, ' ');
+
+        // Xóa dấu ngoặc đơn thừa ở đầu câu nếu có
+        t = t.replace(/^\([^\)]*\)/g, ' ');
+
+        // Khử lặp tên thương hiệu ở đầu (ví dụ: "에스트라 에스트라..." -> "에스트라...")
+        if (brand) {
+          const bClean = brand.trim();
+          const doubleBrandRegex = new RegExp('^(' + bClean + ')\\s+(' + bClean + ')', 'i');
+          t = t.replace(doubleBrandRegex, '$1');
+        }
+
         return t.replace(/\s+/g, ' ').trim();
       }
 
-      // Hàm dịch AI Google song song có cơ chế Fallback
-      async function translateSingleSentence(text) {
+      // 2. HÀM GỌI GOOGLE TRANSLATE API DỊCH TRỌN VẸN CÂU
+      async function translateFullSentence(text) {
         if (!text || !/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(text)) return text;
         try {
           const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=ko&tl=vi&dt=t&q=' + encodeURIComponent(text);
@@ -2406,42 +2356,74 @@ async function translateAllCatalogTitlesToVietnamese() {
             }
           }
         } catch (e) {
-          console.warn('Lỗi kết nối dịch Google:', e);
+          console.warn('Lỗi dịch câu:', e);
         }
         return text;
+      }
+
+      // 3. TỪ ĐIỂN CHUẨN HÓA TIẾNG VIỆT SAU KHI DỊCH XONG
+      function polishVietnameseTitle(str) {
+        if (!str) return '';
+        let s = str;
+
+        const polishRules = [
+          // Chuẩn hóa dạng set & quà tặng
+          { re: /(\d+)\s*miếng\s*\+\s*(\d+)\s*miếng/gi, to: 'Set $1+$2 miếng' },
+          { re: /kế hoạch đặc biệt|kế hoạch kép|kế hoạch/gi, to: 'Set ưu đãi' },
+          { re: /phiên bản giới hạn/gi, to: 'Bản giới hạn' },
+          { re: /đơn lẻ|mục đơn lẻ|sản phẩm đơn lẻ/gi, to: 'Bản lẻ' },
+          { re: /chọn và chọn|chọn và thu thập/gi, to: 'Tự chọn loại' },
+
+          // Thuật ngữ mỹ phẩm thông dụng
+          { re: /miếng đệm mực|miếng mực|tấm lót mực/gi, to: 'Toner Pad' },
+          { re: /gói mặt nạ|mặt nạ gói/gi, to: 'Mặt nạ giấy' },
+          { re: /kem chống nắng dạng gel/gi, to: 'Kem chống nắng Sun Gel' },
+          { re: /chất tăng cường/gi, to: 'Booster' },
+          { re: /ống thuốc|ống tinh chất/gi, to: 'Ampoule' },
+          { re: /huyết thanh/gi, to: 'Serum' },
+          { re: /axit hyaluronic/gi, to: 'Hyaluronic Acid' },
+          { re: /sương mù/gi, to: 'Xịt khoáng Mist' },
+
+          // Sâm & Thực phẩm Coupang
+          { re: /sâm tươi geumsan/gi, to: 'Nhân sâm tươi Geumsan' },
+          { re: /chưa rửa sạch và đã rửa/gi, to: 'Đã rửa / Chưa rửa' },
+          { re: /gốc|rễ/gi, to: 'củ' }
+        ];
+
+        polishRules.forEach(rule => {
+          s = s.replace(rule.re, rule.to);
+        });
+
+        // Xóa các khoảng trắng thừa và dấu câu lệch
+        return s.replace(/\s+/g, ' ').replace(/\s+,/g, ',').trim();
       }
 
       let count = 0;
       const total = currentProductsList.length;
 
-      // Xử lý lần lượt từng món có tiếng Hàn
       for (let i = 0; i < total; i++) {
         let p = currentProductsList[i];
         let hasKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(p.title || '') || /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(p.variant || '') || /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(p.brand || '');
 
         if (hasKorean) {
-          if (btn && i % 5 === 0) {
-            btn.innerHTML = `<span>⏳ Đang dịch SP (${i + 1}/${total})...</span>`;
+          if (btn && i % 3 === 0) {
+            btn.innerHTML = `<span>⏳ Đang dịch chuẩn hóa (${i + 1}/${total})...</span>`;
           }
 
-          // Dịch tiêu đề
-          let cleaned = preCleanKoreanTitle(p.title);
-          if (/[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(cleaned)) {
-            p.title = await translateSingleSentence(cleaned);
-          } else {
-            p.title = cleaned;
-          }
+          // Dịch tiêu đề: Dọn sạch -> Dịch toàn câu -> Chuẩn hóa văn phong
+          let cleaned = cleanRawKoreanTitle(p.title, p.brand);
+          let viTitle = await translateFullSentence(cleaned);
+          p.title = polishVietnameseTitle(viTitle);
 
-          // Dịch phân loại nếu có tiếng Hàn
-          if (p.variant && /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(p.variant)) {
-            let clVar = preCleanKoreanTitle(p.variant);
-            p.variant = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(clVar) ? await translateSingleSentence(clVar) : clVar;
-          }
-
-          // Dịch tên thương hiệu nếu còn dính tiếng Hàn
+          // Dịch brand nếu là tiếng Hàn
           if (p.brand && /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(p.brand)) {
-            let clBrand = preCleanKoreanTitle(p.brand);
-            p.brand = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(clBrand) ? await translateSingleSentence(clBrand) : clBrand;
+            p.brand = await translateFullSentence(p.brand);
+          }
+
+          // Dịch phân loại nếu là tiếng Hàn
+          if (p.variant && /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(p.variant)) {
+            let viVar = await translateFullSentence(cleanRawKoreanTitle(p.variant));
+            p.variant = polishVietnameseTitle(viVar);
           }
 
           count++;
@@ -2460,7 +2442,7 @@ async function translateAllCatalogTitlesToVietnamese() {
       }
 
       await uploadProductsToGoogleSheets();
-      alert(`🎉 Đã xử lý và dịch thành công ${count} sản phẩm sang Tiếng Việt cho tất cả các sàn!`);
+      alert(`🎉 Đã dịch chuẩn hóa 100% thành công ${count} sản phẩm sang Tiếng Việt thuần túy!`);
     }
     // 10. LƯU TRỮ VÀ ĐỒNG BỘ GOOGLE SHEETS
     function saveProductsToStorage() {
