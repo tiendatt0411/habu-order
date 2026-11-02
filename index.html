@@ -11,7 +11,10 @@
   <!-- Tesseract (đọc chữ trong ảnh) giờ chỉ tải khi khách dùng tính năng Gửi ảnh -> web mở nhanh hơn -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,600&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,600&family=Montserrat:wght@800;900&family=Luckiest+Guy&family=Meow+Script&family=Playball&display=swap" rel="stylesheet">
+  <!-- Chỉ lấy riêng chữ "đ" của Dancing Script: chữ "đ" của Playball bị cách điệu khó đọc -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&text=%C4%91&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/sky.jpg">
   <script>
     tailwind.config = {
       theme: {
@@ -127,6 +130,160 @@
       background: #7dd3fc;
       border-radius: 9999px;
     }
+    /* =================== BANNER ĐẦU TRANG (thiết kế Canva "D-2") =================== */
+    /* Máy tính: các phần tử đặt theo % như bản thiết kế, chữ co giãn theo bề rộng banner (cqw) */
+    .habu-hero {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      background: #6aa6dc url('assets/sky.jpg') center / cover no-repeat;
+      --fs-title: 7.02cqw;
+      --fs-script: 3.41cqw;
+      --fs-link: 1.73cqw;
+      --fs-bottom: 1.72cqw;
+    }
+    .habu-hero .hero-sky {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: -2; pointer-events: none;
+    }
+    .habu-hero .hero-snow { position: absolute; inset: 0; z-index: 6; pointer-events: none; overflow: hidden; }
+    .hero-stage {
+      position: relative; margin: 0 auto; width: 100%; max-width: 1680px;
+      aspect-ratio: 2.174; container-type: inline-size;
+    }
+    .hero-stage .hp { position: absolute; }
+    .h-logo   { left: 6.06%; top: 7.5%; width: 12.4%; }
+    .h-heart  { width: 5.6%; filter: drop-shadow(0 0.3cqw 0.5cqw rgba(30, 70, 130, .25)); }
+    .h-heart-1 { left: 25%; top: 19%; }
+    .h-heart-2 { left: 69.5%; top: 7%; z-index: 2; }
+    .h-flake  { filter: drop-shadow(0 0.2cqw 0.4cqw rgba(30, 70, 130, .2)); }
+    .h-flake-1 { left: 77.5%; top: 27.6%; width: 4.7%; }
+    .h-flake-2 { left: 65.9%; top: 43.2%; width: 3.9%; }
+    .h-flake-3 { left: 88.1%; top: 45.2%; width: 1.9%; }
+    .h-flake-4 { left: 4.1%;  top: 57.3%; width: 3.1%; }
+    .h-flake-5 { left: 11.6%; top: 71.6%; width: 1.75%; opacity: .7; }
+    .h-flake-6 { left: 28.25%; top: 59.8%; width: 1.1%; opacity: .8; }
+    .h-title {
+      left: 29.1%; top: 9.2%; margin: 0;
+      font-family: 'Luckiest Guy', 'Montserrat', sans-serif; font-weight: 400;
+      font-size: var(--fs-title); line-height: 1.1; letter-spacing: .03em; white-space: nowrap;
+      background: linear-gradient(90deg, #dbefff 0%, #564f96 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 0 .2cqw rgba(255, 255, 255, .9)) drop-shadow(0 .22cqw .3cqw rgba(40, 80, 150, .38));
+    }
+    .h-script {
+      left: 1.2%; top: 42.3%; width: 36%; margin: 0; text-align: center;
+      font-family: 'Meow Script', cursive; font-size: var(--fs-script); line-height: 1.47; color: #f3fafe;
+      text-shadow: 0 0 .25cqw #fff, 0 0 .7cqw rgba(255, 255, 255, .85), 0 0 1.5cqw rgba(170, 215, 255, .9);
+    }
+    .h-moon { left: 46.9%; top: 22.1%; width: 7.25%; z-index: 3; }
+    .h-pill {
+      left: 53.6%; top: 36.4%; z-index: 3; white-space: nowrap;
+      padding: .46cqw 1.15cqw; border-radius: 999px; background: #26688f; color: #f6e086;
+      font: 700 .85cqw/1.2 'Be Vietnam Pro', sans-serif;
+      box-shadow: 0 .3cqw .9cqw rgba(15, 45, 80, .3), inset 0 0 0 .08cqw rgba(255, 255, 255, .15);
+    }
+    /* Cụm treo: dây + thẻ HABU + móc + thẻ vàng – đung đưa nhẹ quanh điểm treo dưới mặt trăng */
+    .h-swing {
+      left: 39.5%; top: 36.2%; width: 22.2%; z-index: 4;
+      display: flex; flex-direction: column; align-items: center;
+      transform-origin: 50% 0; animation: hbSwing 4.8s ease-in-out infinite;
+    }
+    @keyframes hbSwing { 0%, 100% { transform: rotate(-1.8deg); } 50% { transform: rotate(1.8deg); } }
+    .h-string { width: .12cqw; height: 2.5cqw; background: rgba(255, 255, 255, .85); }
+    .h-tag {
+      width: 2.75cqw; height: 1.85cqw; border-radius: .35cqw; background: #fab51f;
+      border: .08cqw solid rgba(120, 70, 0, .6); box-shadow: 0 .15cqw .4cqw rgba(0, 0, 0, .2);
+      display: flex; align-items: center; justify-content: center;
+      font: 900 .58cqw/1 'Be Vietnam Pro', sans-serif; color: #1f2937; letter-spacing: .02em;
+    }
+    .h-hook { width: 1.3cqw; height: 1cqw; margin-top: -.05cqw; }
+    .h-ropes { width: 100%; height: 2.6cqw; display: block; margin-top: -.1cqw; }
+    .h-card {
+      width: 100%; font-size: 1cqw; position: relative; color: #211859;
+      border-radius: .9em; padding: .95em 1.05em .85em;
+      background: linear-gradient(170deg, #e2b477 0%, #d39b59 45%, #c08641 100%);
+      border: .14em solid #f6d7a7;
+      box-shadow: 0 1.6em 3em rgba(20, 40, 80, .32), inset 0 .1em 0 rgba(255, 255, 255, .35);
+      font-family: 'Be Vietnam Pro', sans-serif;
+    }
+    .h-card-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: .55em; border-bottom: .07em solid rgba(80, 45, 10, .25); }
+    .h-card-label { background: #0e4163; color: #fde7a6; font-weight: 900; font-size: .58em; letter-spacing: .06em; padding: .35em .75em; border-radius: .35em; }
+    .h-card-route { font-weight: 800; font-size: .74em; color: #211859; }
+    .h-card-panel {
+      margin-top: .8em; padding: .85em .9em; border-radius: .7em; border: .07em solid #9e7029;
+      background: radial-gradient(circle at 40% 40%, #f5ecd5 0%, #e8d7ae 70%, #d8be82 100%);
+      display: flex; justify-content: space-between; align-items: center; gap: .6em;
+      box-shadow: inset 0 0 .6em rgba(120, 80, 20, .18);
+    }
+    .h-card-name { font-weight: 900; font-size: 1.12em; line-height: 1.15; color: #211859; }
+    .h-card-sub { font-weight: 700; font-size: .7em; margin-top: .15em; color: #211859; }
+    .h-card-phones { font-weight: 800; font-size: .72em; margin-top: .45em; color: #a04a28; white-space: nowrap; }
+    .h-card-phones a { color: inherit; text-decoration: none; }
+    .h-card-phones a:hover { text-decoration: underline; }
+    .h-card-logo { width: 4.2em; height: 4.2em; border-radius: 50%; background: #fff; object-fit: contain; padding: .15em; flex-shrink: 0; box-shadow: 0 0 0 .07em rgba(33, 24, 89, .25); }
+    .h-card-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 1.05em; font-size: .72em; font-weight: 700; color: #3b2508; }
+    .h-card-code { background: #fff; color: #1f2937; font-family: ui-monospace, monospace; font-size: .92em; font-weight: 700; padding: .25em .6em; border-radius: .35em; }
+    .h-links { left: 68.75%; top: 59.3%; display: flex; flex-direction: column; gap: .2cqw; z-index: 5; }
+    .h-link {
+      display: inline-flex; align-items: center; gap: .75cqw; background: none; border: 0; padding: .1cqw 0; cursor: pointer;
+      font-family: 'Dancing Script', 'Playball', cursive; font-size: var(--fs-link); line-height: 1.2; color: #fff; white-space: nowrap; text-align: left;
+      text-decoration: underline; text-decoration-thickness: .06em; text-underline-offset: .14em;
+      text-shadow: 0 .08cqw .25cqw rgba(20, 50, 90, .35); transition: transform .2s ease, color .2s ease;
+    }
+    .h-link:hover { transform: translateX(.4cqw); color: #fff7d1; }
+    .h-link svg { width: 1.45em; height: 1.45em; flex-shrink: 0; filter: drop-shadow(0 .08cqw .2cqw rgba(20, 50, 90, .3)); }
+    .h-bottom {
+      left: 0; right: 0; top: 86.4%; margin: 0; text-align: center; letter-spacing: .02em;
+      font-family: 'Dancing Script', 'Playball', cursive; font-size: var(--fs-bottom); line-height: 1.2; color: #fce399;
+      -webkit-text-stroke: .045em #fce399; paint-order: stroke fill;
+      text-shadow: 0 .1cqw 0 #7a4c14, 0 .16cqw .32cqw rgba(60, 38, 8, .6);
+    }
+    .h-bottom .h-break { display: block; }
+    /* Tuyết rơi */
+    .snow-flake { position: absolute; top: -6%; animation: hbFall linear infinite; will-change: transform; }
+    .snow-flake > span { display: block; animation: hbSway ease-in-out infinite alternate; }
+    .snow-flake img { display: block; width: 100%; height: auto; }
+    .snow-dot { border-radius: 50%; background: #fff; box-shadow: 0 0 6px rgba(255, 255, 255, .9); }
+    @keyframes hbFall { to { transform: translateY(112vh); } }
+    @keyframes hbSway { from { transform: translateX(-18px) rotate(-25deg); } to { transform: translateX(18px) rotate(25deg); } }
+
+    /* Điện thoại & máy tính bảng: xếp dọc */
+    @media (max-width: 1023px) {
+      .habu-hero { --fs-title: clamp(40px, 12.5vw, 64px); --fs-script: clamp(26px, 7.6vw, 40px); --fs-link: clamp(21px, 6vw, 28px); --fs-bottom: clamp(16px, 4.5vw, 21px); }
+      .hero-stage { aspect-ratio: auto; display: flex; flex-direction: column; align-items: center; padding: 26px 16px 34px; container-type: normal; }
+      .hero-stage .hp { position: relative; left: auto; right: auto; top: auto; }
+      .h-logo { order: 1; width: 104px; }
+      .h-title { order: 2; margin-top: 4px; font-size: var(--fs-title); filter: drop-shadow(0 0 3px rgba(255, 255, 255, .85)) drop-shadow(0 4px 8px rgba(40, 60, 130, .25)); }
+      .h-heart { position: absolute !important; width: 44px; }
+      .h-heart-1 { left: 1.5% !important; top: 128px !important; }
+      .h-heart-2 { right: 2% !important; left: auto !important; top: 92px !important; }
+      .h-script { order: 3; width: 100%; margin-top: 10px; text-shadow: 0 0 3px #fff, 0 0 9px rgba(255, 255, 255, .85), 0 0 18px rgba(170, 215, 255, .9); }
+      .h-pill { order: 4; margin-top: 16px; padding: 6px 14px; font-size: 12px; }
+      .h-moon { order: 5; width: 84px; margin-top: 10px; }
+      .h-swing { order: 6; width: min(330px, 88vw); margin-top: -4px; }
+      .h-string { width: 2px; height: 22px; }
+      .h-tag { width: 38px; height: 25px; border-radius: 5px; font-size: 9px; border-width: 1px; }
+      .h-hook { width: 18px; height: 14px; }
+      .h-ropes { height: 30px; }
+      .h-card { font-size: min(14.5px, 3.95vw); }
+      .h-links { order: 7; margin-top: 26px; gap: 10px; align-items: flex-start; }
+      .h-link { gap: 10px; padding: 4px 0; text-shadow: 0 1px 3px rgba(20, 50, 90, .35); }
+      .h-link:hover { transform: translateX(4px); }
+      .h-bottom .h-break { display: inline; }
+      .h-bottom { order: 8; margin-top: 22px; max-width: 560px; text-shadow: 0 1px 0 #8a5a1c, 0 2px 4px rgba(70, 45, 10, .55); }
+      .h-flake { position: absolute !important; }
+      .h-flake-1 { left: auto !important; right: 5% !important; top: 34% !important; width: 40px; }
+      .h-flake-2 { left: 7% !important; top: 37% !important; width: 32px; }
+      .h-flake-3 { left: auto !important; right: 5% !important; top: 74% !important; width: 24px; }
+      .h-flake-4 { left: 3% !important; top: 81% !important; width: 26px; }
+      .h-flake-5, .h-flake-6 { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .h-swing { animation: none; }
+      .habu-hero .hero-snow { display: none; }
+    }
+
     .force-clickable {
       pointer-events: auto !important;
       cursor: pointer !important;
@@ -210,7 +367,7 @@
       </a>
 
       <!-- MENU 4 MỤC CHUẨN -->
-      <nav class="hidden md:flex items-center gap-8 text-[14px]">
+      <nav class="hidden lg:flex items-center gap-8 text-[14px]">
         <button type="button" id="navBtn-intro" onclick="switchPageView('intro')" class="nav-nike-link active-nav">
           Giới Thiệu
         </button>
@@ -279,8 +436,8 @@
       </nav>
 
       <!-- KHUNG BÊN PHẢI -->
-      <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 md:flex-none justify-end">
-        <form onsubmit="handleNikeSearch(event)" class="relative min-w-0 flex-1 md:flex-none md:w-52" role="search">
+      <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 lg:flex-none justify-end">
+        <form onsubmit="handleNikeSearch(event)" class="relative min-w-0 flex-1 lg:flex-none lg:w-52" role="search">
           <input
             type="search"
             id="nikeSearchInput"
@@ -310,7 +467,7 @@
     </div>
 
     <!-- MENU CHO ĐIỆN THOẠI (trước đây điện thoại không có menu) -->
-    <nav class="md:hidden max-w-7xl mx-auto flex gap-2 overflow-x-auto custom-scrollbar pb-2.5 text-[11px] font-bold" aria-label="Menu">
+    <nav class="lg:hidden max-w-7xl mx-auto flex gap-2 overflow-x-auto custom-scrollbar pb-2.5 text-[11px] font-bold" aria-label="Menu">
       <button type="button" onclick="switchPageView('intro')" class="shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700">Giới thiệu</button>
       <button type="button" onclick="switchPageView('catalog', { filterType: 'all' })" class="shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700">Tất cả SP</button>
       <button type="button" onclick="switchPageView('catalog', { filterType: 'sale' })" class="shrink-0 px-3 py-1.5 rounded-full bg-rose-50 text-rose-600">🔥 Sale</button>
@@ -324,82 +481,73 @@
   <!-- ================= VIEW 1: TRANG GIỚI THIỆU ================= -->
   <main id="view-intro" class="page-view active-view flex-1">
     
-    <section class="relative bg-gradient-to-r from-[#0369a1] via-[#0284c7] to-[#0c4a6e] text-white py-14 px-6 overflow-hidden">
-      <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8 items-center">
-        <div class="lg:col-span-7 space-y-4">
-          <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/25 px-3.5 py-1.5 rounded-full text-xs font-semibold">
-            <span class="px-2 py-0.5 bg-amber-400 text-slate-950 font-black rounded-full uppercase text-[10px]">Order Hàng Hàn Chính Hãng</span>
-            <span>Tuyến bay thẳng Busan ✈️ Hà Nội • Cước 180k/kg</span>
-          </div>
+    <!-- BANNER ĐẦU TRANG (thay cho khung xanh "MUA HỘ & VẬN CHUYỂN...") -->
+    <section class="habu-hero" id="habuHero" aria-label="HàBu Order – Order & vận chuyển hàng Hàn">
+      <video class="hero-sky" id="heroSkyVideo" autoplay muted loop playsinline preload="auto" poster="assets/sky.jpg" aria-hidden="true">
+        <source src="assets/sky.mp4" type="video/mp4">
+      </video>
+      <div class="hero-snow" id="heroSnow" aria-hidden="true"></div>
 
-          <h1 class="hero-headline text-3xl sm:text-5xl font-black uppercase leading-[1.3] tracking-wide">
-            MUA HỘ &amp; VẬN CHUYỂN HÀNG HÀN <br/>
-            <span class="text-amber-300">TỪ BUSAN VỀ TẬN TAY BẠN</span>
-          </h1>
+      <div class="hero-stage">
+        <img class="hp h-logo" src="assets/logo-white.webp" alt="Logo HàBu Order – Busan & Hà Nội" width="640" height="516" />
+        <img class="hp h-heart h-heart-1" src="assets/heart.webp" alt="" aria-hidden="true" width="237" height="240" />
+        <img class="hp h-heart h-heart-2" src="assets/heart.webp" alt="" aria-hidden="true" width="237" height="240" />
+        <img class="hp h-flake h-flake-1" src="assets/snowflake.webp" alt="" aria-hidden="true" />
+        <img class="hp h-flake h-flake-2" src="assets/snowflake.webp" alt="" aria-hidden="true" />
+        <img class="hp h-flake h-flake-3" src="assets/snowflake.webp" alt="" aria-hidden="true" />
+        <img class="hp h-flake h-flake-4" src="assets/snowflake.webp" alt="" aria-hidden="true" />
+        <img class="hp h-flake h-flake-5" src="assets/snowflake.webp" alt="" aria-hidden="true" />
+        <img class="hp h-flake h-flake-6" src="assets/snowflake.webp" alt="" aria-hidden="true" />
 
-          <p class="text-sky-100 text-sm max-w-xl leading-relaxed">
-            HàBu Order mua hộ trực tiếp từ Olive Young, Musinsa, Coupang, KREAM... tự động quy đổi giá trọn gói về tay và ship thẳng đường Air chỉ 3 - 5 ngày.
-          </p>
+        <h1 class="hp h-title" aria-label="HÀBU ORDER">HÀBU ORDeR</h1>
 
-          <div class="pt-2 flex flex-wrap gap-3">
-            <button onclick="switchPageView('catalog', { filterType: 'sale' })" class="px-6 py-3.5 rounded-xl bg-amber-400 text-slate-950 font-black text-xs sm:text-sm shadow-xl hover:bg-amber-300 transition flex items-center gap-1.5 cursor-pointer">
-              <span>🛍️ Săn Kèo Sale Hot</span>
-            </button>
-            <button onclick="switchPageView('lens')" class="px-6 py-3.5 rounded-xl bg-white/20 hover:bg-white/30 text-white font-extrabold text-xs sm:text-sm border border-white/30 transition flex items-center gap-1.5 cursor-pointer">
-              <span>📸 Gửi Ảnh Báo Giá</span>
-            </button>
-            <button onclick="toggleFloatingAiChat()" class="force-clickable px-5 py-3.5 rounded-xl bg-sky-900/80 hover:bg-sky-900 text-amber-300 font-extrabold text-xs sm:text-sm border border-sky-400/40 transition flex items-center gap-1.5">
-              <span>🤖 Hỏi Đáp &amp; AI Tư Vấn</span>
-            </button>
-          </div>
-        </div>
+        <p class="hp h-script">Order &amp; Vận chuyển hàng Hàn<br/>về tận tay Bạn</p>
 
-        <div class="lg:col-span-5 flex flex-col items-center justify-center relative">
-          <div class="w-full flex justify-end mb-2 pr-2 pointer-events-none">
-            <div class="plane-float inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/30 text-xs font-bold text-amber-200 shadow-lg">
-              <span>✈️ Gimhae (PUS) ➔ Nội Bài (HAN)</span>
+        <div class="hp h-pill">✈ Gimhae (PUS) ➔ Nội Bài (HAN)</div>
+        <img class="hp h-moon" src="assets/moon.webp" alt="" aria-hidden="true" width="282" height="254" />
+
+        <!-- Cụm treo đung đưa: dây, thẻ HABU, móc, dây chữ V, thẻ vàng -->
+        <div class="hp h-swing">
+          <div class="h-string"></div>
+          <div class="h-tag">HABU</div>
+          <svg class="h-hook" viewBox="0 0 24 18" fill="none" stroke="#e2e8f0" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 0v7a4 4 0 1 0 4 4"/></svg>
+          <svg class="h-ropes" viewBox="0 0 260 40" preserveAspectRatio="none" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="1.6" aria-hidden="true"><path d="M130 0 L12 40 M130 0 L248 40"/></svg>
+          <div class="h-card">
+            <div class="h-card-top">
+              <span class="h-card-label">HÀBU AIR CARGO</span>
+              <span class="h-card-route">✈ BUSAN - HANOI</span>
             </div>
-          </div>
-
-          <div class="crane-swing flex flex-col items-center select-none">
-            <div class="w-1 h-10 bg-slate-300"></div>
-            <div class="w-10 h-7 bg-amber-400 rounded-md border border-slate-900 shadow flex items-center justify-center">
-              <span class="text-[8px] font-black text-slate-900">HABU</span>
+            <div class="h-card-panel">
+              <div>
+                <div class="h-card-name">HÀBU ORDER</div>
+                <div class="h-card-sub">Uy tín - Chính hãng - Chu đáo</div>
+                <div class="h-card-phones">📞 <a href="https://zalo.me/0383774099" target="_blank" rel="noopener noreferrer" title="Chat Zalo 0383 774 099">0383 774 099</a> • <a href="https://zalo.me/0973726066" target="_blank" rel="noopener noreferrer" title="Chat Zalo 0973 726 066">0973 726 066</a></div>
+              </div>
+              <img class="h-card-logo" src="assets/logo-color.webp" alt="" aria-hidden="true" width="360" height="308" />
             </div>
-            <svg class="w-6 h-6 -mt-1 text-slate-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <path d="M12 2v10a4 4 0 1 0 4 4"/>
-            </svg>
-            <svg class="w-56 h-8 -mt-1" viewBox="0 0 260 50" fill="none">
-              <line x1="130" y1="2" x2="22" y2="48" stroke="#e2e8f0" stroke-width="2.5"/>
-              <line x1="130" y1="2" x2="238" y2="48" stroke="#e2e8f0" stroke-width="2.5"/>
-            </svg>
-
-            <div class="relative w-72 sm:w-80 rounded-2xl bg-gradient-to-br from-[#e2b477] via-[#d19b56] to-[#b57c36] border-2 border-[#f6d7a7] shadow-[0_24px_50px_rgba(0,0,0,0.35)] p-4 text-habu-navy">
-              <div class="flex justify-between items-center border-b border-amber-950/20 pb-2 mb-2.5">
-                <span class="text-[9px] font-black uppercase tracking-wider bg-sky-900 text-amber-200 px-2 py-0.5 rounded">HÀBU AIR CARGO</span>
-                <span class="text-[11px] font-extrabold text-amber-950">✈️ BUSAN - HANOI</span>
-              </div>
-
-              <div class="card-gold-texture rounded-xl p-3 border border-[#9e7029] shadow-inner flex items-center justify-between gap-2">
-                <div>
-                  <div class="text-sm font-black text-[#181265] leading-tight">HÀBU ORDER</div>
-                  <div class="text-[10px] font-bold text-[#181265]">Uy tín - Chính hãng - Chu đáo</div>
-                  <div class="text-[10px] font-extrabold text-[#9e7029] mt-1">📞 0383 774 099 • 0973 726 066</div>
-                </div>
-                <div class="w-14 h-14 shrink-0">
-                  <svg viewBox="0 0 250 215" class="w-full h-full">
-                    <use href="#habu-emblem-pure"></use>
-                  </svg>
-                </div>
-              </div>
-
-              <div class="mt-2.5 pt-2 border-t border-amber-950/20 flex items-center justify-between text-amber-950 text-[10px] font-bold">
-                <span>Cước cố định: 180k/kg</span>
-                <span class="font-mono bg-white/80 px-2 py-0.5 rounded">ORD-EXPRESS</span>
-              </div>
+            <div class="h-card-bottom">
+              <span>Cước cố định: 180k/kg</span>
+              <span class="h-card-code">ORD-EXPRESS</span>
             </div>
           </div>
         </div>
+
+        <nav class="hp h-links" aria-label="Lối tắt">
+          <button type="button" class="h-link force-clickable" onclick="toggleFloatingAiChat()">
+            <svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4v4"/><circle cx="16" cy="3.2" r="1.4" fill="#fff"/><rect x="6" y="8" width="20" height="15" rx="7.5"/><circle cx="12" cy="15.5" r="1.8" fill="#fff"/><circle cx="20" cy="15.5" r="1.8" fill="#fff"/><path d="M13 19.5c1.8 1.2 4.2 1.2 6 0"/><path d="M6 13.5H3.5v5H6M26 13.5h2.5v5H26"/><path d="M11 23l-1.5 4.5M21 23l1.5 4.5"/></svg>
+            <span>Hỏi đáp &amp; Tư vấn AI-&gt;</span>
+          </button>
+          <button type="button" class="h-link" onclick="switchPageView('catalog', { filterType: 'sale' })">
+            <svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10h18l-1.4 18H8.4L7 10z"/><path d="M11.5 13V9a4.5 4.5 0 0 1 9 0v4"/></svg>
+            <span>Săn Sale ngay-&gt;</span>
+          </button>
+          <button type="button" class="h-link" onclick="switchPageView('lens')">
+            <svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11.5a2.5 2.5 0 0 1 2.5-2.5h4l2-3h7l2 3h4a2.5 2.5 0 0 1 2.5 2.5v13a2.5 2.5 0 0 1-2.5 2.5h-19A2.5 2.5 0 0 1 4 24.5z" fill="rgba(255,255,255,.95)"/><circle cx="16" cy="17.5" r="5" fill="#6aa6dc" stroke="#6aa6dc"/><circle cx="16" cy="17.5" r="3" fill="#fff" stroke="#fff"/></svg>
+            <span>Gửi ảnh báo giá-&gt;</span>
+          </button>
+        </nav>
+
+        <p class="hp h-bottom">HàBu Order mua hộ trực tiếp từ Olive Young, Musinsa, Coupang, KREAM... Tự động quy đổi trọn gói giá về <span class="h-break">tay và ship thẳng đường Air chỉ <span style="white-space:nowrap">3-5 ngày.</span></span></p>
       </div>
     </section>
 
@@ -2862,8 +3010,47 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
       });
     })();
 
-    // ---------- 15. KHỞI CHẠY ----------
+    // ---------- 15. BANNER ĐẦU TRANG: TUYẾT RƠI & VIDEO NỀN ----------
+    function initHeroBanner() {
+      const hero = document.getElementById('habuHero');
+      if (!hero) return;
+      const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const video = document.getElementById('heroSkyVideo');
+
+      // Tuyết rơi: bông tuyết 3D + chấm tuyết nhỏ, rơi chậm với tốc độ & độ lắc khác nhau
+      const snow = document.getElementById('heroSnow');
+      if (snow && !reduceMotion) {
+        const count = window.innerWidth < 768 ? 16 : 30;
+        const rand = (a, b) => a + Math.random() * (b - a);
+        let html = '';
+        for (let i = 0; i < count; i++) {
+          const useImage = i % 3 === 0;
+          const size = useImage ? rand(14, 28) : rand(4, 9);
+          const fall = rand(9, 18);
+          const sway = rand(2.5, 5);
+          html += `<div class="snow-flake" style="left:${rand(0, 100).toFixed(1)}%;width:${size.toFixed(0)}px;opacity:${rand(.55, .95).toFixed(2)};animation-duration:${fall.toFixed(1)}s;animation-delay:-${rand(0, fall).toFixed(1)}s">` +
+            `<span style="animation-duration:${sway.toFixed(1)}s">` +
+            (useImage ? '<img src="assets/snowflake.webp" alt="">' : `<i class="snow-dot" style="display:block;width:${size.toFixed(0)}px;height:${size.toFixed(0)}px"></i>`) +
+            '</span></div>';
+        }
+        snow.innerHTML = html;
+      }
+
+      // Video mây: chỉ chạy khi banner đang hiện trên màn hình (đỡ tốn pin điện thoại)
+      if (!video) return;
+      if (reduceMotion) { video.removeAttribute('autoplay'); video.pause(); return; }
+      const tryPlay = () => { const p = video.play(); if (p && p.catch) p.catch(() => {}); };
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(entries => {
+          entries.forEach(en => { if (en.isIntersecting && !document.hidden) tryPlay(); else video.pause(); });
+        }, { threshold: 0.05 }).observe(hero);
+      }
+      document.addEventListener('visibilitychange', () => { if (document.hidden) video.pause(); });
+    }
+
+    // ---------- 16. KHỞI CHẠY ----------
     function initApp() {
+      initHeroBanner();
       const lensKg = document.getElementById('lensKg');
       if (lensKg) lensKg.innerHTML = kgOptionsHtml(0.5);
       renderOrderRows();
