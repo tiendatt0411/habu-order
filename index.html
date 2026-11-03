@@ -321,6 +321,24 @@
       cursor: pointer !important;
     }
   </style>
+  <!-- Cấu hình PWA cho Android & iOS -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#3b82f6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Habu Order">
+  <link rel="apple-touch-icon" href="./logo-minimal.png">
+
+  <!-- Đăng ký Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('PWA Service Worker đã chạy:', reg.scope))
+          .catch(err => console.log('Lỗi đăng ký PWA:', err));
+      });
+    }
+  </script>
 </head>
 <body class="selection:bg-sky-500 selection:text-white flex flex-col min-h-screen">
 
@@ -2626,7 +2644,8 @@
       if (modal && !modal.classList.contains('hidden')) {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
-        setBodyScrollLocked(false);
+        const detail = document.getElementById('productDetailModal');
+        if (!detail || detail.classList.contains('hidden')) setBodyScrollLocked(false);
       }
     }
 
@@ -2684,6 +2703,9 @@
       renderAllProductViews();
       renderAdminManageList();
       closeVariantEditor();
+      // Đang mở trang chi tiết của chính sản phẩm này → vẽ lại để thấy ngay ô chọn phân loại
+      const detail = document.getElementById('productDetailModal');
+      if (detail && !detail.classList.contains('hidden') && modalVariant && String(modalVariant.id) === String(p.id)) openProductDetailModal(p.id);
       const ok = await uploadProductsToGoogleSheets();
       showToast(ok ? (opts ? `Đã lưu ${opts.items.length} phân loại ✓` : 'Đã xóa phân loại') : 'Đã lưu trên web nhưng chưa đồng bộ được Google Sheets');
     }
@@ -2755,6 +2777,7 @@
               ${link ? `<a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" class="py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs text-center transition">Xem link web Hàn ↗</a>` : ''}
               <button type="button" data-action="order-variant" data-id="${escapeHtml(item.id)}" class="py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs transition shadow-md shadow-sky-600/20 cursor-pointer">Đặt mua ngay</button>
             </div>
+            ${isAdminLoggedIn ? `<button type="button" data-action="admin-variants" data-id="${escapeHtml(item.id)}" class="w-full py-2 rounded-xl border border-dashed border-sky-300 bg-white hover:bg-sky-50 text-sky-700 font-black text-xs transition cursor-pointer" title="Thêm / sửa size, màu, dung tích… cho sản phẩm này. Khách không thấy nút này.">✏️ ${multi ? 'Sửa phân loại' : 'Thêm phân loại'} <span class="font-semibold text-slate-400">(chỉ admin thấy)</span></button>` : ''}
           </div>
         </div>`;
 
@@ -3887,5 +3910,62 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initApp);
     else initApp();
   </script>
+  <!-- POPUP HƯỚNG DẪN CÀI APP CHO IPHONE (TỰ ĐỘNG HIỆN KHI DÙNG SAFARI) -->
+<div id="iosInstallPrompt" class="hidden fixed bottom-4 left-4 right-4 z-50 bg-white/95 backdrop-blur-md border border-slate-200/80 p-4 rounded-2xl shadow-2xl transition-all duration-300 max-w-md mx-auto">
+  <div class="flex items-start justify-between gap-3 mb-2">
+    <div class="flex items-center gap-3">
+      <img src="./logo-minimal.png" class="w-10 h-10 rounded-xl border border-slate-200 object-contain p-1 bg-white shadow-sm" alt="Logo">
+      <div>
+        <h4 class="font-bold text-slate-800 text-sm">Cài đặt ứng dụng Habu Order</h4>
+        <p class="text-xs text-slate-500">Mua sắm tiện lợi, mở app ngay trên màn hình</p>
+      </div>
+    </div>
+    <button onclick="dismissIosPrompt()" class="text-slate-400 hover:text-slate-600 text-lg font-bold px-1">&times;</button>
+  </div>
+
+  <div class="bg-sky-50 rounded-xl p-2.5 text-xs text-slate-700 space-y-1.5 border border-sky-100">
+    <div class="flex items-center gap-2">
+      <span class="w-5 h-5 rounded-full bg-sky-500 text-white font-bold flex items-center justify-center text-[10px]">1</span>
+      <span>Nhấn nút <strong>Chia sẻ</strong> <svg class="inline-block w-4 h-4 text-sky-600 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg> (hoặc icon <span class="font-bold text-sky-700">⎋/↑</span> ở đáy màn hình).</span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span class="w-5 h-5 rounded-full bg-sky-500 text-white font-bold flex items-center justify-center text-[10px]">2</span>
+      <span>Cuộn xuống chọn <strong>Thêm vào MH chính</strong> (Add to Home Screen).</span>
+    </div>
+  </div>
+
+  <!-- Mũi tên chỉ xuống nút công cụ của Safari -->
+  <div class="flex justify-center -mb-5 mt-1">
+    <div class="w-4 h-4 bg-white/95 border-r border-b border-slate-200 rotate-45"></div>
+  </div>
+</div>
+
+<script>
+  (function initIosPrompt() {
+    // 1. Kiểm tra xem có đúng là thiết bị iOS (iPhone/iPad) hay không
+    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
+    // 2. Kiểm tra xem web đã được mở dưới dạng App hay chưa
+    const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+
+    // 3. Kiểm tra xem người dùng đã từng tắt thông báo này chưa
+    const isDismissed = localStorage.getItem('hideIosInstallPrompt');
+
+    if (isIos && !isStandalone && !isDismissed) {
+      // Tự động bật thông báo sau 2 giây khi khách vào web
+      setTimeout(() => {
+        const promptBox = document.getElementById('iosInstallPrompt');
+        if (promptBox) promptBox.classList.remove('hidden');
+      }, 2000);
+    }
+  })();
+
+  function dismissIosPrompt() {
+    const promptBox = document.getElementById('iosInstallPrompt');
+    if (promptBox) promptBox.classList.add('hidden');
+    // Lưu trạng thái để không làm phiền khách liên tục
+    localStorage.setItem('hideIosInstallPrompt', 'true');
+  }
+</script>
 </body>
 </html>
