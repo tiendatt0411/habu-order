@@ -980,6 +980,9 @@
             <button type="button" onclick="resetToStandardProducts()" class="text-xs font-bold text-sky-700 hover:underline cursor-pointer">
               🔄 Tải lại từ Google Sheets
             </button>
+            <button type="button" onclick="copyLinksNeedingOptions()" class="text-xs font-bold text-sky-800 bg-white hover:bg-sky-100 border border-sky-300 px-3 py-1.5 rounded-full transition cursor-pointer" title="Chép link các sản phẩm chưa có phân loại để bookmarklet Hút Sale tự lấy hàng loạt">
+              📋 Chép link cần lấy phân loại
+            </button>
             <button type="button" onclick="translateAllCatalogTitlesToVietnamese()" id="translateAllBtn" class="text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-3 py-1.5 rounded-full transition cursor-pointer">
               🌐 Dịch tất cả tên SP sang Tiếng Việt
             </button>
@@ -1691,6 +1694,56 @@
       return (item.title || '').toLowerCase().replace(/[^a-z0-9가-힣]/g, '');
     }
 
+    // Khóa theo link (để khớp kết quả "chỉ lấy phân loại" của bookmarklet với sản phẩm đang có)
+    function productLinkKey(link) {
+      link = String(link || '').trim();
+      if (!link) return '';
+      if (/goodsNo=|products\/\d+/.test(link)) return getProductUniqueKey({ link });
+      return link.replace(/^https?:\/\/(www\.|m\.)?/i, '').replace(/[?#].*$/, '').replace(/\/+$/, '').toLowerCase();
+    }
+
+    // Kết quả bookmarklet chế độ "danh sách link": chỉ gắn phân loại, giữ nguyên tên đã dịch, giá, ảnh...
+    function applyOptionUpdates(updates) {
+      const byKey = new Map();
+      currentProductsList.forEach(p => { const k = productLinkKey(p.link); if (k && !byKey.has(k)) byKey.set(k, []); if (k) byKey.get(k).push(p); });
+      const stat = { withOpt: 0, noOpt: 0, notFound: 0 };
+      updates.forEach(u => {
+        const targets = byKey.get(productLinkKey(u.link));
+        if (!targets) { stat.notFound++; return; }
+        const opts = normalizeOptions(u.options);
+        targets.forEach(p => {
+          if (opts) { p.options = opts; delete p.optChecked; }
+          else if (!hasOptions(p)) p.optChecked = 1;   // đã kiểm tra: sản phẩm không có phân loại
+        });
+        opts ? stat.withOpt++ : stat.noOpt++;
+      });
+      return stat;
+    }
+
+    // Chép link các sản phẩm chưa có phân loại (chưa kiểm tra lần nào) để dán vào bookmarklet
+    async function copyLinksNeedingOptions() {
+      if (!isAdminLoggedIn) return;
+      const need = currentProductsList.filter(p => safeUrl(p.link) && !hasOptions(p) && !p.optChecked);
+      const skipped = currentProductsList.filter(p => !hasOptions(p) && p.optChecked).length;
+      if (!need.length) {
+        alert('Không còn sản phẩm nào cần lấy phân loại 🎉' + (skipped ? `\n(${skipped} món đã kiểm tra là không có phân loại.)` : ''));
+        return;
+      }
+      const byMall = {};
+      need.forEach(p => { const m = p.mall || 'Khác'; (byMall[m] = byMall[m] || []).push(p.link); });
+      const textOut = Object.values(byMall).map(a => a.join('\n')).join('\n');
+      let copied = false;
+      try { await navigator.clipboard.writeText(textOut); copied = true; } catch (e) {
+        const ta = document.createElement('textarea'); ta.value = textOut; document.body.appendChild(ta); ta.select();
+        try { copied = document.execCommand('copy'); } catch (e2) {}
+        ta.remove();
+      }
+      const lines = Object.entries(byMall).map(([m, a]) => `• ${m}: ${a.length} link`).join('\n');
+      alert((copied ? `📋 Đã chép ${need.length} link sản phẩm chưa có phân loại:\n` : `Không tự chép được, hãy thử lại. Có ${need.length} link:\n`) + lines +
+        '\n\nCách làm: mở trang chủ của sàn (VD oliveyoung.co.kr) → bấm dấu trang Hút Sale → "📋 Lấy phân loại cho danh sách link" → dán → Bắt đầu.' +
+        '\nXong thì dán kết quả vào ô "Thêm sản phẩm nhanh" và bấm Nạp.' + (skipped ? `\n\n(Bỏ qua ${skipped} món đã kiểm tra là không có phân loại.)` : ''));
+    }
+
     async function handleAdminImportSubmit() {
       if (!isAdminLoggedIn) { alert('Bạn không có quyền thực hiện thao tác này!'); return; }
       const inputEl = document.getElementById('adminImportJsonInput');
@@ -1720,8 +1773,27 @@
         return;
       }
 
+      // Kết quả "chỉ lấy phân loại" (bookmarklet chế độ danh sách link)
+      const optionUpdates = list.filter(x => x && x._habu === 'options');
+      list = list.filter(x => x && x._habu !== 'options');
+      if (optionUpdates.length && !list.length) {
+        if (importBtn) { importBtn.disabled = true; importBtn.textContent = '⏳ Đang gắn phân loại & đồng bộ...'; }
+        const st = applyOptionUpdates(optionUpdates);
+        saveProductsToStorage();
+        renderAllProductViews();
+        renderAdminManageList();
+        const synced = await uploadProductsToGoogleSheets();
+        inputEl.value = '';
+        if (importBtn) { importBtn.disabled = false; importBtn.textContent = '⚡ Nạp Lên Web & Đồng Bộ Google Sheets'; }
+        alert(`✅ Đã cập nhật phân loại!\n• ${st.withOpt} món đã có phân loại.\n• ${st.noOpt} món không có phân loại (lần sau không chép link món này nữa).` +
+          (st.notFound ? `\n• ${st.notFound} link không còn trên web (bỏ qua).` : '') +
+          '\nTên, giá, ảnh trên web giữ nguyên.' + (synced ? '' : '\n⚠️ Chưa đồng bộ được Google Sheets, hãy thử lại.'));
+        return;
+      }
+
       if (importBtn) { importBtn.disabled = true; importBtn.textContent = '⏳ Đang lọc trùng & đồng bộ...'; }
 
+      if (optionUpdates.length) applyOptionUpdates(optionUpdates);
       const combined = list.map(sanitizeProductDetails).concat(currentProductsList);
       const seenKeys = new Set();
       const uniqueProducts = [];
