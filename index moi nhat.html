@@ -1,0 +1,3075 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="referrer" content="no-referrer">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HÀBU ORDER - Order Hàng Hàn Quốc | Busan - Hanoi</title>
+  <meta name="description" content="HàBu Order - mua hộ & vận chuyển hàng Hàn Quốc từ Busan về Hà Nội. Olive Young, Musinsa, Coupang, KREAM. Giá về tay trọn gói, bay Air 3-5 ngày.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='48' fill='%230284c7'/><text x='50' y='65' font-size='50' font-weight='bold' fill='%23ffffff' text-anchor='middle'>H</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tesseract (đọc chữ trong ảnh) giờ chỉ tải khi khách dùng tính năng Gửi ảnh -> web mở nhanh hơn -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,600&family=Montserrat:wght@800;900&family=Luckiest+Guy&family=Meow+Script&family=Playball&display=swap" rel="stylesheet">
+  <!-- Chỉ lấy riêng chữ "đ" của Dancing Script: chữ "đ" của Playball bị cách điệu khó đọc -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&text=%C4%91&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="sky.jpg">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Be Vietnam Pro"', 'sans-serif'],
+            display: ['"Montserrat"', '"Be Vietnam Pro"', 'sans-serif'],
+          },
+          colors: {
+            habu: {
+              navy: '#0369a1',
+              blue: '#0284c7',
+              sky: '#38bdf8',
+              deep: '#0c4a6e',
+              light: '#f0f9ff'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background-color: #f8fafc;
+      color: #0f172a;
+      overflow-x: hidden;
+    }
+    .hero-headline {
+      font-family: 'Montserrat', 'Be Vietnam Pro', sans-serif;
+      letter-spacing: -0.015em;
+    }
+    .card-gold-texture {
+      background: radial-gradient(circle at center, #f5ecd5 0%, #e8d7ae 65%, #d8be82 100%);
+    }
+    @keyframes swingBox {
+      0%, 100% { transform: rotate(-1.6deg) translateY(0px); }
+      50% { transform: rotate(1.6deg) translateY(6px); }
+    }
+    .crane-swing {
+      transform-origin: top center;
+      animation: swingBox 5s ease-in-out infinite;
+    }
+    @keyframes floatPlane {
+      0%, 100% { transform: translateY(0px) rotate(-2deg); }
+      50% { transform: translateY(-10px) rotate(1deg); }
+    }
+    .plane-float {
+      animation: floatPlane 3.6s ease-in-out infinite;
+    }
+    .nav-nike-link {
+      position: relative;
+      font-weight: 700;
+      color: #0f172a;
+      padding: 16px 0;
+      transition: color 0.15s ease;
+      cursor: pointer;
+    }
+    .nav-nike-link:hover {
+      color: #0284c7;
+    }
+    .nav-nike-link.active-nav::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 8px;
+      height: 3px;
+      background-color: #0284c7;
+      border-radius: 9999px;
+    }
+    .nike-dropdown {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(6px);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .nike-dropdown-parent:hover .nike-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .page-view {
+      display: none;
+    }
+    .page-view.active-view {
+      display: block;
+      animation: fadeInView 0.2s ease-out;
+    }
+    @keyframes fadeInView {
+      from { opacity: 0; transform: translateY(3px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .lens-laser-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #38bdf8, #f59e0b, #38bdf8, transparent);
+      box-shadow: 0 0 16px 4px rgba(56, 189, 248, 0.85);
+      animation: scanLaser 1.8s ease-in-out infinite;
+    }
+    @keyframes scanLaser {
+      0% { top: 4%; opacity: 0.9; }
+      50% { top: 92%; opacity: 1; }
+      100% { top: 4%; opacity: 0.9; }
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #7dd3fc;
+      border-radius: 9999px;
+    }
+    /* =================== BANNER ĐẦU TRANG (thiết kế Canva "D-2") =================== */
+    /* Máy tính: các phần tử đặt theo % như bản thiết kế, chữ co giãn theo bề rộng banner (cqw) */
+    .habu-hero {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      background: #6aa6dc url('sky.jpg') center / cover no-repeat;
+      --fs-title: 7.02cqw;
+      --fs-script: 3.41cqw;
+      --fs-link: 1.73cqw;
+      --fs-bottom: 1.72cqw;
+    }
+    .habu-hero .hero-sky {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: -2; pointer-events: none;
+    }
+    .habu-hero .hero-snow { position: absolute; inset: 0; z-index: 6; pointer-events: none; overflow: hidden; }
+    .hero-stage {
+      position: relative; margin: 0 auto; width: 100%; max-width: 1680px;
+      aspect-ratio: 2.174; container-type: inline-size;
+    }
+    .hero-stage .hp { position: absolute; }
+    .h-logo   { left: 6.06%; top: 7.5%; width: 12.4%; }
+    .h-heart  { width: 5.6%; filter: drop-shadow(0 0.3cqw 0.5cqw rgba(30, 70, 130, .25)); }
+    .h-heart-1 { left: 25%; top: 19%; }
+    .h-heart-2 { left: 69.5%; top: 7%; z-index: 2; }
+    .h-flake  { filter: drop-shadow(0 0.2cqw 0.4cqw rgba(30, 70, 130, .2)); }
+    .h-flake-1 { left: 77.5%; top: 27.6%; width: 4.7%; }
+    .h-flake-2 { left: 65.9%; top: 43.2%; width: 3.9%; }
+    .h-flake-3 { left: 88.1%; top: 45.2%; width: 1.9%; }
+    .h-flake-4 { left: 4.1%;  top: 57.3%; width: 3.1%; }
+    .h-flake-5 { left: 11.6%; top: 71.6%; width: 1.75%; opacity: .7; }
+    .h-flake-6 { left: 28.25%; top: 59.8%; width: 1.1%; opacity: .8; }
+    .h-title {
+      left: 29.1%; top: 9.2%; margin: 0;
+      font-family: 'Luckiest Guy', 'Montserrat', sans-serif; font-weight: 400;
+      font-size: var(--fs-title); line-height: 1.1; letter-spacing: .03em; white-space: nowrap;
+      background: linear-gradient(90deg, #dbefff 0%, #564f96 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 0 .2cqw rgba(255, 255, 255, .9)) drop-shadow(0 .22cqw .3cqw rgba(40, 80, 150, .38));
+    }
+    .h-script {
+      left: 1.2%; top: 42.3%; width: 36%; margin: 0; text-align: center;
+      font-family: 'Meow Script', cursive; font-size: var(--fs-script); line-height: 1.47; color: #f3fafe;
+      text-shadow: 0 0 .25cqw #fff, 0 0 .7cqw rgba(255, 255, 255, .85), 0 0 1.5cqw rgba(170, 215, 255, .9);
+    }
+    .h-moon { left: 46.9%; top: 22.1%; width: 7.25%; z-index: 3; }
+    .h-pill {
+      left: 53.6%; top: 36.4%; z-index: 3; white-space: nowrap;
+      padding: .46cqw 1.15cqw; border-radius: 999px; background: #26688f; color: #f6e086;
+      font: 700 .85cqw/1.2 'Be Vietnam Pro', sans-serif;
+      box-shadow: 0 .3cqw .9cqw rgba(15, 45, 80, .3), inset 0 0 0 .08cqw rgba(255, 255, 255, .15);
+    }
+    /* Cụm treo: dây + thẻ HABU + móc + thẻ vàng – đung đưa nhẹ quanh điểm treo dưới mặt trăng */
+    .h-swing {
+      left: 39.5%; top: 36.2%; width: 22.2%; z-index: 4;
+      display: flex; flex-direction: column; align-items: center;
+      transform-origin: 50% 0; animation: hbSwing 4.8s ease-in-out infinite;
+    }
+    @keyframes hbSwing { 0%, 100% { transform: rotate(-1.8deg); } 50% { transform: rotate(1.8deg); } }
+    .h-string { width: .12cqw; height: 2.5cqw; background: rgba(255, 255, 255, .85); }
+    .h-tag {
+      width: 2.75cqw; height: 1.85cqw; border-radius: .35cqw; background: #fab51f;
+      border: .08cqw solid rgba(120, 70, 0, .6); box-shadow: 0 .15cqw .4cqw rgba(0, 0, 0, .2);
+      display: flex; align-items: center; justify-content: center;
+      font: 900 .58cqw/1 'Be Vietnam Pro', sans-serif; color: #1f2937; letter-spacing: .02em;
+    }
+    .h-hook { width: 1.3cqw; height: 1cqw; margin-top: -.05cqw; }
+    .h-ropes { width: 100%; height: 2.6cqw; display: block; margin-top: -.1cqw; }
+    .h-card {
+      width: 100%; font-size: 1cqw; position: relative; color: #211859;
+      border-radius: .9em; padding: .95em 1.05em .85em;
+      background: linear-gradient(170deg, #e2b477 0%, #d39b59 45%, #c08641 100%);
+      border: .14em solid #f6d7a7;
+      box-shadow: 0 1.6em 3em rgba(20, 40, 80, .32), inset 0 .1em 0 rgba(255, 255, 255, .35);
+      font-family: 'Be Vietnam Pro', sans-serif;
+    }
+    .h-card-top { display: flex; justify-content: space-between; align-items: center; padding-bottom: .55em; border-bottom: .07em solid rgba(80, 45, 10, .25); }
+    .h-card-label { background: #0e4163; color: #fde7a6; font-weight: 900; font-size: .58em; letter-spacing: .06em; padding: .35em .75em; border-radius: .35em; }
+    .h-card-route { font-weight: 800; font-size: .74em; color: #211859; }
+    .h-card-panel {
+      margin-top: .8em; padding: .85em .9em; border-radius: .7em; border: .07em solid #9e7029;
+      background: radial-gradient(circle at 40% 40%, #f5ecd5 0%, #e8d7ae 70%, #d8be82 100%);
+      display: flex; justify-content: space-between; align-items: center; gap: .6em;
+      box-shadow: inset 0 0 .6em rgba(120, 80, 20, .18);
+    }
+    .h-card-name { font-weight: 900; font-size: 1.12em; line-height: 1.15; color: #211859; }
+    .h-card-sub { font-weight: 700; font-size: .7em; margin-top: .15em; color: #211859; }
+    .h-card-phones { font-weight: 800; font-size: .72em; margin-top: .45em; color: #a04a28; white-space: nowrap; }
+    .h-card-phones a { color: inherit; text-decoration: none; }
+    .h-card-phones a:hover { text-decoration: underline; }
+    .h-card-logo { width: 4.2em; height: 4.2em; border-radius: 50%; background: #fff; object-fit: contain; padding: .15em; flex-shrink: 0; box-shadow: 0 0 0 .07em rgba(33, 24, 89, .25); }
+    .h-card-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 1.05em; font-size: .72em; font-weight: 700; color: #3b2508; }
+    .h-card-code { background: #fff; color: #1f2937; font-family: ui-monospace, monospace; font-size: .92em; font-weight: 700; padding: .25em .6em; border-radius: .35em; }
+    .h-links { left: 68.75%; top: 59.3%; display: flex; flex-direction: column; gap: .2cqw; z-index: 5; }
+    .h-link {
+      display: inline-flex; align-items: center; gap: .75cqw; background: none; border: 0; padding: .1cqw 0; cursor: pointer;
+      font-family: 'Dancing Script', 'Playball', cursive; font-size: var(--fs-link); line-height: 1.2; color: #fff; white-space: nowrap; text-align: left;
+      text-decoration: underline; text-decoration-thickness: .06em; text-underline-offset: .14em;
+      text-shadow: 0 .08cqw .25cqw rgba(20, 50, 90, .35); transition: transform .2s ease, color .2s ease;
+    }
+    .h-link:hover { transform: translateX(.4cqw); color: #fff7d1; }
+    .h-link svg { width: 1.45em; height: 1.45em; flex-shrink: 0; filter: drop-shadow(0 .08cqw .2cqw rgba(20, 50, 90, .3)); }
+    .h-bottom {
+      left: 0; right: 0; top: 86.4%; margin: 0; text-align: center; letter-spacing: .02em;
+      font-family: 'Dancing Script', 'Playball', cursive; font-size: var(--fs-bottom); line-height: 1.2; color: #fce399;
+      -webkit-text-stroke: .045em #fce399; paint-order: stroke fill;
+      text-shadow: 0 .1cqw 0 #7a4c14, 0 .16cqw .32cqw rgba(60, 38, 8, .6);
+    }
+    .h-bottom .h-break { display: block; }
+    /* Tuyết rơi */
+    .snow-flake { position: absolute; top: -6%; animation: hbFall linear infinite; will-change: transform; }
+    .snow-flake > span { display: block; animation: hbSway ease-in-out infinite alternate; }
+    .snow-flake img { display: block; width: 100%; height: auto; }
+    .snow-dot { border-radius: 50%; background: #fff; box-shadow: 0 0 6px rgba(255, 255, 255, .9); }
+    @keyframes hbFall { to { transform: translateY(112vh); } }
+    @keyframes hbSway { from { transform: translateX(-18px) rotate(-25deg); } to { transform: translateX(18px) rotate(25deg); } }
+
+    /* Điện thoại & máy tính bảng: xếp dọc */
+    @media (max-width: 1023px) {
+      .habu-hero { --fs-title: clamp(40px, 12.5vw, 64px); --fs-script: clamp(26px, 7.6vw, 40px); --fs-link: clamp(21px, 6vw, 28px); --fs-bottom: clamp(16px, 4.5vw, 21px); }
+      .hero-stage { aspect-ratio: auto; display: flex; flex-direction: column; align-items: center; padding: 26px 16px 34px; container-type: normal; }
+      .hero-stage .hp { position: relative; left: auto; right: auto; top: auto; }
+      .h-logo { order: 1; width: 104px; }
+      .h-title { order: 2; margin-top: 4px; font-size: var(--fs-title); filter: drop-shadow(0 0 3px rgba(255, 255, 255, .85)) drop-shadow(0 4px 8px rgba(40, 60, 130, .25)); }
+      .h-heart { position: absolute !important; width: 44px; }
+      .h-heart-1 { left: 1.5% !important; top: 128px !important; }
+      .h-heart-2 { right: 2% !important; left: auto !important; top: 92px !important; }
+      .h-script { order: 3; width: 100%; margin-top: 10px; text-shadow: 0 0 3px #fff, 0 0 9px rgba(255, 255, 255, .85), 0 0 18px rgba(170, 215, 255, .9); }
+      .h-pill { order: 4; margin-top: 16px; padding: 6px 14px; font-size: 12px; }
+      .h-moon { order: 5; width: 84px; margin-top: 10px; }
+      .h-swing { order: 6; width: min(330px, 88vw); margin-top: -4px; }
+      .h-string { width: 2px; height: 22px; }
+      .h-tag { width: 38px; height: 25px; border-radius: 5px; font-size: 9px; border-width: 1px; }
+      .h-hook { width: 18px; height: 14px; }
+      .h-ropes { height: 30px; }
+      .h-card { font-size: min(14.5px, 3.95vw); }
+      .h-links { order: 7; margin-top: 26px; gap: 10px; align-items: flex-start; }
+      .h-link { gap: 10px; padding: 4px 0; text-shadow: 0 1px 3px rgba(20, 50, 90, .35); }
+      .h-link:hover { transform: translateX(4px); }
+      .h-bottom .h-break { display: inline; }
+      .h-bottom { order: 8; margin-top: 22px; max-width: 560px; text-shadow: 0 1px 0 #8a5a1c, 0 2px 4px rgba(70, 45, 10, .55); }
+      .h-flake { position: absolute !important; }
+      .h-flake-1 { left: auto !important; right: 5% !important; top: 34% !important; width: 40px; }
+      .h-flake-2 { left: 7% !important; top: 37% !important; width: 32px; }
+      .h-flake-3 { left: auto !important; right: 5% !important; top: 74% !important; width: 24px; }
+      .h-flake-4 { left: 3% !important; top: 81% !important; width: 26px; }
+      .h-flake-5, .h-flake-6 { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .h-swing { animation: none; }
+      .habu-hero .hero-snow { display: none; }
+    }
+
+    .force-clickable {
+      pointer-events: auto !important;
+      cursor: pointer !important;
+    }
+  </style>
+</head>
+<body class="selection:bg-sky-500 selection:text-white flex flex-col min-h-screen">
+
+  <form id="googleLensDirectForm" action="https://lens.google.com/upload" method="POST" enctype="multipart/form-data" target="_blank" class="hidden">
+    <input type="file" name="encoded_image" id="googleLensHiddenFile" />
+  </form>
+
+  <svg width="0" height="0" class="hidden" aria-hidden="true">
+    <defs>
+      <g id="habu-emblem-pure">
+        <path d="M 108 18 A 96 96 0 1 1 36 172" fill="none" stroke="#0284c7" stroke-width="7" stroke-linecap="round"/>
+        <g transform="translate(4, 24)">
+          <path d="M 6 95 Q 48 54 74 14 Q 95 62 126 95" fill="none" stroke="#9e7029" stroke-width="3.5"/>
+          <path d="M 0 95 L 132 95" stroke="#9e7029" stroke-width="5"/>
+          <path d="M 71 12 L 67 95 M 77 12 L 81 95" stroke="#9e7029" stroke-width="4"/>
+          <line x1="22" y1="81" x2="22" y2="95" stroke="#9e7029" stroke-width="2"/>
+          <line x1="42" y1="60" x2="42" y2="95" stroke="#9e7029" stroke-width="2"/>
+          <line x1="61" y1="32" x2="61" y2="95" stroke="#9e7029" stroke-width="2"/>
+          <line x1="87" y1="40" x2="87" y2="95" stroke="#9e7029" stroke-width="2"/>
+          <line x1="107" y1="72" x2="107" y2="95" stroke="#9e7029" stroke-width="2"/>
+        </g>
+        <g transform="translate(88, 30)">
+          <line x1="14" y1="4" x2="14" y2="85" stroke="#0284c7" stroke-width="3.2" stroke-linecap="round"/>
+          <g transform="translate(17, 10) rotate(-6)">
+            <rect x="0" y="0" width="38" height="26" rx="2" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+            <path d="M 13 13 A 6 6 0 0 1 25 13 Z" fill="#c8102e"/>
+            <path d="M 13 13 A 6 6 0 0 0 25 13 Z" fill="#003478"/>
+          </g>
+          <path d="M 7 58 C 12 55, 19 56, 20 62 C 20 67, 13 69, 9 67 L 4 85 L 17 85" fill="#fbcfe8" stroke="#9e7029" stroke-width="2"/>
+        </g>
+        <g transform="translate(116, 14)">
+          <path d="M 28 24 Q 60 32 92 22 L 104 38 Q 60 46 14 38 Z" fill="#0284c7"/>
+          <path d="M 8 50 Q 60 60 112 46 L 124 64 Q 60 72 0 64 Z" fill="#0284c7"/>
+          <rect x="18" y="64" width="82" height="32" fill="#0284c7"/>
+        </g>
+        <g transform="translate(45, 143)">
+          <line x1="0" y1="14" x2="36" y2="14" stroke="#0284c7" stroke-width="3"/>
+          <path d="M 42 23 L 42 18 L 122 18 L 126 52 L 38 52 Z" fill="#0284c7"/>
+          <path d="M 72 52 L 72 38 A 9 9 0 0 1 90 38 L 90 52 Z" fill="#ffffff"/>
+          <line x1="25" y1="53" x2="145" y2="53" stroke="#0284c7" stroke-width="4"/>
+        </g>
+      </g>
+    </defs>
+  </svg>
+
+  <!-- TOP BAR -->
+  <div class="bg-gradient-to-r from-sky-900 via-sky-800 to-habu-deep text-white text-[11px] py-2 px-4 sm:px-6 border-b border-sky-700/60 shadow-sm relative z-20">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+      <div class="flex flex-wrap items-center gap-x-3 gap-y-1">
+        <span class="hidden sm:inline-flex items-center gap-1.5 bg-sky-400/20 text-sky-200 border border-sky-300/40 px-2.5 py-0.5 rounded-full font-bold">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> Tuyến cố định: Busan ✈️ Hà Nội
+        </span>
+        <span class="text-sky-100">Tỷ giá: <strong class="text-amber-300">21 VND</strong> • Công mua: <strong class="text-amber-300">30k (&lt;1kg) / 60k (≥1kg)</strong> • Cước bay: <strong class="text-amber-300">180k/kg</strong></span>
+      </div>
+      <div class="flex items-center gap-4 text-sky-100 font-semibold">
+        <a href="https://zalo.me/0383774099" target="_blank" rel="noopener noreferrer" class="hidden sm:inline hover:text-amber-300">📞 Zalo 1: 0383-774-099</a>
+        <a href="https://zalo.me/0973726066" target="_blank" rel="noopener noreferrer" class="hidden sm:inline hover:text-amber-300">📞 Zalo 2: 0973-726-066</a>
+        
+        <button type="button" id="topBarAdminBtn" onclick="handleAdminAccess()" class="force-clickable hover:text-amber-300 font-black bg-white/20 hover:bg-white/30 px-3 py-1 rounded text-amber-300 border border-amber-300/60 shadow-sm transition">
+          🔒 Quản trị
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAVBAR CHUẨN 4 MỤC -->
+  <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-sm px-4 sm:px-6">
+    <div class="max-w-7xl mx-auto h-16 flex items-center justify-between gap-3 sm:gap-6">
+
+      <a href="#intro" onclick="event.preventDefault(); switchPageView('intro')" class="shrink-0 flex items-center group cursor-pointer" title="HàBu Order">
+        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-full card-gold-texture border-2 border-[#9e7029]/70 flex items-center justify-center p-1 hover:scale-105 transition shadow-md">
+          <svg viewBox="0 0 250 215" class="w-full h-full">
+            <use href="#habu-emblem-pure"></use>
+          </svg>
+        </div>
+      </a>
+
+      <!-- MENU 4 MỤC CHUẨN -->
+      <nav class="hidden lg:flex items-center gap-8 text-[14px]">
+        <button type="button" id="navBtn-intro" onclick="switchPageView('intro')" class="nav-nike-link active-nav">
+          Giới Thiệu
+        </button>
+
+        <div class="relative nike-dropdown-parent">
+          <button type="button" id="navBtn-brand" onclick="switchPageView('catalog', { filterType: 'all' })" class="nav-nike-link flex items-center gap-1">
+            <span>Hãng</span>
+          </button>
+          <div class="nike-dropdown absolute left-1/2 -translate-x-1/2 top-full w-56 bg-white rounded-2xl border border-sky-100 shadow-2xl p-2.5 space-y-1">
+            <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'Medicube' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>🧬 Medicube</span>
+              <span class="text-[10px] text-slate-400">PDRN &amp; Pad</span>
+            </button>
+            <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'Mediheal' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>💧 Mediheal</span>
+              <span class="text-[10px] text-slate-400">Mask &amp; Pad</span>
+            </button>
+            <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'Laneige' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>🍓 Laneige</span>
+              <span class="text-[10px] text-slate-400">Mặt nạ ngủ môi</span>
+            </button>
+            <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'Torriden' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>🧪 Torriden</span>
+              <span class="text-[10px] text-slate-400">Serum Cấp Ẩm</span>
+            </button>
+            <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'Dr.G' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>🌿 Dr.G</span>
+              <span class="text-[10px] text-slate-400">Kem dưỡng mụn</span>
+            </button>
+            <button onclick="switchPageView('catalog', { filterType: 'brand', value: 'Nike' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>✔️ Nike / KREAM</span>
+              <span class="text-[10px] text-slate-400">Air Force / Jacket</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="relative nike-dropdown-parent">
+          <button type="button" id="navBtn-category" onclick="switchPageView('catalog', { filterType: 'all' })" class="nav-nike-link flex items-center gap-1">
+            <span>Loại sản phẩm</span>
+          </button>
+          <div class="nike-dropdown absolute left-1/2 -translate-x-1/2 top-full w-60 bg-white rounded-2xl border border-sky-100 shadow-2xl p-2.5 space-y-1">
+            <button onclick="switchPageView('catalog', { filterType: 'category', value: 'Mỹ phẩm' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>💄 Mỹ phẩm &amp; Skincare</span>
+              <span class="text-[10px] text-slate-400">Olive Young</span>
+            </button>
+            <button onclick="switchPageView('catalog', { filterType: 'subCategory', value: 'Toner Pad' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>🧴 Toner Pad &amp; Serum</span>
+              <span class="text-[10px] text-slate-400">Dưỡng da</span>
+            </button>
+            <button onclick="switchPageView('catalog', { filterType: 'subCategory', value: 'Mặt nạ' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-sky-50 hover:text-sky-700 flex justify-between transition cursor-pointer">
+              <span>🎭 Mặt nạ (Mask &amp; Lip)</span>
+              <span class="text-[10px] text-slate-400">Chăm sóc da</span>
+            </button>
+            <div class="border-t border-slate-100 my-1"></div>
+            <button onclick="switchPageView('catalog', { filterType: 'sale' })" class="w-full text-left px-3 py-2 rounded-xl text-xs font-black text-rose-600 hover:bg-rose-50 flex justify-between transition cursor-pointer">
+              <span>🔥 Toàn bộ hàng Sale</span>
+              <span class="text-[9px] bg-rose-100 text-rose-700 px-1.5 py-0.5 rounded font-black">SALE</span>
+            </button>
+          </div>
+        </div>
+
+        <button type="button" id="navBtn-sale" onclick="switchPageView('catalog', { filterType: 'sale' })" class="nav-nike-link text-rose-600 flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
+          <span>Sale</span>
+        </button>
+      </nav>
+
+      <!-- KHUNG BÊN PHẢI -->
+      <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 lg:flex-none justify-end">
+        <form onsubmit="handleNikeSearch(event)" class="relative min-w-0 flex-1 lg:flex-none lg:w-52" role="search">
+          <input
+            type="search"
+            id="nikeSearchInput"
+            placeholder="Tìm Medicube, Mediheal..."
+            enterkeyhint="search"
+            class="w-full pl-8 pr-3 py-2 rounded-full bg-slate-100 hover:bg-slate-200/80 focus:bg-white border border-transparent focus:border-sky-500 outline-none text-xs font-medium text-slate-800 transition"
+          />
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none">🔍</span>
+        </form>
+
+        <button type="button" onclick="toggleFloatingAiChat()" class="force-clickable hidden sm:flex px-3 py-2 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-extrabold text-xs items-center gap-1 shadow-sm transition">
+          <span>🤖</span>
+          <span>Hỏi Đáp AI</span>
+        </button>
+
+        <button type="button" onclick="switchPageView('order')" class="relative shrink-0 p-2.5 hover:bg-sky-50 text-slate-800 hover:text-sky-700 rounded-full transition cursor-pointer" title="Đơn hàng của bạn" aria-label="Đơn hàng của bạn">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+          </svg>
+          <span id="cartCountBadge" class="hidden absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-600 text-white text-[10px] font-black leading-[18px] text-center">0</span>
+        </button>
+
+        <button type="button" onclick="switchPageView('lens')" class="shrink-0 px-3 sm:px-3.5 py-2 rounded-full bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center gap-1 shadow-sm transition cursor-pointer" aria-label="Gửi ảnh báo giá">
+          <span>📸</span><span class="hidden sm:inline">Gửi ảnh</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MENU CHO ĐIỆN THOẠI (trước đây điện thoại không có menu) -->
+    <nav class="lg:hidden max-w-7xl mx-auto flex gap-2 overflow-x-auto custom-scrollbar pb-2.5 text-[11px] font-bold" aria-label="Menu">
+      <button type="button" onclick="switchPageView('intro')" class="shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700">Giới thiệu</button>
+      <button type="button" onclick="switchPageView('catalog', { filterType: 'all' })" class="shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700">Tất cả SP</button>
+      <button type="button" onclick="switchPageView('catalog', { filterType: 'sale' })" class="shrink-0 px-3 py-1.5 rounded-full bg-rose-50 text-rose-600">🔥 Sale</button>
+      <button type="button" onclick="switchPageView('catalog', { filterType: 'mall', value: 'Olive Young' })" class="shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700">💄 Olive Young</button>
+      <button type="button" onclick="switchPageView('catalog', { filterType: 'mall', value: 'KREAM' })" class="shrink-0 px-3 py-1.5 rounded-full bg-slate-100 text-slate-700">👟 KREAM</button>
+      <button type="button" onclick="switchPageView('lens')" class="shrink-0 px-3 py-1.5 rounded-full bg-sky-50 text-sky-700">📸 Gửi ảnh báo giá</button>
+      <button type="button" onclick="switchPageView('order')" class="shrink-0 px-3 py-1.5 rounded-full bg-amber-50 text-amber-800">🛒 Đơn hàng</button>
+    </nav>
+  </header>
+
+  <!-- ================= VIEW 1: TRANG GIỚI THIỆU ================= -->
+  <main id="view-intro" class="page-view active-view flex-1">
+    
+    <!-- BANNER ĐẦU TRANG (thay cho khung xanh "MUA HỘ & VẬN CHUYỂN...") -->
+    <section class="habu-hero" id="habuHero" aria-label="HàBu Order – Order & vận chuyển hàng Hàn">
+      <video class="hero-sky" id="heroSkyVideo" autoplay muted loop playsinline preload="auto" poster="sky.jpg" aria-hidden="true">
+        <source src="sky.mp4" type="video/mp4">
+      </video>
+      <div class="hero-snow" id="heroSnow" aria-hidden="true"></div>
+
+      <div class="hero-stage">
+        <img class="hp h-logo" src="logo-white.webp" alt="Logo HàBu Order – Busan & Hà Nội" width="640" height="516" />
+        <img class="hp h-heart h-heart-1" src="heart.webp" alt="" aria-hidden="true" width="237" height="240" />
+        <img class="hp h-heart h-heart-2" src="heart.webp" alt="" aria-hidden="true" width="237" height="240" />
+        <img class="hp h-flake h-flake-1" src="snowflake.webp" alt="" aria-hidden="true" />
+        <img class="hp h-flake h-flake-2" src="snowflake.webp" alt="" aria-hidden="true" />
+        <img class="hp h-flake h-flake-3" src="snowflake.webp" alt="" aria-hidden="true" />
+        <img class="hp h-flake h-flake-4" src="snowflake.webp" alt="" aria-hidden="true" />
+        <img class="hp h-flake h-flake-5" src="snowflake.webp" alt="" aria-hidden="true" />
+        <img class="hp h-flake h-flake-6" src="snowflake.webp" alt="" aria-hidden="true" />
+
+        <h1 class="hp h-title" aria-label="HÀBU ORDER">HÀBU ORDeR</h1>
+
+        <p class="hp h-script">Order &amp; Vận chuyển hàng Hàn<br/>về tận tay Bạn</p>
+
+        <div class="hp h-pill">✈ Gimhae (PUS) ➔ Nội Bài (HAN)</div>
+        <img class="hp h-moon" src="moon.webp" alt="" aria-hidden="true" width="282" height="254" />
+
+        <!-- Cụm treo đung đưa: dây, thẻ HABU, móc, dây chữ V, thẻ vàng -->
+        <div class="hp h-swing">
+          <div class="h-string"></div>
+          <div class="h-tag">HABU</div>
+          <svg class="h-hook" viewBox="0 0 24 18" fill="none" stroke="#e2e8f0" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 0v7a4 4 0 1 0 4 4"/></svg>
+          <svg class="h-ropes" viewBox="0 0 260 40" preserveAspectRatio="none" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="1.6" aria-hidden="true"><path d="M130 0 L12 40 M130 0 L248 40"/></svg>
+          <div class="h-card">
+            <div class="h-card-top">
+              <span class="h-card-label">HÀBU AIR CARGO</span>
+              <span class="h-card-route">✈ BUSAN - HANOI</span>
+            </div>
+            <div class="h-card-panel">
+              <div>
+                <div class="h-card-name">HÀBU ORDER</div>
+                <div class="h-card-sub">Uy tín - Chính hãng - Chu đáo</div>
+                <div class="h-card-phones">📞 <a href="https://zalo.me/0383774099" target="_blank" rel="noopener noreferrer" title="Chat Zalo 0383 774 099">0383 774 099</a> • <a href="https://zalo.me/0973726066" target="_blank" rel="noopener noreferrer" title="Chat Zalo 0973 726 066">0973 726 066</a></div>
+              </div>
+              <img class="h-card-logo" src="logo-color.webp" alt="" aria-hidden="true" width="360" height="308" />
+            </div>
+            <div class="h-card-bottom">
+              <span>Cước cố định: 180k/kg</span>
+              <span class="h-card-code">ORD-EXPRESS</span>
+            </div>
+          </div>
+        </div>
+
+        <nav class="hp h-links" aria-label="Lối tắt">
+          <button type="button" class="h-link force-clickable" onclick="toggleFloatingAiChat()">
+            <svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4v4"/><circle cx="16" cy="3.2" r="1.4" fill="#fff"/><rect x="6" y="8" width="20" height="15" rx="7.5"/><circle cx="12" cy="15.5" r="1.8" fill="#fff"/><circle cx="20" cy="15.5" r="1.8" fill="#fff"/><path d="M13 19.5c1.8 1.2 4.2 1.2 6 0"/><path d="M6 13.5H3.5v5H6M26 13.5h2.5v5H26"/><path d="M11 23l-1.5 4.5M21 23l1.5 4.5"/></svg>
+            <span>Hỏi đáp &amp; Tư vấn AI-&gt;</span>
+          </button>
+          <button type="button" class="h-link" onclick="switchPageView('catalog', { filterType: 'sale' })">
+            <svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10h18l-1.4 18H8.4L7 10z"/><path d="M11.5 13V9a4.5 4.5 0 0 1 9 0v4"/></svg>
+            <span>Săn Sale ngay-&gt;</span>
+          </button>
+          <button type="button" class="h-link" onclick="switchPageView('lens')">
+            <svg viewBox="0 0 32 32" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11.5a2.5 2.5 0 0 1 2.5-2.5h4l2-3h7l2 3h4a2.5 2.5 0 0 1 2.5 2.5v13a2.5 2.5 0 0 1-2.5 2.5h-19A2.5 2.5 0 0 1 4 24.5z" fill="rgba(255,255,255,.95)"/><circle cx="16" cy="17.5" r="5" fill="#6aa6dc" stroke="#6aa6dc"/><circle cx="16" cy="17.5" r="3" fill="#fff" stroke="#fff"/></svg>
+            <span>Gửi ảnh báo giá-&gt;</span>
+          </button>
+        </nav>
+
+        <p class="hp h-bottom">HàBu Order mua hộ trực tiếp từ Olive Young, Musinsa, Coupang, KREAM... Tự động quy đổi trọn gói giá về <span class="h-break">tay và ship thẳng đường Air chỉ <span style="white-space:nowrap">3-5 ngày.</span></span></p>
+      </div>
+    </section>
+
+    <!-- 4 Ô CHỮ NHẬT LỚN -->
+    <section class="max-w-7xl mx-auto px-6 py-8">
+      <div class="grid sm:grid-cols-2 gap-6">
+        <div onclick="switchPageView('catalog', { filterType: 'sale' })" class="relative h-64 sm:h-72 rounded-3xl overflow-hidden cursor-pointer group shadow-md bg-gradient-to-br from-rose-600 via-rose-700 to-rose-900 text-white p-7 flex flex-col justify-end transition hover:-translate-y-1">
+          <img src="https://images.unsplash.com/photo-1596755389378-c31d21fd1273?auto=format&fit=crop&w=1000&q=80" alt="SALE" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-35 group-hover:scale-105 transition duration-500" />
+          <div class="relative z-10 space-y-1.5">
+            <span class="px-2.5 py-0.5 rounded-full bg-white text-rose-700 font-black text-[11px] uppercase tracking-wider">Khuyến mãi cực hot</span>
+            <h2 class="hero-headline text-4xl sm:text-5xl font-black tracking-tight">SALE</h2>
+            <p class="text-xs text-rose-100 font-medium">Toàn bộ mặt hàng đang giảm giá sốc từ Olive Young, Musinsa, KREAM...</p>
+            <span class="inline-block pt-1 font-extrabold text-xs underline group-hover:translate-x-1 transition">Khám phá ngay →</span>
+          </div>
+        </div>
+
+        <div onclick="switchPageView('catalog', { filterType: 'all' })" class="relative h-64 sm:h-72 rounded-3xl overflow-hidden cursor-pointer group shadow-md bg-gradient-to-br from-slate-900 via-slate-950 to-black text-white p-7 flex flex-col justify-end transition hover:-translate-y-1">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=80" alt="NEW" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-35 group-hover:scale-105 transition duration-500" />
+          <div class="relative z-10 space-y-1.5">
+            <span class="px-2.5 py-0.5 rounded-full bg-amber-400 text-slate-950 font-black text-[11px] uppercase tracking-wider">Xu hướng mới nhất</span>
+            <h2 class="hero-headline text-4xl sm:text-5xl font-black tracking-tight">NEW</h2>
+            <p class="text-xs text-slate-300 font-medium">Bộ sưu tập thời trang, mỹ phẩm và sneaker vừa ra mắt tại Hàn Quốc</p>
+            <span class="inline-block pt-1 font-extrabold text-xs underline group-hover:translate-x-1 transition">Xem sản phẩm mới →</span>
+          </div>
+        </div>
+
+        <div onclick="switchPageView('catalog', { filterType: 'mall', value: 'Olive Young' })" class="relative h-64 sm:h-72 rounded-3xl overflow-hidden cursor-pointer group shadow-md bg-gradient-to-br from-emerald-600 via-teal-700 to-emerald-900 text-white p-7 flex flex-col justify-end transition hover:-translate-y-1">
+          <img src="https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=1000&q=80" alt="Olive Young" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-35 group-hover:scale-105 transition duration-500" />
+          <div class="relative z-10 space-y-1.5">
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 font-black text-[11px] uppercase tracking-wider">Thiên đường mỹ phẩm</span>
+            <h2 class="hero-headline text-3xl sm:text-4xl font-black tracking-tight">Olive Young</h2>
+            <p class="text-xs text-emerald-100 font-medium">Medicube, Mediheal, Laneige, Torriden, Dr.G, d'Alba, Clio...</p>
+            <span class="inline-block pt-1 font-extrabold text-xs underline group-hover:translate-x-1 transition">Khám phá Olive Young →</span>
+          </div>
+        </div>
+
+        <div onclick="switchPageView('catalog', { filterType: 'mall', value: 'KREAM' })" class="relative h-64 sm:h-72 rounded-3xl overflow-hidden cursor-pointer group shadow-md bg-gradient-to-br from-sky-700 via-sky-800 to-slate-900 text-white p-7 flex flex-col justify-end transition hover:-translate-y-1">
+          <img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1000&q=80" alt="KREAM" class="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-35 group-hover:scale-105 transition duration-500" />
+          <div class="relative z-10 space-y-1.5">
+            <span class="px-2.5 py-0.5 rounded-full bg-sky-200 text-sky-950 font-black text-[11px] uppercase tracking-wider">Sneaker &amp; Streetwear</span>
+            <h2 class="hero-headline text-3xl sm:text-4xl font-black tracking-tight">KREAM &amp; Malls</h2>
+            <p class="text-xs text-sky-100 font-medium">Nike Air Force, Salomon, New Balance, The North Face, Calvin Klein...</p>
+            <span class="inline-block pt-1 font-extrabold text-xs underline group-hover:translate-x-1 transition">Khám phá KREAM →</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TOP SẢN PHẨM -->
+    <section class="max-w-7xl mx-auto px-6 py-8">
+      <div class="flex justify-between items-end mb-6 pb-2 border-b border-slate-200">
+        <div>
+          <span class="text-[11px] font-bold text-sky-700 uppercase tracking-wider">Lựa chọn hàng đầu</span>
+          <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-0.5">Top Sản Phẩm Nổi Bật</h2>
+        </div>
+        <button onclick="switchPageView('catalog', { filterType: 'all' })" class="text-xs font-bold text-sky-700 hover:underline cursor-pointer">
+          Xem tất cả sản phẩm →
+        </button>
+      </div>
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6" id="introTopProductsGrid"></div>
+    </section>
+
+    <!-- HÀNH TRÌNH THÙNG HÀNG AIR -->
+    <section class="bg-gradient-to-b from-slate-900 to-slate-950 text-white py-14 px-4 sm:px-6 border-y border-slate-800">
+      <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-5 space-y-4 min-w-0">
+          <span class="text-sky-400 text-xs font-extrabold uppercase tracking-wider">Vận hành chuyên nghiệp</span>
+          <h2 class="text-2xl sm:text-3xl font-black tracking-tight">THÙNG HÀNG HÀBU BY AIR</h2>
+          <p class="text-slate-400 text-xs leading-relaxed">
+            Hàng hóa được cân điện tử trực tiếp tại kho Busan với cước bay cố định 180k/kg, niêm phong thùng carton chuyên dụng và thông quan chính ngạch tại Hà Nội:
+          </p>
+
+          <div class="space-y-2 pt-1" id="introJourneyList">
+            <button onclick="setJourneyStage(1)" data-stage="1" class="journey-btn w-full text-left p-3.5 rounded-xl border border-sky-400 bg-sky-500/20 flex items-start gap-3 transition cursor-pointer">
+              <span class="font-black text-sky-400 text-sm">01</span>
+              <div>
+                <div class="text-xs font-bold text-white uppercase">Nhận đơn &amp; gom hàng tại kho Busan</div>
+                <div class="text-[11px] text-slate-300">Checkout đủ mẫu, đúng vị Laneige, Mediheal từ web Hàn...</div>
+              </div>
+            </button>
+            <button onclick="setJourneyStage(2)" data-stage="2" class="journey-btn w-full text-left p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-800/40 flex items-start gap-3 transition cursor-pointer">
+              <span class="font-black text-amber-400 text-sm">02</span>
+              <div>
+                <div class="text-xs font-bold text-white uppercase">Cân điện tử (180k/kg) &amp; đóng thùng</div>
+                <div class="text-[11px] text-slate-400">Cân đo minh bạch tại Busan, bọc chống sốc kỹ lưỡng</div>
+              </div>
+            </button>
+            <button onclick="setJourneyStage(3)" data-stage="3" class="journey-btn w-full text-left p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-800/40 flex items-start gap-3 transition cursor-pointer">
+              <span class="font-black text-slate-400 text-sm">03</span>
+              <div>
+                <div class="text-xs font-bold text-white uppercase">Bay thẳng Air Cargo (Busan ✈️ Hà Nội)</div>
+                <div class="text-[11px] text-slate-400">Thời gian vận chuyển nhanh chóng chỉ 3 - 5 ngày</div>
+              </div>
+            </button>
+            <button onclick="setJourneyStage(4)" data-stage="4" class="journey-btn w-full text-left p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-800/40 flex items-start gap-3 transition cursor-pointer">
+              <span class="font-black text-emerald-400 text-sm">04</span>
+              <div>
+                <div class="text-xs font-bold text-white uppercase">Thông quan hàng không tại Nội Bài</div>
+                <div class="text-[11px] text-slate-400">Hoàn tất thủ tục hải quan và phân loại theo mã ORD</div>
+              </div>
+            </button>
+            <button onclick="setJourneyStage(5)" data-stage="5" class="journey-btn w-full text-left p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-800/40 flex items-start gap-3 transition cursor-pointer">
+              <span class="font-black text-slate-400 text-sm">05</span>
+              <div>
+                <div class="text-xs font-bold text-white uppercase">Giao tận tay khách hàng toàn quốc</div>
+                <div class="text-[11px] text-slate-400">Giao nhanh nội thành Hà Nội hoặc gửi chuyển phát nhanh</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 min-w-0">
+          <div class="h-80 sm:h-96 rounded-3xl bg-slate-950 border border-slate-800 p-4 sm:p-6 flex flex-col justify-between shadow-2xl relative">
+            <div class="flex justify-between items-center text-xs">
+              <span id="stageBadge" class="min-w-0 px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/40 text-sky-300 font-bold">CHẶNG 01: GOM HÀNG TẠI KHO BUSAN</span>
+              <button onclick="toggleAutoJourney()" id="autoPlayBtn" class="text-slate-400 hover:text-white text-[11px] bg-white/10 px-2 py-0.5 rounded cursor-pointer">⏸ Tự động</button>
+            </div>
+            
+            <div id="sceneCanvas" class="flex-1 flex items-center justify-center my-4 min-w-0 overflow-hidden"></div>
+            
+            <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+              <div id="stageProgress" class="bg-gradient-to-r from-sky-400 to-amber-400 h-full transition-all duration-500" style="width: 20%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GỬI ẢNH BÁO GIÁ -->
+    <section class="max-w-7xl mx-auto px-6 py-12">
+      <div class="rounded-3xl bg-gradient-to-br from-sky-50 via-white to-sky-100/60 border border-sky-200 p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
+        <div class="space-y-2 max-w-xl">
+          <span class="px-3 py-1 rounded-full bg-sky-100 text-sky-800 font-extrabold text-[11px] uppercase">📸 Tính năng thông minh</span>
+          <h3 class="text-2xl sm:text-3xl font-black text-slate-900">Gửi Ảnh Sản Phẩm ➔ Báo Giá Trọn Gói</h3>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Chỉ cần gửi ảnh chụp màn hình món đồ bạn thích, hệ thống sẽ tự nhận diện và tính ngay giá về tay trọn gói bằng tiền Việt!
+          </p>
+        </div>
+        <button onclick="switchPageView('lens')" class="shrink-0 px-8 py-4 rounded-2xl bg-sky-600 hover:bg-sky-700 text-white font-black text-sm shadow-xl transition hover:scale-105 cursor-pointer">
+          Thử tính năng Gửi Ảnh ngay ➔
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= VIEW 2: KHO SẢN PHẨM ================= -->
+  <main id="view-catalog" class="page-view flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6 pb-4 border-b border-slate-200">
+      <div>
+        <div class="text-xs font-bold text-sky-700 uppercase tracking-wider">HàBu Order Catalog</div>
+        <h2 id="catalogViewHeaderTitle" class="text-2xl sm:text-4xl font-black text-slate-900 mt-1">
+          KHO SẢN PHẨM HÀBU
+        </h2>
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        <span id="catalogCountBadge" class="text-xs font-bold text-sky-800 bg-sky-100 px-3 py-1.5 rounded-full">0 sản phẩm</span>
+        <button onclick="switchPageView('intro')" class="text-xs font-bold text-slate-500 hover:text-sky-700 cursor-pointer">← Về Giới Thiệu</button>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 overflow-x-auto pb-3 mb-6 custom-scrollbar text-xs font-bold" id="catalogFilterButtonGroup">
+      <button type="button" onclick="switchSmartCatalogFilter('all')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-black transition cursor-pointer bg-sky-600 text-white shadow-sm shrink-0" data-filter="all">Tất cả</button>
+      <button type="button" onclick="switchSmartCatalogFilter('sale')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0" data-filter="sale">🔥 Hàng Sale</button>
+      <button type="button" onclick="switchSmartCatalogFilter('oliveyoung')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0" data-filter="oliveyoung">💄 Olive Young</button>
+      <button type="button" onclick="switchSmartCatalogFilter('kream')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0" data-filter="kream">👟 KREAM</button>
+      <button type="button" onclick="switchSmartCatalogFilter('musinsa')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0" data-filter="musinsa">👕 Musinsa</button>
+      <button type="button" onclick="switchSmartCatalogFilter('nike')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0" data-filter="nike">✔️ Nike</button>
+      <button type="button" onclick="switchSmartCatalogFilter('adidas')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0" data-filter="adidas">👟 Adidas</button>
+      <button type="button" onclick="switchSmartCatalogFilter('coupang')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0" data-filter="coupang">🚀 Coupang</button>
+      <button type="button" onclick="switchSmartCatalogFilter('cosmetics_other')" class="cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0" data-filter="cosmetics_other">✨ Sản Phẩm Khác</button>
+    </div>
+
+    <!-- KHU VỰC HIỂN THỊ SẢN PHẨM (LUÔN HIỂN THỊ) -->
+    <div id="catalogProductsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"></div>
+  </main>
+
+  <!-- ================= VIEW 3: GỬI ẢNH BÁO GIÁ (LENS VIEW) ================= -->
+  <main id="view-lens" class="page-view flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
+    <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200">
+      <div>
+        <span class="text-xs font-bold text-sky-700 uppercase">Tìm Kiếm Bằng Hình Ảnh</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-0.5">NHẬN DIỆN &amp; TÍNH GIÁ TỰ ĐỘNG</h2>
+      </div>
+      <button onclick="switchPageView('catalog', { filterType: 'all' })" class="text-xs font-bold text-slate-500 hover:text-sky-700 cursor-pointer">← Về Kho Hàng</button>
+    </div>
+
+    <div class="grid lg:grid-cols-12 gap-8 items-start">
+      <div class="lg:col-span-5 space-y-4">
+        <div class="bg-white rounded-3xl border-2 border-dashed border-sky-300 hover:border-sky-600 p-6 shadow-sm transition relative" id="lensDropzone">
+          <input type="file" id="lensFileInput" accept="image/*" class="hidden" onchange="handleImageFileSelect(event)" />
+
+          <div id="lensUploadPrompt" class="text-center py-10 cursor-pointer" onclick="document.getElementById('lensFileInput').click()">
+            <div class="w-16 h-16 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center text-3xl mx-auto mb-3">📸</div>
+            <h3 class="text-base font-bold text-slate-900">Bấm chọn ảnh hoặc Chụp ảnh</h3>
+            <p class="text-xs text-slate-500 mt-1">Hoặc bấm <strong>Ctrl + V</strong> để dán ảnh chụp màn hình</p>
+            <div class="mt-4 inline-flex items-center gap-1.5 bg-sky-600 text-white font-bold text-xs px-5 py-2.5 rounded-full shadow">
+              <span>📤 Chọn ảnh</span>
+            </div>
+          </div>
+
+          <div id="lensPreviewContainer" class="hidden space-y-4">
+            <div class="relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 max-h-80 flex items-center justify-center">
+              <img id="lensPreviewImg" src="" alt="Ảnh sản phẩm" class="max-h-80 w-auto object-contain mx-auto" />
+              <div id="lensLaserOverlay" class="hidden absolute inset-0 bg-black/40 backdrop-blur-[1px] flex-col items-center justify-center">
+                <div class="lens-laser-line"></div>
+                <div class="px-4 py-2 rounded-full bg-black/90 text-white text-xs font-bold border border-sky-400 flex items-center gap-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-ping"></span>
+                  <span id="lensScanStatus">Đang nhận diện sản phẩm...</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-between items-center text-xs">
+              <button type="button" onclick="document.getElementById('lensFileInput').click()" class="text-slate-600 font-bold hover:underline cursor-pointer">🔄 Đổi ảnh khác</button>
+              <button type="button" onclick="submitDirectToGoogleLens()" class="text-rose-600 font-bold hover:underline cursor-pointer">📷 Mở Google Lens ↗</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="lensSuggestedMatchesBox" class="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm hidden">
+          <div class="text-xs font-black uppercase text-slate-900 mb-2">🎯 Sản phẩm khớp với ảnh:</div>
+          <div id="lensSuggestedMatchesList" class="space-y-2"></div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 bg-white rounded-3xl border border-sky-100 p-6 space-y-4 shadow-sm">
+        <h3 class="text-lg font-black text-slate-900">Kết Quả Nhận Diện &amp; Giá Về Tay</h3>
+        <p id="lensScanNote" class="text-[11px] leading-relaxed text-slate-500 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+          Gửi ảnh chụp màn hình trang sản phẩm (có tên &amp; giá), hệ thống sẽ đọc chữ trong ảnh để điền sẵn. Bạn có thể sửa lại trước khi đặt.
+        </p>
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Tên sản phẩm (Tiếng Việt):</label>
+            <input type="text" id="lensDetectedName" placeholder="Tên sản phẩm..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-bold text-slate-900 outline-none" />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Hãng / Sàn:</label>
+              <input type="text" id="lensDetectedBrand" placeholder="VD: Laneige / Olive Young" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-bold text-slate-900 outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Giá web Hàn (KRW):</label>
+              <input type="number" id="lensPriceKRW" value="" min="0" inputmode="numeric" placeholder="VD: 28900" oninput="recalculateLensVND()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm font-bold text-slate-900 outline-none" />
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <div class="col-span-2">
+              <label class="block text-xs font-bold text-slate-700 mb-1">Mã số sản phẩm (Loại / Vị / Mã màu):</label>
+              <input type="text" id="lensDetectedBenefit" placeholder="VD: Vị Berry / Apple Lime..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Cân nặng:</label>
+              <select id="lensKg" onchange="recalculateLensVND()" class="w-full px-2 py-2.5 rounded-xl border border-slate-300 text-sm font-bold text-slate-900 outline-none bg-white"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-sky-50 border border-sky-100 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] font-bold text-sky-900 uppercase">Giá về tay trọn gói:</div>
+            <div id="lensResultBreakdown" class="text-[10px] text-slate-500">Đã gồm công mua + ship Air 180k/kg</div>
+          </div>
+          <div id="lensResultAllInVND" class="text-2xl font-black text-rose-600">0 đ</div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 pt-2">
+          <button onclick="addLensProductToOrderForm(false)" class="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs transition cursor-pointer">
+            🛒 Đưa vào đơn hàng
+          </button>
+          <button onclick="addLensProductToOrderForm(true)" class="w-full py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition cursor-pointer">
+            💬 Nhờ Shop báo giá qua Zalo
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= VIEW 4: FORM ĐẶT HÀNG ================= -->
+  <main id="view-order" class="page-view flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
+    <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200">
+      <div>
+        <span class="text-xs font-bold text-sky-700 uppercase">Thanh toán &amp; Giao nhận</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-0.5">FORM ĐẶT HÀNG TRỌN GÓI</h2>
+      </div>
+      <button onclick="switchPageView('intro')" class="text-xs font-bold text-slate-500 hover:text-sky-700 cursor-pointer">← Về Giới Thiệu</button>
+    </div>
+
+    <form id="habuOrderForm" onsubmit="handleOrderSubmit(event)" class="grid lg:grid-cols-12 gap-8 items-start">
+      <div class="lg:col-span-8 space-y-6">
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 space-y-4 shadow-sm">
+          <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+            <h3 class="font-black text-base text-slate-900">Danh sách sản phẩm trong đơn</h3>
+            <button type="button" onclick="addProductRow()" class="text-xs font-bold text-sky-700 hover:text-sky-900 bg-sky-50 px-3 py-1.5 rounded-full cursor-pointer">+ Thêm sản phẩm</button>
+          </div>
+          <div id="productItemsContainer" class="space-y-4"></div>
+          <p class="text-[11px] text-slate-500 leading-relaxed">
+            💡 Mua theo link: dán link sản phẩm từ web Hàn, điền giá KRW và chọn cân nặng ước tính. Cân nặng chỉ để tạm tính — shop cân thực tế tại kho Busan và báo lại nếu chênh lệch.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-slate-200 p-6 space-y-4 shadow-sm">
+          <h3 class="font-black text-base text-slate-900 pb-3 border-b border-slate-100">Thông tin người nhận</h3>
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div>
+              <label for="customerName" class="block text-xs font-bold text-slate-700 mb-1">Tên khách hàng *</label>
+              <input type="text" id="customerName" required autocomplete="name" placeholder="Họ và tên..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-sky-500 text-xs font-medium outline-none" />
+            </div>
+            <div>
+              <label for="customerPhone" class="block text-xs font-bold text-slate-700 mb-1">Số điện thoại / Zalo *</label>
+              <input type="tel" id="customerPhone" required autocomplete="tel" inputmode="tel" placeholder="VD: 0912 345 678" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-sky-500 text-xs font-medium outline-none" />
+            </div>
+            <div class="sm:col-span-2">
+              <label for="customerAddress" class="block text-xs font-bold text-slate-700 mb-1">Địa chỉ nhận hàng tại Việt Nam *</label>
+              <input type="text" id="customerAddress" required autocomplete="street-address" placeholder="Số nhà, đường, quận/huyện, tỉnh/thành..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-sky-500 text-xs font-medium outline-none" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-4 lg:sticky lg:top-20 space-y-4">
+        <div class="bg-gradient-to-br from-sky-900 via-sky-800 to-habu-deep text-white rounded-3xl p-6 shadow-xl space-y-4">
+          <h3 class="font-black text-lg pb-3 border-b border-white/15">Tổng kết đơn hàng</h3>
+          <div class="space-y-2 text-xs text-sky-100">
+            <div class="flex justify-between">
+              <span>Tiền hàng quy đổi:</span>
+              <span id="summaryConvertedVND" class="font-bold text-white">0 đ</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Công mua hộ:</span>
+              <span id="summaryFeeVND" class="font-bold text-white">0 đ</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Cước bay Air (180k/kg) · <span id="summaryWeightKg">0 kg</span>:</span>
+              <span id="summaryShippingVND" class="font-bold text-emerald-400">0 đ</span>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-white/10 flex flex-col justify-between">
+            <span class="text-[11px] font-bold text-sky-200 uppercase">Giá về tay trọn gói:</span>
+            <span id="summaryGrandTotalVND" class="text-2xl font-black text-amber-300 mt-1">0 đ</span>
+          </div>
+
+          <button type="submit" id="submitOrderBtn" class="w-full py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider transition shadow-lg cursor-pointer">
+            🚀 Gửi Đơn &amp; Nhận Mã ORD
+          </button>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <!-- ================= VIEW 5: TRANG QUẢN TRỊ ADMIN ================= -->
+  <main id="view-admin" class="page-view flex-1 max-w-4xl mx-auto px-6 py-10 w-full">
+    <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-200">
+      <div>
+        <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-xs uppercase">✓ Đang Đăng Nhập Quản Trị Viên</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-slate-900 mt-1">BẢNG QUẢN TRỊ KHO HÀNG HÀBU ORDER</h2>
+      </div>
+      <div class="flex items-center gap-3">
+        <button type="button" onclick="switchPageView('intro')" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs cursor-pointer">
+          ← Quay lại trang chủ
+        </button>
+        <button type="button" onclick="logoutAdmin()" class="px-4 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs cursor-pointer">
+          🔒 Đăng xuất
+        </button>
+      </div>
+    </div>
+
+    <div class="space-y-6">
+      <div class="p-6 rounded-3xl bg-sky-50 border border-sky-200 space-y-3">
+        <div class="flex items-center justify-between">
+          <label class="block text-sm font-black text-sky-950 uppercase">⚡ Thêm sản phẩm nhanh (Dán JSON từ Bookmarklet):</label>
+          <span class="text-[11px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">✓ Tự động đồng bộ Online</span>
+        </div>
+        <textarea id="adminImportJsonInput" rows="5" placeholder="Bấm chuột vào đây và nhấn Ctrl + V để dán mã sản phẩm..." class="w-full p-4 rounded-2xl border border-sky-300 text-xs font-mono outline-none bg-white focus:ring-2 focus:ring-sky-500"></textarea>
+        <div class="flex flex-wrap justify-between items-center gap-2 pt-1">
+          <div class="flex flex-wrap items-center gap-3">
+            <button type="button" onclick="resetToStandardProducts()" class="text-xs font-bold text-sky-700 hover:underline cursor-pointer">
+              🔄 Tải lại từ Google Sheets
+            </button>
+            <button type="button" onclick="translateAllCatalogTitlesToVietnamese()" id="translateAllBtn" class="text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-3 py-1.5 rounded-full transition cursor-pointer">
+              🌐 Dịch tất cả tên SP sang Tiếng Việt
+            </button>
+          </div>
+          <button type="button" id="adminImportBtn" onclick="handleAdminImportSubmit()" class="px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs shadow-md transition cursor-pointer">
+            ⚡ Nạp Lên Web &amp; Đồng Bộ Google Sheets
+          </button>
+        </div>
+      </div>
+
+      <div class="bg-white p-6 rounded-3xl border border-slate-200 space-y-4">
+        <div class="pb-2 border-b border-slate-100">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 w-full">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-black uppercase text-slate-900">Quản lý kho:</span>
+              <span id="adminTotalCountText" class="text-xs text-slate-500 font-bold"></span>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <button type="button" onclick="selectAllAdminProducts(true)" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer">
+                ✓ Chọn tất cả
+              </button>
+              <button type="button" onclick="selectAllAdminProducts(false)" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold cursor-pointer">
+                ✕ Bỏ chọn
+              </button>
+              <button type="button" onclick="deleteSelectedProductsByAdmin()" class="px-3 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-black shadow-sm transition cursor-pointer">
+                🗑️ Xóa các mục đã chọn (<span id="selectedCountBadge">0</span>)
+              </button>
+            </div>
+          </div>
+        </div>
+        <div id="adminProductManageList" class="space-y-2.5 max-h-96 overflow-y-auto custom-scrollbar pr-1"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-gradient-to-r from-slate-950 via-sky-950 to-slate-950 text-white pt-10 pb-8 px-6 mt-auto border-t border-sky-900/50">
+    <div class="max-w-7xl mx-auto grid md:grid-cols-12 gap-8 pb-8 border-b border-white/10 text-xs">
+      <div class="md:col-span-5 space-y-3">
+        <div class="w-10 h-10 rounded-full card-gold-texture p-0.5 flex items-center justify-center">
+          <svg viewBox="0 0 250 215" class="w-full h-full"><use href="#habu-emblem-pure"></use></svg>
+        </div>
+        <div class="font-black text-sm uppercase">HÀBU ORDER • BUSAN ✈️ HANOI</div>
+        <p class="text-slate-400 text-[11px] leading-relaxed max-w-sm">
+          Dịch vụ order hàng Hàn Quốc uy tín, phân loại rõ ràng, giá về tay trọn gói và hỗ trợ chu đáo.
+        </p>
+      </div>
+
+      <div class="md:col-span-4 space-y-1.5">
+        <div class="font-bold text-amber-300 uppercase mb-2">Liên hệ &amp; Zalo</div>
+        <p>👤 Quản lý: Đặng Tiến Đạt - Thịnh Nguyễn</p>
+        <p>📱 Zalo 1: <a href="https://zalo.me/0383774099" target="_blank" class="text-sky-300 hover:underline">0383-774-099</a></p>
+        <p>📱 Zalo 2: <a href="https://zalo.me/0973726066" target="_blank" class="text-amber-300 hover:underline">0973-726-066</a></p>
+        <p>✉️ Email: anhemhabu@gmail.com</p>
+      </div>
+
+      <div class="md:col-span-3 space-y-2">
+        <div class="font-bold text-amber-300 uppercase mb-2">Kênh chính thức</div>
+        <a href="https://www.facebook.com/profile.php?id=61577854719150" target="_blank" class="block p-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition text-slate-300">
+          Facebook HàBu Order →
+        </a>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto pt-6 text-center text-slate-500 text-[11px]">
+      © 2026 HÀBU ORDER. All rights reserved.
+    </div>
+  </footer>
+
+  <!-- FLOATING WIDGET -->
+  <div style="position: fixed; bottom: 1.25rem; right: 1.25rem; z-index: 999999; pointer-events: auto !important; display: flex; flex-direction: column; align-items: flex-end; gap: 0.625rem;">
+    
+    <div id="floatingAiPanel" class="hidden mb-1 w-[calc(100vw-2.5rem)] max-w-[24rem] bg-white rounded-3xl shadow-2xl border-2 border-sky-600 overflow-hidden" style="pointer-events: auto !important;">
+      <div class="bg-gradient-to-r from-sky-700 to-habu-deep text-white p-3.5 flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center font-black text-sm shadow">🤖</span>
+          <div>
+            <div class="text-xs font-black uppercase text-amber-300">Trợ lý AI &amp; Hỏi Đáp HàBu</div>
+            <div class="text-[10px] text-sky-100">Giải đáp sản phẩm, cước phí &amp; lịch bay Air</div>
+          </div>
+        </div>
+        <button type="button" onclick="toggleFloatingAiChat()" class="text-white/80 hover:text-white font-bold text-sm cursor-pointer">✕</button>
+      </div>
+
+      <div id="floatingAiMessages" class="p-3.5 h-72 max-h-[45vh] overflow-y-auto space-y-2.5 bg-slate-50 text-xs custom-scrollbar">
+        <div class="p-3 rounded-2xl bg-white border border-slate-200 text-slate-700 leading-relaxed shadow-sm">
+          Xin chào! Mình là <strong>Trợ lý AI HàBu Order</strong> 👋. Bạn có thể hỏi mình bất kỳ câu hỏi nào về:
+          <ul class="mt-1 space-y-0.5 text-slate-600 list-disc list-inside">
+            <li><strong>Thời gian &amp; quy trình:</strong> Hàng bay mấy ngày, lịch bay, cân điện tử.</li>
+            <li><strong>Tư vấn quà tặng / Sản phẩm:</strong> Quà cho bố mẹ, dưỡng ẩm, trị mụn, size áo/giày.</li>
+            <li><strong>Cước phí:</strong> Cách tính giá về tay trọn gói, ship 180k/kg.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="px-3 py-2 bg-slate-100 border-t border-slate-200 flex gap-1.5 overflow-x-auto custom-scrollbar text-[11px]">
+        <button type="button" onclick="sendQuickFloatingAi('Đặt hàng thì bao lâu hàng về đến Việt Nam?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-300 font-semibold text-sky-800 whitespace-nowrap hover:bg-sky-50 cursor-pointer">✈️ Mấy ngày hàng về?</button>
+        <button type="button" onclick="sendQuickFloatingAi('Gợi ý sản phẩm quà tặng sức khỏe cho bố mẹ người lớn tuổi?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-300 font-semibold text-sky-800 whitespace-nowrap hover:bg-sky-50 cursor-pointer">🎁 Quà cho bố mẹ</button>
+        <button type="button" onclick="sendQuickFloatingAi('Quy trình kiểm hàng và ship Air từ Busan về thế nào?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-300 font-semibold text-sky-800 whitespace-nowrap hover:bg-sky-50 cursor-pointer">📦 Quy trình vận chuyển</button>
+        <button type="button" onclick="sendQuickFloatingAi('Phân biệt các vị mặt nạ ngủ môi Laneige?')" class="px-2.5 py-1 rounded-full bg-white border border-slate-300 font-semibold text-sky-800 whitespace-nowrap hover:bg-sky-50 cursor-pointer">🍓 Mặt nạ môi Laneige</button>
+      </div>
+
+      <form onsubmit="handleFloatingAiSubmit(event)" class="p-2.5 bg-white border-t border-slate-200 flex gap-1.5">
+        <input
+          type="text"
+          id="floatingAiInput"
+          placeholder="Hỏi về thời gian về, quà tặng, size..."
+          class="flex-1 px-3 py-2 rounded-xl border border-slate-300 focus:border-sky-600 outline-none text-xs font-medium"
+        />
+        <button type="submit" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow cursor-pointer">
+          Gửi
+        </button>
+      </form>
+    </div>
+
+    <div class="flex items-center gap-2" style="pointer-events: auto !important;">
+      <a
+        href="https://zalo.me/0383774099"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Chat Zalo Hotline 1: 0383-774-099"
+        class="w-11 h-11 rounded-full bg-[#0068ff] hover:scale-110 shadow-lg border-2 border-white flex items-center justify-center text-white font-black text-xs transition duration-200 cursor-pointer"
+      >
+        <span class="tracking-tighter text-[11px]">Zalo 1</span>
+      </a>
+
+      <a
+        href="https://zalo.me/0973726066"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Chat Zalo Hotline 2: 0973-726-066"
+        class="w-11 h-11 rounded-full bg-[#008fe5] hover:scale-110 shadow-lg border-2 border-white flex items-center justify-center text-white font-black text-xs transition duration-200 cursor-pointer"
+      >
+        <span class="tracking-tighter text-[11px]">Zalo 2</span>
+      </a>
+
+      <a
+        href="https://www.facebook.com/profile.php?id=61577854719150"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Nhắn tin qua Fanpage Facebook HàBu Order"
+        class="w-11 h-11 rounded-full bg-gradient-to-tr from-[#00c6ff] via-[#0078ff] to-[#a033ff] hover:scale-110 shadow-lg border-2 border-white flex items-center justify-center text-white transition duration-200 cursor-pointer"
+      >
+        <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+          <path d="M12 2C6.477 2 2 6.145 2 11.258c0 2.91 1.455 5.513 3.736 7.185v3.557l3.418-1.876c.904.25 1.86.386 2.846.386 5.523 0 10-4.145 10-9.252C22 6.145 17.523 2 12 2zm1.042 12.447l-2.613-2.788-5.1 2.788 5.61-5.955 2.678 2.788 5.035-2.788-5.61 5.955z"/>
+        </svg>
+      </a>
+
+      <button
+        type="button"
+        onclick="toggleFloatingAiChat()"
+        aria-label="Hỏi Đáp & AI Tư Vấn"
+        class="force-clickable bg-gradient-to-r from-sky-600 to-sky-700 hover:from-sky-700 hover:to-sky-800 text-white font-black text-xs px-3 sm:px-4 py-3 rounded-full shadow-2xl border-2 border-amber-300 flex items-center gap-2 transition hover:scale-105"
+      >
+        <span class="text-base">🤖</span>
+        <span class="hidden sm:inline">Hỏi Đáp &amp; AI Tư Vấn</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- MODAL CHI TIẾT SẢN PHẨM -->
+  <div id="productDetailModal" onclick="if (event.target === this) closeProductDetailModal()" class="fixed inset-0 z-[1000000] bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4" role="dialog" aria-modal="true">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar relative">
+      <button type="button" onclick="closeProductDetailModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold z-10 cursor-pointer">✕</button>
+      <div id="productDetailModalBody"></div>
+    </div>
+  </div>
+
+  <!-- MODAL ĐẶT HÀNG THÀNH CÔNG -->
+  <div id="orderSuccessModal" onclick="if (event.target === this) closeSuccessModal()" class="fixed inset-0 z-[1000000] bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4" role="dialog" aria-modal="true">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center shadow-2xl">
+      <div class="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-2xl mx-auto font-black mb-3">✓</div>
+      <h3 class="text-xl font-black text-slate-900">ĐẶT HÀNG THÀNH CÔNG!</h3>
+      <div class="my-4 p-4 rounded-2xl bg-slate-50 border border-slate-200">
+        <div class="text-[10px] font-bold text-slate-400 uppercase">Mã đơn của bạn</div>
+        <div id="modalOrderCode" class="text-3xl font-black text-sky-700 mt-0.5">ORD-001</div>
+      </div>
+      <div id="modalSummaryText" class="text-left text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1 mb-4 text-slate-600"></div>
+      <button type="button" onclick="closeSuccessModal()" class="w-full py-3 rounded-xl bg-sky-600 text-white font-bold text-xs cursor-pointer">Đóng</button>
+    </div>
+  </div>
+
+  <!-- SCRIPT HỆ THỐNG TOÀN DIỆN -->
+  <script>
+    // =====================================================================
+    // HÀBU ORDER – SCRIPT HỆ THỐNG
+    // =====================================================================
+
+    // ---------- 1. CẤU HÌNH ----------
+    // Link Google Apps Script (nếu triển khai bằng "New deployment" ra link mới thì dán link mới vào đây)
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzt22aihXB9fUkZyduRF06YBkccFAT-B-FPYKzpqW8mC9O-mdqlX_B4s7CLem9nr9Mj/exec';
+    const STORAGE_KEY = 'habu_products_v2';
+    // Mật khẩu quản trị & token Telegram giờ nằm trong Google Apps Script (Script properties),
+    // không còn để trong code web nữa nên người ngoài không xem được.
+
+    // BẢNG GIÁ DÙNG CHUNG CHO TOÀN WEB (thẻ sản phẩm, chi tiết, gửi ảnh, form đặt hàng, AI)
+    // -> Muốn đổi giá chỉ cần sửa ở đây, mọi chỗ khác tự cập nhật.
+    const PRICING = {
+      EXCHANGE_RATE: 21,       // 1 KRW = 21 VND
+      FEE_UNDER_1KG: 30000,    // công mua mỗi món nặng dưới 1kg
+      FEE_FROM_1KG: 60000,     // công mua mỗi món nặng từ 1kg trở lên
+      SHIP_PER_KG: 180000,     // cước bay Air mỗi kg (cân làm tròn lên nấc 0.5kg)
+      MAX_SANE_KRW: 3000000    // giá cào lỗi vượt mức này sẽ bị chặn
+    };
+    const KG_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3, 4, 5];
+    const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=600&q=80';
+    const ZALO_LINK = 'https://zalo.me/0383774099';
+
+    let isAdminLoggedIn = false;
+    let adminKey = '';   // mật khẩu admin đã được Apps Script xác nhận (chỉ giữ trong phiên này)
+    let currentUploadedFile = null;
+    let currentProductsList = [];   // Lỗi cũ: biến này bị xóa mất -> khách mới vào web bị lỗi
+    let productsLoaded = false;
+    let currentCatalogFilter = { type: 'all', value: '' };
+
+    // ---------- 2. HÀM TIỆN ÍCH ----------
+    function escapeHtml(value) {
+      return String(value == null ? '' : value)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+    function safeUrl(url, fallback) {
+      const u = String(url || '').trim();
+      return /^https?:\/\//i.test(u) ? u : (fallback || '');
+    }
+    function sameId(a, b) {
+      return String(a).trim() === String(b).trim();
+    }
+    function findProduct(id) {
+      if (id === undefined || id === null || id === '') return null;
+      return currentProductsList.find(p => sameId(p.id, id)) || null;
+    }
+    function parseKrw(v) {
+      if (typeof v === 'number') return isFinite(v) ? Math.round(v) : 0;
+      const n = Number(String(v || '').replace(/[^\d]/g, ''));
+      return isFinite(n) ? n : 0;
+    }
+    function parseBool(v, defaultValue) {
+      if (typeof v === 'boolean') return v;
+      const s = String(v == null ? '' : v).trim().toLowerCase();
+      if (s === '') return defaultValue;
+      if (['false', '0', 'no', 'không', 'khong'].includes(s)) return false;
+      if (['true', '1', 'yes', 'có', 'co'].includes(s)) return true;
+      return defaultValue;
+    }
+    function formatVND(num) {
+      return Math.round(num || 0).toLocaleString('vi-VN') + ' đ';
+    }
+    function formatKg(kg) {
+      return String(Math.round(Number(kg) * 100) / 100) + ' kg';
+    }
+    function roundThousand(n) {
+      return Math.round((n || 0) / 1000) * 1000;
+    }
+    function normalizeText(s) {
+      return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd');
+    }
+    let lastIdIssued = 0;
+    function nextId() {
+      lastIdIssued = Math.max(Date.now(), lastIdIssued + 1);
+      return lastIdIssued;
+    }
+    let toastTimer = null;
+    function showToast(message) {
+      let el = document.getElementById('habuToast');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'habuToast';
+        el.setAttribute('role', 'status');
+        el.className = 'fixed left-1/2 -translate-x-1/2 bottom-24 z-[1000001] max-w-[90vw] px-4 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold shadow-2xl transition-opacity duration-300 opacity-0 pointer-events-none text-center';
+        document.body.appendChild(el);
+      }
+      el.textContent = message;
+      el.classList.remove('opacity-0');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.add('opacity-0'), 2600);
+    }
+
+    // ---------- 3. CÂN NẶNG & CÔNG THỨC GIÁ (DUY NHẤT CHO TOÀN WEB) ----------
+    // Ước lượng cân nặng theo tên sản phẩm (giữ nguyên quy tắc cũ của shop)
+    function estimateSmartWeight(title, category, fallbackKg) {
+      const t = (title || '').toLowerCase();
+      const c = (category || '').toLowerCase();
+      let actualKg = 0.25; // Mặc định mỹ phẩm phổ thông: serum, kem dưỡng, son dưỡng
+
+      if ( // Nhóm 1: Áo khoác, áo phao, hoodie, đồ đông nặng
+        t.includes('áo khoác') || t.includes('jacket') || t.includes('hoodie') ||
+        t.includes('padding') || t.includes('phao') || t.includes('windbreaker') ||
+        t.includes('재킷') || t.includes('점퍼') || t.includes('패딩') ||
+        t.includes('코트') || t.includes('후드') || t.includes('트위드') || t.includes('베스트')
+      ) {
+        actualKg = 0.85;
+      } else if ( // Nhóm 2: Giày dép, sneaker
+        t.includes('giày') || t.includes('sneaker') || t.includes('shoes') || c.includes('giày') ||
+        t.includes('samba') || t.includes('force') || t.includes('asics') ||
+        t.includes('신발') || t.includes('스니커즈') || t.includes('운동화') || t.includes('러닝화')
+      ) {
+        actualKg = 0.95;
+      } else if ( // Nhóm 3: Mặt nạ
+        t.includes('mask') || t.includes('mặt nạ') || t.includes('마스크') ||
+        t.includes('pack') || t.includes('sheet') || t.includes('10+1') || t.includes('10매')
+      ) {
+        actualKg = 0.35;
+      } else if ( // Nhóm 4: Toner pad hộp to, combo có refill
+        t.includes('toner pad') || t.includes('토너패드') || t.includes('hộp to') ||
+        (t.includes('pad') && (t.includes('refill') || t.includes('리필') || t.includes('100매')))
+      ) {
+        actualKg = 0.55;
+      } else if (fallbackKg && Number(fallbackKg) > 0) { // Nhóm 5: cân nặng có sẵn
+        actualKg = Number(fallbackKg);
+      }
+
+      const billedKg = roundUpWeight(actualKg);
+      return { actualWeight: actualKg, weight: billedKg, chargedKg: billedKg, billedKg: billedKg, displayLabel: formatKg(billedKg) };
+    }
+
+    // Làm tròn lên nấc 0.5kg: <=0.5 -> 0.5 ; 0.51-1 -> 1 ; 1.01-1.5 -> 1.5 ...
+    function roundUpWeight(kg) {
+      const k = Number(kg) || 0;
+      if (k <= 0.5) return 0.5;
+      return Math.ceil(k * 2 - 1e-9) / 2;
+    }
+
+    // Công mua theo cân nặng: dưới 1kg 30k, từ 1kg 60k
+    function buyingFeeFor(kg) {
+      return roundUpWeight(kg) >= 1 ? PRICING.FEE_FROM_1KG : PRICING.FEE_UNDER_1KG;
+    }
+
+    // Giá về tay của 1 món = tiền hàng quy đổi + công mua + cước bay
+    function calcItemPrice(krw, kg, oldKrw) {
+      const priceKrw = Math.max(0, Number(krw) || 0);
+      const billedKg = roundUpWeight(kg);
+      const convertedVND = priceKrw * PRICING.EXCHANGE_RATE;
+      const buyingFee = buyingFeeFor(billedKg);
+      const shipVND = billedKg * PRICING.SHIP_PER_KG;
+      const allInVND = roundThousand(convertedVND + buyingFee + shipVND);
+      const old = Number(oldKrw) || 0;
+      const oldAllInVND = old > priceKrw ? roundThousand(old * PRICING.EXCHANGE_RATE + buyingFee + shipVND) : allInVND;
+      return { convertedVND, buyingFee, shipVND, allInVND, oldAllInVND, billedKg, weightLabel: formatKg(billedKg) };
+    }
+
+    function kgOptionsHtml(selectedKg) {
+      const sel = roundUpWeight(selectedKg);
+      const opts = KG_OPTIONS.includes(sel) ? KG_OPTIONS : KG_OPTIONS.concat(sel).sort((a, b) => a - b);
+      return opts.map(kg =>
+        `<option value="${kg}" ${kg === sel ? 'selected' : ''}>${formatKg(kg)} · công ${buyingFeeFor(kg) / 1000}k</option>`
+      ).join('');
+    }
+
+    // ---------- 4. DỮ LIỆU SẢN PHẨM ----------
+    function sanitizeProductDetails(item) {
+      item = item || {};
+      let krw = parseKrw(item.krw);
+      if (krw > PRICING.MAX_SANE_KRW) krw = 25000;   // chống cào nhầm mã số thành giá tiền tỷ
+      if (!krw) krw = 20000;
+      let oldKrw = parseKrw(item.oldKrw);
+      if (!oldKrw || oldKrw > PRICING.MAX_SANE_KRW) oldKrw = Math.round(krw * 1.2);
+      const wInfo = estimateSmartWeight(item.title, item.category, item.estKg);
+      const hasId = item.id !== undefined && item.id !== null && String(item.id).trim() !== '';
+
+      return Object.assign({}, item, {
+        id: hasId ? item.id : nextId(),
+        title: String(item.title || item.name || 'Sản phẩm Hàn Quốc').trim(),
+        brand: item.brand || 'Olive Young',
+        category: item.category || 'Mỹ phẩm',
+        subCategory: item.subCategory || 'Skincare',
+        mall: item.mall || 'Olive Young',
+        krw: krw,
+        oldKrw: oldKrw,
+        weightClass: wInfo.billedKg >= 1 ? 'over1' : 'under1',
+        estKg: wInfo.billedKg,
+        isSale: parseBool(item.isSale, true),
+        salesCount: Number(item.salesCount) || 0,
+        variant: item.variant || 'Chính hãng từ Hàn Quốc',
+        link: item.link || '',
+        image: item.image || DEFAULT_IMAGE,
+        benefit: item.benefit || 'Hàng chính hãng nội địa Hàn Quốc.',
+        benefits: item.benefits || ['Sản phẩm nội địa Hàn Quốc chính hãng từ Olive Young/KREAM.'],
+        targetAudience: item.targetAudience || 'Mọi loại da, phù hợp với thị hiếu người dùng châu Á.',
+        usageGuide: item.usageGuide || 'Sử dụng đều đặn theo hướng dẫn của nhà sản xuất.'
+      });
+    }
+
+    // Nhận danh sách mới, chuẩn hóa và sửa ID bị trùng (ID trùng làm xóa/đặt nhầm món)
+    function setProducts(list) {
+      const seen = new Set();
+      currentProductsList = (Array.isArray(list) ? list : []).filter(Boolean).map(sanitizeProductDetails).map(p => {
+        if (seen.has(String(p.id))) p.id = nextId();
+        seen.add(String(p.id));
+        return p;
+      });
+    }
+
+    function saveProductsToStorage() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(currentProductsList));
+      } catch (e) {}
+    }
+
+    // Google Sheets có thể trả về mảng [...] hoặc { status, products: [...] } -> nhận cả hai
+    function normalizeSheetProducts(json) {
+      if (Array.isArray(json)) return json;
+      if (json && Array.isArray(json.products)) return json.products;
+      if (json && Array.isArray(json.data)) return json.data;
+      return null;
+    }
+
+    async function fetchProductsFromSheet() {
+      const urls = [`${GOOGLE_SCRIPT_URL}?action=get_products`, GOOGLE_SCRIPT_URL];
+      for (const url of urls) {
+        try {
+          const res = await fetch(url);
+          const list = normalizeSheetProducts(await res.json());
+          if (list) return list;
+        } catch (e) {
+          console.warn('Chưa đọc được Google Sheets:', e);
+        }
+      }
+      return null;
+    }
+
+    // Tải sản phẩm: hiện ngay bản lưu trên máy (nếu có), rồi cập nhật bản mới từ Google Sheets.
+    // (Trước đây web gọi Google Sheets 3 lần mỗi lần mở trang.)
+    async function loadProducts() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+        if (Array.isArray(saved) && saved.length > 0) {
+          setProducts(saved);
+          productsLoaded = true;
+          renderAllProductViews();
+        }
+      } catch (e) {}
+
+      const fresh = await fetchProductsFromSheet();
+      if (fresh && fresh.length > 0) {
+        setProducts(fresh);
+        saveProductsToStorage();
+      }
+      productsLoaded = true;
+      renderAllProductViews();
+    }
+
+    async function postToSheet(body) {
+      const res = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(body)
+      });
+      return res.json();
+    }
+
+    // Lưu kho lên Google Sheets kèm mật khẩu admin (Apps Script kiểm tra trước khi ghi).
+    // Lỗi cũ: Apps Script không nhận lệnh này nên kho chưa bao giờ thật sự được lưu lên Sheet.
+    async function uploadProductsToGoogleSheets() {
+      if (!isAdminLoggedIn || !adminKey) return false;
+      try {
+        const result = await postToSheet({ action: 'save_products', adminKey: adminKey, products: currentProductsList });
+        if (result && result.status === 'unauthorized') {
+          alert('Mật khẩu quản trị không còn đúng (có thể vừa được đổi). Vui lòng đăng nhập lại.');
+          logoutAdmin();
+          return false;
+        }
+        return !!(result && result.status === 'success');
+      } catch (e) {
+        console.error('Lỗi đẩy sản phẩm lên Sheets:', e);
+        return false;
+      }
+    }
+
+    function renderAllProductViews() {
+      renderCatalogView();
+      renderIntroTopProducts();
+      const adminView = document.getElementById('view-admin');
+      if (adminView && adminView.classList.contains('active-view')) renderAdminManageList();
+    }
+
+    // ---------- 5. QUẢN TRỊ ADMIN ----------
+    // Mật khẩu được kiểm tra trên Google Apps Script (trước đây mã PIN nằm ngay trong code web)
+    let adminCheckInProgress = false;
+    async function handleAdminAccess() {
+      if (isAdminLoggedIn) {
+        openAdminPanel();
+        return;
+      }
+      if (adminCheckInProgress) return;
+      const pass = prompt('Vui lòng nhập mật khẩu Quản Trị Viên:');
+      if (pass === null || !pass.trim()) return;
+
+      adminCheckInProgress = true;
+      const btn = document.getElementById('topBarAdminBtn');
+      if (btn) btn.textContent = '⏳ Đang kiểm tra...';
+      try {
+        const result = await postToSheet({ action: 'check_admin', adminKey: pass.trim() });
+        if (result && result.status === 'success') {
+          adminKey = pass.trim();
+          isAdminLoggedIn = true;
+          updateAdminStatusUI();
+          openAdminPanel();
+          showToast('Đăng nhập Quản Trị Viên thành công!');
+        } else {
+          updateAdminStatusUI();
+          alert('Mật khẩu không chính xác! Chỉ quản trị viên mới có quyền thao tác.');
+        }
+      } catch (e) {
+        updateAdminStatusUI();
+        alert('Chưa kết nối được máy chủ Google Sheets để kiểm tra mật khẩu. Vui lòng thử lại.');
+      } finally {
+        adminCheckInProgress = false;
+      }
+    }
+    function handleAdminLoginClick() {
+      handleAdminAccess();
+    }
+
+    function updateAdminStatusUI() {
+      const btn = document.getElementById('topBarAdminBtn');
+      if (!btn) return;
+      if (isAdminLoggedIn) {
+        btn.innerHTML = '⚙️ Vào Quản Trị';
+        btn.className = 'force-clickable font-black bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded text-slate-950 shadow-sm transition';
+      } else {
+        btn.innerHTML = '🔒 Quản trị';
+        btn.className = 'force-clickable hover:text-amber-300 font-black bg-white/20 hover:bg-white/30 px-3 py-1 rounded text-amber-300 border border-amber-300/60 shadow-sm transition';
+      }
+    }
+
+    function openAdminPanel() {
+      switchPageView('admin');
+      setTimeout(() => {
+        const inp = document.getElementById('adminImportJsonInput');
+        if (inp) inp.focus();
+      }, 100);
+    }
+
+    function logoutAdmin() {
+      isAdminLoggedIn = false;
+      adminKey = '';
+      selectedProductIds.clear();
+      switchPageView('intro');
+      updateAdminStatusUI();
+      showToast('Đã đăng xuất khỏi tài khoản Quản trị!');
+    }
+
+    let selectedProductIds = new Set();   // lưu ID dạng chuỗi
+
+    function updateAdminCount() {
+      const countEl = document.getElementById('adminTotalCountText');
+      if (countEl) countEl.textContent = `Tổng: ${currentProductsList.length} món`;
+    }
+
+    function renderAdminManageList() {
+      const box = document.getElementById('adminProductManageList');
+      if (!box) return;
+      updateAdminCount();
+
+      if (!currentProductsList.length) {
+        box.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">${productsLoaded ? 'Kho hàng hiện đang trống.' : '⏳ Đang tải sản phẩm...'}</div>`;
+        updateSelectedBadge();
+        return;
+      }
+
+      box.innerHTML = currentProductsList.map(p => {
+        const id = escapeHtml(p.id);
+        const checked = selectedProductIds.has(String(p.id)) ? 'checked' : '';
+        return `
+          <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3 text-xs hover:bg-white transition">
+            <label class="flex items-center gap-3 min-w-0 cursor-pointer">
+              <input type="checkbox" class="w-4 h-4 shrink-0 text-sky-600 rounded border-slate-300 cursor-pointer" data-action="admin-select" data-id="${id}" ${checked} />
+              <img src="${escapeHtml(safeUrl(p.image, DEFAULT_IMAGE))}" alt="" loading="lazy" class="w-12 h-12 rounded-xl object-cover bg-white shrink-0 border border-slate-200" onerror="this.onerror=null;this.src='${escapeHtml(DEFAULT_IMAGE)}'" />
+              <div class="min-w-0">
+                <div class="font-bold text-slate-900 truncate">${escapeHtml(p.title)}</div>
+                <div class="text-[11px] text-slate-500 truncate">${escapeHtml(p.brand)} • ${escapeHtml(p.mall)} • <strong>${(p.krw || 0).toLocaleString()} ₩</strong></div>
+              </div>
+            </label>
+            <button type="button" data-action="admin-delete" data-id="${id}" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-black text-xs shrink-0 transition cursor-pointer">
+              Xóa lẻ
+            </button>
+          </div>`;
+      }).join('');
+      updateSelectedBadge();
+    }
+
+    function toggleSelectProduct(id, isChecked) {
+      if (isChecked) selectedProductIds.add(String(id));
+      else selectedProductIds.delete(String(id));
+      updateSelectedBadge();
+    }
+
+    function selectAllAdminProducts(status) {
+      if (status) currentProductsList.forEach(p => selectedProductIds.add(String(p.id)));
+      else selectedProductIds.clear();
+      renderAdminManageList();
+    }
+
+    function updateSelectedBadge() {
+      const badge = document.getElementById('selectedCountBadge');
+      if (badge) badge.textContent = selectedProductIds.size;
+    }
+
+    async function deleteSelectedProductsByAdmin() {
+      if (!isAdminLoggedIn) { alert('Bạn không có quyền thực hiện thao tác này!'); return; }
+      if (selectedProductIds.size === 0) { alert('Vui lòng tích chọn ít nhất 1 sản phẩm để xóa!'); return; }
+      const count = selectedProductIds.size;
+      if (!confirm(`Bạn có chắc chắn muốn xóa ${count} sản phẩm đã chọn khỏi website và Google Sheets?`)) return;
+
+      currentProductsList = currentProductsList.filter(p => !selectedProductIds.has(String(p.id)));
+      selectedProductIds.clear();
+      saveProductsToStorage();
+      renderAllProductViews();
+      renderAdminManageList();
+      const ok = await uploadProductsToGoogleSheets();
+      showToast(ok ? `Đã xóa ${count} sản phẩm!` : 'Đã xóa trên web nhưng chưa đồng bộ được Google Sheets');
+    }
+
+    async function deleteProductByAdmin(productId) {
+      if (!isAdminLoggedIn) { alert('Bạn không có quyền thực hiện thao tác này!'); return; }
+      const target = findProduct(productId);
+      if (!target) return;
+      if (!confirm(`Bạn có chắc muốn xóa sản phẩm:\n"${target.title}"?`)) return;
+
+      currentProductsList = currentProductsList.filter(p => !sameId(p.id, productId));
+      selectedProductIds.delete(String(productId));
+      saveProductsToStorage();
+      renderAllProductViews();
+      renderAdminManageList();
+      const ok = await uploadProductsToGoogleSheets();
+      showToast(ok ? 'Đã xóa món này!' : 'Đã xóa trên web nhưng chưa đồng bộ được Google Sheets');
+    }
+
+    function getProductUniqueKey(item) {
+      const link = item.link || '';
+      const mOlive = link.match(/goodsNo=([A-Za-z0-9]+)/);
+      if (mOlive) return 'OY_' + mOlive[1];
+      const mKream = link.match(/products\/(\d+)/);
+      if (mKream) return 'KREAM_' + mKream[1];
+      return (item.title || '').toLowerCase().replace(/[^a-z0-9가-힣]/g, '');
+    }
+
+    async function handleAdminImportSubmit() {
+      if (!isAdminLoggedIn) { alert('Bạn không có quyền thực hiện thao tác này!'); return; }
+      const inputEl = document.getElementById('adminImportJsonInput');
+      const importBtn = document.getElementById('adminImportBtn');
+      if (!inputEl) return;
+      let raw = inputEl.value.trim();
+      if (!raw) { alert('Vui lòng dán mã từ Bookmarklet vào ô!'); return; }
+
+      raw = raw.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+      const firstBracket = raw.indexOf('[');
+      const lastBracket = raw.lastIndexOf(']');
+      if (firstBracket !== -1 && lastBracket > firstBracket) {
+        raw = raw.substring(firstBracket, lastBracket + 1);
+      } else if (raw.startsWith('{') && raw.endsWith('}')) {
+        raw = '[' + raw + ']';
+      }
+
+      let list = null;
+      try {
+        list = JSON.parse(raw);
+      } catch (err) {
+        alert('Dữ liệu JSON dán vào không hợp lệ. Hãy kiểm tra lại!');
+        return;
+      }
+      if (!Array.isArray(list) || list.length === 0) {
+        alert('Dữ liệu JSON không đúng danh sách sản phẩm!');
+        return;
+      }
+
+      if (importBtn) { importBtn.disabled = true; importBtn.textContent = '⏳ Đang lọc trùng & đồng bộ...'; }
+
+      const combined = list.map(sanitizeProductDetails).concat(currentProductsList);
+      const seenKeys = new Set();
+      const uniqueProducts = [];
+      combined.forEach(prod => {
+        const key = getProductUniqueKey(prod);
+        if (!seenKeys.has(key)) {
+          seenKeys.add(key);
+          uniqueProducts.push(prod);
+        }
+      });
+      const duplicateCount = combined.length - uniqueProducts.length;
+
+      setProducts(uniqueProducts);
+      saveProductsToStorage();
+      renderAllProductViews();
+      renderAdminManageList();
+      const ok = await uploadProductsToGoogleSheets();
+
+      inputEl.value = '';
+      if (importBtn) { importBtn.disabled = false; importBtn.textContent = '⚡ Nạp Lên Web & Đồng Bộ Google Sheets'; }
+      alert(`✅ Đã nạp thành công!\n• Tổng sản phẩm hiện có: ${currentProductsList.length} món.\n• Đã tự động loại bỏ: ${duplicateCount} món bị trùng lặp.` +
+        (ok ? '' : '\n⚠️ Chưa đồng bộ được Google Sheets, hãy thử lại.'));
+    }
+
+    async function resetToStandardProducts() {
+      if (!confirm('Tải lại danh sách sản phẩm mới nhất từ Google Sheets?')) return;
+      try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+      currentProductsList = [];
+      productsLoaded = false;
+      renderAllProductViews();
+      renderAdminManageList();
+      await loadProducts();
+      renderAdminManageList();
+      showToast(`Đã tải ${currentProductsList.length} sản phẩm từ Google Sheets`);
+    }
+
+    // ---------- 6. KHO SẢN PHẨM: LỌC & TÌM KIẾM ----------
+    const FILTER_KEYS = {
+      all: { type: 'all', value: '' },
+      sale: { type: 'sale', value: '' },
+      oliveyoung: { type: 'mall', value: 'Olive Young' },
+      kream: { type: 'mall', value: 'KREAM' },
+      musinsa: { type: 'mall', value: 'Musinsa' },
+      nike: { type: 'brand', value: 'Nike' },
+      adidas: { type: 'brand', value: 'Adidas' },
+      coupang: { type: 'mall', value: 'Coupang' },
+      cosmetics_other: { type: 'category', value: 'Mỹ phẩm' }
+    };
+
+    // Menu "Loại sản phẩm" (trước đây bấm vào vẫn hiện tất cả)
+    const SUBCATEGORY_RULES = {
+      'toner pad': /toner|\bpads?\b|패드|토너|serum|세럼|앰플|ampoule|essence|에센스|tinh chất/i,
+      'mặt nạ': /mask|mặt nạ|마스크|sleeping|\blip\b|립/i
+    };
+
+    function switchSmartCatalogFilter(key) {
+      const f = FILTER_KEYS[key] || FILTER_KEYS.all;
+      currentCatalogFilter = { type: f.type, value: f.value };
+      renderCatalogView();
+      rememberCatalogFilter();
+    }
+
+    function highlightFilterButtons() {
+      const cur = currentCatalogFilter || FILTER_KEYS.all;
+      const activeKey = Object.keys(FILTER_KEYS).find(k =>
+        FILTER_KEYS[k].type === cur.type && FILTER_KEYS[k].value.toLowerCase() === String(cur.value || '').toLowerCase()
+      );
+      document.querySelectorAll('#catalogFilterButtonGroup .cat-filter-btn').forEach(btn => {
+        btn.className = btn.getAttribute('data-filter') === activeKey
+          ? 'cat-filter-btn px-4 py-2 rounded-xl text-xs font-black transition cursor-pointer bg-sky-600 text-white shadow-sm shrink-0'
+          : 'cat-filter-btn px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0';
+      });
+    }
+
+    function getFilteredProductsList() {
+      const list = currentProductsList;
+      const { type, value } = currentCatalogFilter || { type: 'all', value: '' };
+      if (!type || type === 'all') return list;
+
+      // Bỏ dấu, dấu chấm, gạch nối, khoảng trắng -> "dr g", "dr.g", "drg", "mat na" đều khớp
+      const squash = s => normalizeText(s).replace(/[.\-_\s]+/g, '');
+      const val = squash(value);
+
+      if (type === 'search') {
+        const words = String(value || '').trim().split(/\s+/).map(squash).filter(Boolean);
+        return list.filter(p => {
+          const hay = squash(`${p.title} ${p.brand} ${p.category} ${p.subCategory} ${p.mall} ${p.variant}`);
+          return hay.includes(val) || words.every(w => hay.includes(w));
+        });
+      }
+      if (type === 'brand') return list.filter(p => squash(p.brand).includes(val) || squash(p.title).includes(val));
+      if (type === 'mall') return list.filter(p => squash(p.mall) === val);
+      if (type === 'category') return list.filter(p => squash(p.category) === val);
+      if (type === 'subCategory') {
+        const rule = SUBCATEGORY_RULES[String(value || '').toLowerCase()];
+        return list.filter(p => squash(p.subCategory) === val || (rule && rule.test(`${p.title} ${p.subCategory}`)));
+      }
+      if (type === 'sale') return list.filter(p => p.isSale);
+      return list;
+    }
+
+    function skeletonCardsHtml(n) {
+      return Array.from({ length: n }).map(() => `
+        <div class="bg-white rounded-3xl border border-slate-200 p-4 space-y-3 animate-pulse">
+          <div class="h-48 rounded-2xl bg-slate-100"></div>
+          <div class="h-3 w-1/3 rounded bg-slate-100"></div>
+          <div class="h-3 w-5/6 rounded bg-slate-100"></div>
+          <div class="h-8 rounded-xl bg-slate-100"></div>
+        </div>`).join('');
+    }
+
+    function renderCatalogView() {
+      const grid = document.getElementById('catalogProductsGrid');
+      if (!grid) return;
+      highlightFilterButtons();
+
+      const filtered = getFilteredProductsList();
+      const badge = document.getElementById('catalogCountBadge');
+      if (badge) badge.textContent = productsLoaded ? `${filtered.length} sản phẩm` : 'Đang tải...';
+
+      const filterVal = String((currentCatalogFilter && currentCatalogFilter.value) || '');
+      const filterType = (currentCatalogFilter && currentCatalogFilter.type) || 'all';
+      const titles = {
+        all: 'KHO SẢN PHẨM HÀBU',
+        sale: '🔥 TOÀN BỘ MẶT HÀNG SALE',
+        brand: `HÃNG: ${filterVal.toUpperCase()}`,
+        mall: `SÀN: ${filterVal.toUpperCase()}`,
+        category: `DANH MỤC: ${filterVal.toUpperCase()}`,
+        subCategory: `LOẠI: ${filterVal.toUpperCase()}`,
+        search: `KẾT QUẢ TÌM KIẾM: "${filterVal.toUpperCase()}"`
+      };
+      const headerTitle = document.getElementById('catalogViewHeaderTitle');
+      if (headerTitle) headerTitle.textContent = titles[filterType] || 'SẢN PHẨM';
+
+      if (!productsLoaded && currentProductsList.length === 0) {
+        grid.innerHTML = skeletonCardsHtml(8);
+        return;
+      }
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full py-12 text-center space-y-3">
+            <div class="text-slate-400 text-sm">Chưa có sản phẩm nào trong mục này.</div>
+            <div class="flex flex-wrap justify-center gap-2 text-xs font-bold">
+              <button type="button" onclick="switchSmartCatalogFilter('all')" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700">Xem tất cả sản phẩm</button>
+              <button type="button" onclick="switchPageView('order')" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white">Đặt theo link web Hàn</button>
+            </div>
+          </div>`;
+        return;
+      }
+      grid.innerHTML = filtered.map(renderProductCardHtml).join('');
+    }
+
+    function renderProductCardHtml(item) {
+      const calc = calcItemPrice(item.krw, item.estKg, item.oldKrw);
+      const id = escapeHtml(item.id);
+      const title = escapeHtml(item.title);
+      const img = escapeHtml(safeUrl(item.image, DEFAULT_IMAGE));
+
+      return `
+        <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group">
+          <div class="p-4 space-y-3 cursor-pointer" data-action="detail" data-id="${id}">
+            <div class="relative w-full h-48 rounded-2xl overflow-hidden bg-slate-100 flex items-center justify-center">
+              <img src="${img}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" loading="lazy"
+                   onerror="this.onerror=null;this.src='${escapeHtml(DEFAULT_IMAGE)}'" />
+              <div class="absolute top-2.5 left-2.5 flex flex-col gap-1 items-start">
+                <span class="px-2.5 py-0.5 rounded-full bg-slate-900/80 backdrop-blur-md text-white font-black text-[9px] uppercase tracking-wider">${escapeHtml(item.mall || 'Olive Young')}</span>
+                ${item.isSale ? '<span class="px-2 py-0.5 rounded-full bg-rose-600 text-white font-black text-[9px] uppercase">🔥 Sale</span>' : ''}
+              </div>
+            </div>
+            <div class="space-y-1">
+              <div class="text-[11px] font-black uppercase text-sky-700">${escapeHtml(item.brand || 'CHÍNH HÃNG')}</div>
+              <h3 class="text-xs font-bold text-slate-800 line-clamp-2 leading-snug group-hover:text-sky-600 transition" title="${title}">${title}</h3>
+              <p class="text-[10px] text-slate-400 line-clamp-1">Phân loại: ${escapeHtml(item.variant || 'Chính hãng từ Hàn Quốc')}</p>
+            </div>
+          </div>
+
+          <div class="px-4 pb-4 pt-1 space-y-3 border-t border-slate-100">
+            <div class="flex items-baseline justify-between">
+              <div>
+                ${calc.oldAllInVND > calc.allInVND ? `<div class="text-[10px] text-slate-400 line-through">${formatVND(calc.oldAllInVND)}</div>` : ''}
+                <div class="text-base font-black text-rose-600">${formatVND(calc.allInVND)}</div>
+              </div>
+              <div class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg">Cước: ${calc.weightLabel}</div>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" data-action="detail" data-id="${id}" class="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs cursor-pointer">Chi tiết →</button>
+              <button type="button" data-action="order" data-id="${id}" class="w-full py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs cursor-pointer">Đặt ngay</button>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    function renderIntroTopProducts() {
+      const topGrid = document.getElementById('introTopProductsGrid');
+      if (!topGrid) return;
+      if (!productsLoaded && currentProductsList.length === 0) {
+        topGrid.innerHTML = skeletonCardsHtml(4);
+        return;
+      }
+      if (currentProductsList.length === 0) {
+        topGrid.innerHTML = '<div class="col-span-full py-8 text-center text-slate-400 text-sm">Sản phẩm đang được cập nhật. Bạn có thể đặt theo link web Hàn ở mục Đơn hàng.</div>';
+        return;
+      }
+      const sorted = [...currentProductsList].sort((a, b) => extractSalesPopularity(b) - extractSalesPopularity(a));
+      topGrid.innerHTML = sorted.slice(0, 8).map(renderProductCardHtml).join('');
+    }
+
+    function extractSalesPopularity(item) {
+      let score = 500;
+      const str = ((item.title || '') + ' ' + (item.brand || '') + ' ' + (item.mall || '')).toLowerCase();
+      // Ưu tiên hàng Olive Young và các brand mỹ phẩm hot
+      if (str.includes('olive') || str.includes('mediheal') || str.includes('laneige') || str.includes('medicube') || str.includes('torriden')) {
+        score += 20000;
+      }
+      if (item.salesCount && Number(item.salesCount) > 0) return score + Number(item.salesCount);
+
+      const m = str.match(/(?:giao dịch|deal|ưu đãi|거래)\s*([0-9.,]+)\s*([만kmn万]?)/i);
+      if (m) {
+        const val = parseFloat(m[1].replace(/,/g, '.'));
+        const unit = (m[2] || '').toLowerCase();
+        if (unit === '만' || unit === 'm' || str.includes('만') || str.includes('.000')) {
+          score += val >= 100 ? Math.round(val * 1000) : Math.round(val * 10000);
+        } else {
+          score += Math.round(val * 1000);
+        }
+      }
+      return score;
+    }
+
+    // ---------- 7. CHUYỂN TRANG (có hỗ trợ nút Back của điện thoại) ----------
+    const NAV_FOR_FILTER = { all: 'navBtn-brand', brand: 'navBtn-brand', mall: 'navBtn-brand', search: 'navBtn-brand', category: 'navBtn-category', subCategory: 'navBtn-category', sale: 'navBtn-sale' };
+
+    function switchPageView(viewName, filterParams, options) {
+      options = options || {};
+      if (viewName === 'admin' && !isAdminLoggedIn) viewName = 'intro';
+      const target = document.getElementById(`view-${viewName}`);
+      if (!target) return;
+
+      document.querySelectorAll('.page-view').forEach(el => el.classList.remove('active-view'));
+      target.classList.add('active-view');
+
+      if (viewName === 'catalog' && filterParams) {
+        currentCatalogFilter = { type: filterParams.filterType || 'all', value: filterParams.value || '' };
+      }
+
+      document.querySelectorAll('.nav-nike-link').forEach(el => el.classList.remove('active-nav'));
+      const navId = viewName === 'intro' ? 'navBtn-intro' : viewName === 'catalog' ? NAV_FOR_FILTER[currentCatalogFilter.type] : null;
+      const activeBtn = navId && document.getElementById(navId);
+      if (activeBtn) activeBtn.classList.add('active-nav');
+
+      if (viewName === 'catalog') renderCatalogView();
+      if (viewName === 'admin') renderAdminManageList();
+      if (viewName === 'order') refreshOrderTotals();
+
+      if (!options.fromHistory) {
+        const state = { view: viewName, filter: currentCatalogFilter };
+        try {
+          if (location.hash === '#' + viewName) history.replaceState(state, '');
+          else history.pushState(state, '', '#' + viewName);
+        } catch (e) {}
+      }
+      window.scrollTo({ top: 0, behavior: options.fromHistory ? 'auto' : 'smooth' });
+    }
+
+    function rememberCatalogFilter() {
+      try { history.replaceState({ view: 'catalog', filter: currentCatalogFilter }, ''); } catch (e) {}
+    }
+
+    window.addEventListener('popstate', e => {
+      const st = e.state || {};
+      const view = st.view || location.hash.replace('#', '') || 'intro';
+      if (st.filter) currentCatalogFilter = st.filter;
+      closeProductDetailModal();
+      switchPageView(view, null, { fromHistory: true });
+    });
+
+    function handleNikeSearch(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const input = document.getElementById('nikeSearchInput');
+      const val = input.value.trim();
+      if (!val) return;
+      input.blur();
+      switchPageView('catalog', { filterType: 'search', value: val });
+    }
+
+    // ---------- 8. CHI TIẾT SẢN PHẨM ----------
+    function setBodyScrollLocked(locked) {
+      document.body.classList.toggle('overflow-hidden', locked);
+    }
+
+    function openProductDetailModal(id) {
+      const item = findProduct(id);   // Lỗi cũ: so sánh chuỗi với số nên nút "Chi tiết" không mở được
+      if (!item) return;
+      const calc = calcItemPrice(item.krw, item.estKg, item.oldKrw);
+      const body = document.getElementById('productDetailModalBody');
+      const modal = document.getElementById('productDetailModal');
+      if (!body || !modal) return;
+
+      const hasRating = item.rating && !isNaN(parseFloat(item.rating));
+      const summaryText = item.summary || item.benefit || 'Sản phẩm nội địa Hàn Quốc chính hãng, được tuyển chọn kỹ lưỡng theo đánh giá và xu hướng tiêu dùng tại Hàn.';
+      const link = safeUrl(item.link);
+
+      body.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+          <div class="space-y-3">
+            <div class="rounded-2xl overflow-hidden bg-slate-100 h-72 flex items-center justify-center border border-slate-200 relative">
+              <img src="${escapeHtml(safeUrl(item.image, DEFAULT_IMAGE))}" alt="${escapeHtml(item.title)}" class="w-full h-full object-cover"
+                   onerror="this.onerror=null;this.src='${escapeHtml(DEFAULT_IMAGE)}'" />
+              <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-white font-bold text-xs uppercase">${escapeHtml(item.mall || 'Hàn Quốc')}</span>
+              ${item.isRetailCalc ? `<span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-emerald-600/90 text-white font-black text-[11px] shadow">Giá tách lẻ từ Set</span>` : ''}
+            </div>
+            <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2">
+              <div class="font-extrabold text-slate-900 uppercase text-[11px] border-b border-slate-200 pb-1">📋 Thông số cơ bản:</div>
+              <div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Thương hiệu:</span><span class="font-bold text-slate-800 text-right">${escapeHtml(item.brand || 'Chính hãng')}</span></div>
+              <div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Phân loại / Quy cách:</span><span class="font-bold text-slate-800 text-right">${escapeHtml(item.variant || 'Bản tiêu chuẩn')}</span></div>
+              <div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Loại sản phẩm:</span><span class="font-bold text-slate-800 text-right">${escapeHtml(item.category || 'Mỹ phẩm / Thời trang')}</span></div>
+              <div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Nguồn sàn gốc:</span><span class="font-bold text-sky-600 text-right">${escapeHtml(item.mall || 'Korea Official')}</span></div>
+              ${item.totalSetKrw && item.isRetailCalc ? `<div class="flex justify-between border-t border-slate-200 pt-1 text-[11px]"><span class="text-slate-400">Giá gốc cả set (${escapeHtml(item.unitCount)} món):</span><span class="font-bold text-slate-600">${Number(item.totalSetKrw).toLocaleString()} KRW</span></div>` : ''}
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <div>
+              <span class="text-xs font-black uppercase text-sky-600 tracking-wider">${escapeHtml(item.brand || 'CHÍNH HÃNG')}</span>
+              <h2 class="text-base font-black text-slate-900 mt-1 leading-snug pr-8">${escapeHtml(item.title)}</h2>
+            </div>
+
+            ${hasRating ? `
+            <div class="p-3 rounded-2xl bg-amber-50/70 border border-amber-200/60 flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="text-amber-500 text-sm">★★★★★</span>
+                <span class="text-xs font-black text-slate-900">${parseFloat(item.rating).toFixed(1)} / 5.0</span>
+              </div>
+              ${item.reviews ? `<span class="text-[11px] text-slate-600 font-bold">(${Number(String(item.reviews).replace(/[^\d]/g, '')).toLocaleString('vi-VN')} đánh giá trên web Hàn)</span>` : ''}
+            </div>` : ''}
+
+            <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 leading-relaxed">
+              <span class="font-bold text-slate-800">💡 Mô tả tóm tắt:</span> ${escapeHtml(summaryText)}
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-sky-50/60 border border-sky-100 text-xs space-y-2">
+              <div class="flex justify-between items-center"><span class="text-slate-500">Giá web Hàn:</span><span class="font-bold text-slate-800">${Number(item.krw).toLocaleString()} ₩ → ${formatVND(calc.convertedVND)}</span></div>
+              <div class="flex justify-between items-center"><span class="text-slate-500">Công mua hộ:</span><span class="font-bold text-slate-800">${formatVND(calc.buyingFee)}</span></div>
+              <div class="flex justify-between items-center"><span class="text-slate-500">Cước bay (${calc.weightLabel} dự kiến):</span><span class="font-bold text-slate-800">${formatVND(calc.shipVND)}</span></div>
+              ${calc.oldAllInVND > calc.allInVND ? `<div class="flex justify-between items-center"><span class="text-slate-500">Giá niêm yết cũ:</span><span class="text-slate-400 line-through">${formatVND(calc.oldAllInVND)}</span></div>` : ''}
+              <div class="flex justify-between items-baseline pt-1 border-t border-sky-100">
+                <span class="text-xs font-black text-slate-800 uppercase">${item.isRetailCalc ? 'Giá 1 món về tay:' : 'Giá về tay trọn gói:'}</span>
+                <span class="text-2xl font-black text-rose-600">${formatVND(calc.allInVND)}</span>
+              </div>
+            </div>
+
+            <div class="grid ${link ? 'grid-cols-2' : 'grid-cols-1'} gap-2 pt-2">
+              ${link ? `<a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" class="py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs text-center transition">Xem link web Hàn ↗</a>` : ''}
+              <button type="button" data-action="order" data-id="${escapeHtml(item.id)}" class="py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs transition shadow-md shadow-sky-600/20 cursor-pointer">Đặt mua ngay</button>
+            </div>
+          </div>
+        </div>`;
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      setBodyScrollLocked(true);
+    }
+
+    function closeProductDetailModal() {
+      const modal = document.getElementById('productDetailModal');
+      if (modal && !modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        setBodyScrollLocked(false);
+      }
+    }
+
+    // ---------- 9. CHAT HỎI ĐÁP NỔI ----------
+    function toggleFloatingAiChat() {
+      const panel = document.getElementById('floatingAiPanel');
+      if (!panel) return;
+      panel.classList.toggle('hidden');
+      if (!panel.classList.contains('hidden') && window.matchMedia('(min-width: 640px)').matches) {
+        setTimeout(() => {
+          const inp = document.getElementById('floatingAiInput');
+          if (inp) inp.focus();
+        }, 100);
+      }
+    }
+
+    function sendQuickFloatingAi(text) {
+      document.getElementById('floatingAiInput').value = text;
+      handleFloatingAiSubmit(null);
+    }
+
+    function handleFloatingAiSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const input = document.getElementById('floatingAiInput');
+      const text = input.value.trim();
+      if (!text) return;
+      input.value = '';
+
+      const box = document.getElementById('floatingAiMessages');
+      box.insertAdjacentHTML('beforeend', `<div class="p-2.5 rounded-2xl bg-sky-600 text-white ml-6 text-right font-medium">${escapeHtml(text)}</div>`);
+      box.insertAdjacentHTML('beforeend', `<div class="p-3 rounded-2xl bg-white border border-sky-200 text-slate-700 leading-relaxed shadow-sm">${generateSmartAiResponse(text)}</div>`);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function generateSmartAiResponse(query) {
+      const q = query.toLowerCase().trim();
+      const has = (...words) => words.some(w => q.includes(w));
+
+      if (has('bao lâu', 'mấy ngày', 'thời gian', 'khi nào', 'về đến')) {
+        return `✈️ <strong>Thời gian hàng về tận tay:</strong><br/>
+- Sau khi chốt đơn, hàng từ web Hàn (Olive Young, Musinsa, KREAM...) về kho HàBu tại <strong>Busan mất 1 - 2 ngày</strong>.<br/>
+- Hàng được kiểm tra, cân điện tử và đóng chuyến bay thẳng Air Cargo về Nội Bài (Hà Nội).<br/>
+- <strong>Tổng thời gian từ lúc mua đến khi nhận hàng tại Việt Nam chỉ từ 3 - 5 ngày làm việc</strong>.<br/>
+- Nội thành Hà Nội nhận ngay trong ngày sau khi thông quan; tỉnh khác ship 1-2 ngày.`;
+      }
+
+      if (has('laneige', 'mặt nạ môi', 'mat na moi', 'lip sleeping')) {
+        return `🍓 <strong>Mặt nạ ngủ môi Laneige (Lip Sleeping Mask):</strong><br/>
+- Các vị đều có công dụng như nhau: dưỡng ẩm, làm mềm môi qua đêm; chỉ khác <strong>mùi hương &amp; màu</strong>.<br/>
+- <strong>Berry</strong> là vị gốc, bán chạy nhất. Ngoài ra thường có Apple Lime, Gummy Bear, Vanilla... (vị có sẵn thay đổi theo đợt trên Olive Young).<br/>
+👉 Khi đặt, bạn ghi rõ vị vào ô <strong>Phân loại / Vị</strong>, shop sẽ kiểm tra còn hàng trước khi mua.`;
+      }
+
+      if (has('bố mẹ', 'ba mẹ', 'người lớn', 'quà', 'sức khỏe', 'ông bà')) {
+        return `🎁 <strong>Gợi ý quà biếu sức khỏe cho bố mẹ:</strong><br/>
+1. <strong>Tinh chất Hồng Sâm KGC Everytime 30 gói:</strong> Bồi bổ nguyên khí, tăng đề kháng, giảm mệt mỏi cho người lớn tuổi.<br/>
+2. <strong>Viên uống Glucosamine / Dầu thông đỏ Hàn Quốc:</strong> Được nhiều gia đình chọn làm quà cho người lớn tuổi.<br/>
+3. <strong>Set kem dưỡng Phục hồi PDRN / Collagen:</strong> Cấp ẩm sâu, chống nứt nẻ khô da mùa đông.<br/>
+👉 Bạn bấm icon <strong>Zalo</strong> bên cạnh để shop tư vấn mẫu kèm túi biếu nhé!`;
+      }
+
+      if (has('quy trình', 'vận chuyển', 'ship air', 'cước bay', 'phí ship', 'kiểm hàng')) {
+        return `📦 <strong>Quy trình vận chuyển chuẩn 5 chặng HàBu by Air:</strong><br/>
+- <strong>Chặng 1:</strong> Gom hàng chính hãng tại kho Busan, kiểm tra chuẩn mã, chuẩn màu/size.<br/>
+- <strong>Chặng 2:</strong> Cân điện tử minh bạch, cước bay <strong>${formatVND(PRICING.SHIP_PER_KG)}/kg</strong> (làm tròn nấc 0.5kg), bọc chống sốc kỹ lưỡng.<br/>
+- <strong>Chặng 3:</strong> Bay thẳng Air Cargo từ Gimhae (Busan) ✈️ Nội Bài (Hà Nội).<br/>
+- <strong>Chặng 4:</strong> Thông quan chính ngạch tại Nội Bài, phân loại theo mã ORD.<br/>
+- <strong>Chặng 5:</strong> Giao tận tay bạn qua ship hỏa tốc hoặc bưu cục toàn quốc.`;
+      }
+
+      if (has('tính giá', 'công thức', 'tỷ giá', 'tiền ship', 'công mua', 'giá về tay', 'bao nhiêu tiền')) {
+        const ex = calcItemPrice(28900, 0.5);
+        return `💰 <strong>Công thức tính giá trọn gói về tay tại HàBu Order:</strong><br/>
+<strong>Giá về tay = (Giá web Hàn × ${PRICING.EXCHANGE_RATE}) + Công mua + Cước bay</strong><br/>
+- <em>Tỷ giá:</em> ${PRICING.EXCHANGE_RATE} VND / 1 KRW.<br/>
+- <em>Công mua:</em> ${PRICING.FEE_UNDER_1KG / 1000}k/món nặng dưới 1kg, ${PRICING.FEE_FROM_1KG / 1000}k/món từ 1kg.<br/>
+- <em>Cước bay:</em> ${formatVND(PRICING.SHIP_PER_KG)}/kg, làm tròn lên nấc 0.5kg.<br/>
+- <em>Ví dụ:</em> món 28.900₩ nặng 0.5kg → ${formatVND(ex.convertedVND)} + ${formatVND(ex.buyingFee)} + ${formatVND(ex.shipVND)} ≈ <strong>${formatVND(ex.allInVND)}</strong>.`;
+      }
+
+      if (has('size', 'cỡ', 'số giày', 'chọn size')) {
+        return `📏 <strong>Chọn size khi mua hộ:</strong><br/>
+- <em>Giày Hàn</em> tính theo <strong>mm</strong> (VD: 250 ≈ chân dài 25cm). Bạn đo chiều dài bàn chân rồi ghi size mm vào ô <strong>Phân loại / Size</strong>.<br/>
+- <em>Quần áo</em> (Musinsa...) thường ghi S/M/L hoặc 95/100/105 — bạn gửi chiều cao, cân nặng để shop đối chiếu bảng size của hãng.<br/>
+👉 Nhắn <strong>Zalo</strong> kèm link sản phẩm để shop kiểm tra bảng size trước khi mua nhé!`;
+      }
+
+      if (has('đặt hàng', 'cách đặt', 'mua hộ', 'order', 'đặt mua')) {
+        return `🛒 <strong>Cách đặt hàng tại HàBu Order:</strong><br/>
+1. Chọn sản phẩm có sẵn trong <strong>Kho sản phẩm</strong> và bấm <strong>Đặt ngay</strong>, hoặc<br/>
+2. Vào <strong>Đơn hàng</strong>, dán link sản phẩm từ web Hàn + giá KRW, hoặc<br/>
+3. Dùng <strong>📸 Gửi ảnh</strong> để hệ thống đọc tên &amp; giá từ ảnh chụp màn hình.<br/>
+Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong> để nhận mã ORD.`;
+      }
+
+      return `🤖 <strong>Trợ lý HàBu Order:</strong> Cảm ơn câu hỏi của bạn! Bạn có thể hỏi mình về <em>"thời gian hàng về"</em>, <em>"cách tính giá"</em>, <em>"quà biếu cho bố mẹ"</em>, <em>"cách chọn size"</em> hoặc bấm ngay vào icon <strong>Zalo</strong> bên cạnh để gặp trực tiếp shop nhé!`;
+    }
+
+    // ---------- 10. MÔ PHỎNG HÀNH TRÌNH BAY ----------
+    let currentStage = 1;
+    let autoPlayTimer = null;
+
+    const JOURNEY_TITLES = {
+      1: 'CHẶNG 01 / 05: NHẬN ĐƠN & GOM HÀNG TẠI KHO BUSAN',
+      2: 'CHẶNG 02 / 05: CÂN HÀNG ĐIỆN TỬ (180K/KG) & ĐÓNG THÙNG TẠI BUSAN',
+      3: 'CHẶNG 03 / 05: VẬN CHUYỂN ĐƯỜNG HÀNG KHÔNG (BUSAN ✈️ HÀ NỘI)',
+      4: 'CHẶNG 04 / 05: THÔNG QUAN HÀNG KHÔNG TẠI SÂN BAY NỘI BÀI',
+      5: 'CHẶNG 05 / 05: GIAO TẬN TAY KHÁCH HÀNG TOÀN QUỐC'
+    };
+
+    const JOURNEY_SCENES = {
+      1: `
+        <div class="text-center space-y-4">
+          <div class="inline-flex flex-wrap justify-center max-w-full items-center gap-4 bg-slate-800/90 p-4 sm:p-5 rounded-2xl border border-slate-700 shadow-xl">
+            <div class="w-24 h-20 rounded-xl bg-amber-400/20 border border-amber-400 flex flex-col items-center justify-center p-1 text-center">
+              <span class="text-2xl">🛍️💄👟</span>
+              <span class="text-[8px] font-black text-amber-300 mt-1 uppercase">Olive Young / KREAM</span>
+            </div>
+            <span class="text-2xl text-sky-400 font-black">➔</span>
+            <div class="w-28 h-24 rounded-xl bg-gradient-to-br from-[#e2b477] to-[#b57c36] border-2 border-amber-200 p-2 flex flex-col items-center justify-center text-habu-navy shadow-lg">
+              <div class="font-black text-xs">THÙNG HÀBU</div>
+              <div class="text-[9px] font-bold text-slate-800">KHO BUSAN</div>
+              <div class="mt-1 px-2 py-0.5 bg-sky-950 text-amber-300 text-[8px] font-black rounded">ĐÃ GOM ĐỦ</div>
+            </div>
+          </div>
+          <p class="text-xs text-sky-200">Nhân viên HàBu kiểm tra kỹ đúng mẫu, đúng loại mỹ phẩm &amp; size thời trang trước khi đóng kiện.</p>
+        </div>`,
+      2: `
+        <div class="text-center space-y-3">
+          <div class="inline-flex flex-wrap justify-center max-w-full items-end gap-3 bg-slate-800/90 p-4 sm:p-5 rounded-2xl border border-amber-400/60 shadow-xl">
+            <div class="w-36 h-24 rounded-xl bg-gradient-to-br from-[#e2b477] to-[#b57c36] border border-amber-200 p-2.5 text-habu-navy flex flex-col justify-between">
+              <span class="text-[9px] font-black bg-amber-200 px-1.5 py-0.5 rounded">NIÊM PHONG AIR</span>
+              <span class="font-black text-xs">HÀBU BOX</span>
+              <span class="text-[9px] font-bold text-slate-800">Cước: 180k/kg</span>
+            </div>
+            <div class="bg-slate-950 border-2 border-amber-400 p-3 rounded-xl text-left font-mono">
+              <div class="text-[9px] text-amber-300 uppercase">Cân điện tử Busan</div>
+              <div class="text-2xl font-black text-emerald-400">0.85 KG</div>
+              <div class="text-[10px] text-sky-300">Làm tròn: 1 kg</div>
+              <div class="text-[10px] text-sky-300">Ship Air: 180.000 đ</div>
+            </div>
+          </div>
+          <p class="text-xs text-amber-200">Cân đo minh bạch tại kho Busan, quấn màng xốp chống sốc bảo vệ hàng hóa.</p>
+        </div>`,
+      3: `
+        <div class="w-full flex flex-col items-center justify-center">
+          <div class="plane-float flex flex-col items-center">
+            <svg viewBox="0 0 340 140" class="w-64 sm:w-80 drop-shadow-2xl">
+              <circle cx="40" cy="30" r="14" fill="#38bdf8" opacity="0.25"/>
+              <circle cx="290" cy="95" r="18" fill="#38bdf8" opacity="0.25"/>
+              <path d="M 40 70 Q 50 50 100 50 L 250 50 Q 300 50 315 68 Q 300 85 250 85 L 80 85 Z" fill="#ffffff" stroke="#0284c7" stroke-width="3"/>
+              <path d="M 45 68 L 22 30 L 55 30 L 78 52 Z" fill="#0284c7"/>
+              <path d="M 140 70 L 110 115 L 150 115 L 200 70 Z" fill="#0284c7"/>
+              <text x="165" y="72" text-anchor="middle" font-weight="900" font-size="12" fill="#0369a1">HÀBU AIR CARGO ✈️</text>
+            </svg>
+            <div class="px-3.5 py-1 rounded-full bg-amber-400 text-slate-950 font-black text-xs shadow-md mt-1 text-center">
+              📦 Chuyến bay thẳng Gimhae (Busan) ➔ Nội Bài (Hà Nội)
+            </div>
+          </div>
+        </div>`,
+      4: `
+        <div class="text-center space-y-3">
+          <div class="inline-flex flex-wrap justify-center max-w-full items-center gap-3 bg-slate-800/90 p-4 sm:p-5 rounded-2xl border border-emerald-400/60 shadow-xl">
+            <div class="w-36 h-24 rounded-xl bg-gradient-to-br from-[#e2b477] to-[#b57c36] border border-amber-200 p-2 text-habu-navy flex flex-col justify-between">
+              <span class="text-[9px] font-black bg-emerald-300 text-emerald-950 px-1.5 py-0.5 rounded">✓ THÔNG QUAN</span>
+              <span class="font-black text-xs">NỘI BÀI HAN</span>
+              <span class="text-[8px] font-mono bg-white/80 rounded px-1">MÃ: ORD-001</span>
+            </div>
+            <div class="bg-slate-950 border border-emerald-400 p-3 rounded-xl text-left space-y-1">
+              <div class="text-[10px] font-bold text-emerald-400">HẢI QUAN HÀNG KHÔNG</div>
+              <div class="text-xs font-black text-white">Đã thông quan chính ngạch</div>
+              <div class="text-[10px] text-sky-300">Đã phân luồng về kho Hà Nội</div>
+            </div>
+          </div>
+          <p class="text-xs text-emerald-300">Hoàn tất thủ tục hải quan tại sân bay Nội Bài chỉ sau vài giờ hạ cánh.</p>
+        </div>`,
+      5: `
+        <div class="text-center space-y-3">
+          <div class="inline-flex flex-wrap justify-center max-w-full items-center gap-3 bg-slate-800/90 px-4 sm:px-6 py-5 rounded-2xl border border-sky-400/50 shadow-xl">
+            <div class="text-4xl">🚚</div>
+            <div class="text-left">
+              <div class="text-xs font-black text-amber-300 uppercase">XE TẢI PHÂN PHỐI HÀBU ORDER</div>
+              <div class="text-sm font-black text-white">Giao tận nơi Hà Nội &amp; Ship Toàn Quốc</div>
+              <div class="text-[10px] text-sky-300">Hỗ trợ kiểm tra hàng khi nhận</div>
+            </div>
+          </div>
+          <p class="text-xs text-sky-200">Giao nhanh nội thành Hà Nội trong ngày hoặc chuyển phát nhanh qua ViettelPost/GHTK.</p>
+        </div>`
+    };
+
+    function showJourneyStage(stage) {
+      currentStage = stage;
+      document.querySelectorAll('.journey-btn').forEach(btn => {
+        const active = Number(btn.getAttribute('data-stage')) === stage;
+        btn.className = active
+          ? 'journey-btn w-full text-left p-3.5 rounded-xl border border-sky-400 bg-sky-500/20 flex items-start gap-3 transition cursor-pointer'
+          : 'journey-btn w-full text-left p-3.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-800/40 flex items-start gap-3 transition cursor-pointer';
+      });
+      const badge = document.getElementById('stageBadge');
+      if (badge) badge.textContent = JOURNEY_TITLES[stage];
+      const prog = document.getElementById('stageProgress');
+      if (prog) prog.style.width = `${stage * 20}%`;
+      const canvas = document.getElementById('sceneCanvas');
+      if (canvas) canvas.innerHTML = JOURNEY_SCENES[stage] || '';
+    }
+
+    // Khách bấm chọn chặng: hiện chặng đó và đếm lại thời gian tự chạy
+    function setJourneyStage(stage) {
+      showJourneyStage(stage);
+      if (autoPlayTimer) startAutoJourney();
+    }
+
+    function toggleAutoJourney() {
+      const btn = document.getElementById('autoPlayBtn');
+      if (autoPlayTimer) {
+        clearInterval(autoPlayTimer);
+        autoPlayTimer = null;
+        if (btn) btn.textContent = '▶ Tự động';
+      } else {
+        startAutoJourney();
+        if (btn) btn.textContent = '⏸ Tạm dừng';
+      }
+    }
+
+    function startAutoJourney() {
+      if (autoPlayTimer) clearInterval(autoPlayTimer);
+      autoPlayTimer = setInterval(() => {
+        showJourneyStage(currentStage >= 5 ? 1 : currentStage + 1);
+      }, 3500);
+    }
+
+    // ---------- 11. FORM ĐẶT HÀNG ----------
+    let rowSeq = 0;
+    function createRow(data) {
+      data = data || {};
+      return {
+        rowId: ++rowSeq,
+        productId: data.productId != null ? String(data.productId) : '',
+        title: String(data.title || ''),
+        link: String(data.link || ''),
+        krw: Math.max(0, parseKrw(data.krw)),
+        qty: Math.max(1, Math.floor(Number(data.qty)) || 1),
+        kg: roundUpWeight(data.kg || 0.5),
+        variant: String(data.variant || '')
+      };
+    }
+    let productRows = [createRow()];
+
+    function isRowEmpty(r) {
+      return !r.link.trim() && !r.title.trim() && !(r.krw > 0) && !r.variant.trim();
+    }
+
+    function renderOrderRows() {
+      const container = document.getElementById('productItemsContainer');
+      if (!container) return;
+      const inputCls = 'w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-sky-500 outline-none text-xs bg-white';
+      container.innerHTML = productRows.map((r, i) => `
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3" data-row="${r.rowId}">
+          <div class="flex justify-between items-center gap-3 text-xs">
+            <span class="font-bold text-slate-700">Sản phẩm #${i + 1}</span>
+            <div class="flex items-center gap-2">
+              <span class="font-black text-rose-600" data-row-total></span>
+              <button type="button" data-action="remove-row" data-id="${r.rowId}" title="Xóa sản phẩm này" aria-label="Xóa sản phẩm #${i + 1}" class="w-7 h-7 rounded-full bg-white border border-slate-300 text-slate-500 hover:text-rose-600 hover:border-rose-300 font-bold leading-none cursor-pointer">✕</button>
+            </div>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-3">
+            <div class="sm:col-span-2">
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Tên sản phẩm</label>
+              <input type="text" value="${escapeHtml(r.title)}" oninput="updateRow(${r.rowId}, 'title', this.value)" placeholder="VD: Mặt nạ Mediheal Madecassoside (nếu biết)" class="${inputCls} font-bold text-slate-900" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Link sản phẩm *</label>
+              <input type="url" inputmode="url" value="${escapeHtml(r.link)}" oninput="updateRow(${r.rowId}, 'link', this.value)" placeholder="Dán link web Hàn..." class="${inputCls}" data-field="link" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Phân loại / Vị / Mã màu / Size</label>
+              <input type="text" value="${escapeHtml(r.variant)}" oninput="updateRow(${r.rowId}, 'variant', this.value)" placeholder="VD: Vị Berry / Loại PDRN / 250mm..." class="${inputCls} font-bold text-slate-900" />
+            </div>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Giá KRW *</label>
+              <input type="number" min="0" inputmode="numeric" value="${r.krw || ''}" placeholder="VD: 28900" oninput="updateRow(${r.rowId}, 'krw', this.value)" class="${inputCls} font-bold" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Số lượng *</label>
+              <input type="number" min="1" inputmode="numeric" value="${r.qty}" oninput="updateRow(${r.rowId}, 'qty', this.value)" class="${inputCls} font-bold" />
+            </div>
+            <div>
+              <label class="block text-[11px] font-bold text-slate-600 mb-1">Cân nặng / món</label>
+              <select onchange="updateRow(${r.rowId}, 'kg', this.value)" class="${inputCls} font-bold px-2">${kgOptionsHtml(r.kg)}</select>
+            </div>
+          </div>
+          <div class="text-[10px] text-slate-500" data-row-breakdown></div>
+        </div>`).join('');
+      refreshOrderTotals();
+    }
+
+    // Gõ chữ chỉ cập nhật số liệu, không vẽ lại form (lỗi cũ: gõ 1 chữ là mất con trỏ)
+    function updateRow(rowId, field, val) {
+      const r = productRows.find(x => x.rowId === rowId);
+      if (!r) return;
+      if (field === 'krw') r.krw = Math.max(0, parseKrw(val));
+      else if (field === 'qty') r.qty = Math.max(1, Math.floor(Number(val)) || 1);
+      else if (field === 'kg') r.kg = roundUpWeight(val);
+      else r[field] = String(val);
+      refreshOrderTotals();
+    }
+
+    function computeOrderTotals(rows) {
+      let converted = 0, fees = 0, kg = 0, waitingQuote = 0;
+      rows.forEach(r => {
+        if (isRowEmpty(r)) return;
+        if (!(r.krw > 0)) { waitingQuote++; return; }
+        const c = calcItemPrice(r.krw, r.kg);
+        converted += c.convertedVND * r.qty;
+        fees += c.buyingFee * r.qty;
+        kg += c.billedKg * r.qty;
+      });
+      const ship = kg * PRICING.SHIP_PER_KG;
+      return { converted, fees, kg, ship, grand: roundThousand(converted + fees + ship), waitingQuote };
+    }
+
+    function refreshOrderTotals() {
+      productRows.forEach(r => {
+        const box = document.querySelector(`#productItemsContainer [data-row="${r.rowId}"]`);
+        if (!box) return;
+        const totalEl = box.querySelector('[data-row-total]');
+        const brEl = box.querySelector('[data-row-breakdown]');
+        if (isRowEmpty(r)) {
+          totalEl.textContent = '';
+          brEl.textContent = '';
+        } else if (!(r.krw > 0)) {
+          totalEl.textContent = 'Chờ báo giá';
+          brEl.textContent = 'Chưa có giá KRW — shop sẽ báo giá cho bạn qua Zalo.';
+        } else {
+          const c = calcItemPrice(r.krw, r.kg);
+          totalEl.textContent = formatVND(c.allInVND * r.qty);
+          brEl.textContent = `Mỗi món: tiền hàng ${formatVND(c.convertedVND)} + công mua ${formatVND(c.buyingFee)} + cước ${c.weightLabel} ${formatVND(c.shipVND)}` + (r.qty > 1 ? ` · × ${r.qty} món` : '');
+        }
+      });
+
+      const t = computeOrderTotals(productRows);
+      const setText = (id, text) => { const el = document.getElementById(id); if (el) el.textContent = text; };
+      setText('summaryConvertedVND', formatVND(t.converted));
+      setText('summaryFeeVND', formatVND(t.fees));
+      setText('summaryWeightKg', formatKg(t.kg));
+      setText('summaryShippingVND', formatVND(t.ship));
+      setText('summaryGrandTotalVND', formatVND(t.grand) + (t.waitingQuote ? ' + món chờ báo giá' : ''));
+      updateCartBadge();
+    }
+
+    function updateCartBadge() {
+      const badge = document.getElementById('cartCountBadge');
+      if (!badge) return;
+      const count = productRows.filter(r => !isRowEmpty(r)).reduce((s, r) => s + r.qty, 0);
+      badge.textContent = count;
+      badge.classList.toggle('hidden', count === 0);
+    }
+
+    function addProductRow() {
+      productRows.push(createRow());
+      renderOrderRows();
+      const inputs = document.querySelectorAll('#productItemsContainer [data-field="link"]');
+      if (inputs.length) inputs[inputs.length - 1].focus();
+    }
+
+    function removeProductRow(rowId) {
+      productRows = productRows.filter(r => r.rowId !== rowId);
+      if (productRows.length === 0) productRows = [createRow()];
+      renderOrderRows();
+    }
+
+    // Thêm vào đơn (trước đây "Đặt ngay" ghi đè mất món đã chọn trước đó)
+    function addRowToCart(data) {
+      const existing = data.productId ? productRows.find(r => r.productId && sameId(r.productId, data.productId)) : null;
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        const row = createRow(data);
+        const emptyIndex = productRows.findIndex(isRowEmpty);
+        if (emptyIndex !== -1) productRows[emptyIndex] = row;
+        else productRows.push(row);
+      }
+      renderOrderRows();
+    }
+
+    function orderProductItemDirect(id) {
+      const item = findProduct(id);
+      if (!item) {
+        console.warn('Không tìm thấy sản phẩm có ID:', id);
+        return;
+      }
+      closeProductDetailModal();
+      addRowToCart({
+        productId: item.id,
+        title: item.title,
+        link: item.link,
+        krw: item.krw,
+        kg: item.estKg,
+        variant: item.variant
+      });
+      switchPageView('order');
+      showToast('Đã thêm vào đơn hàng ✓');
+    }
+
+    async function handleOrderSubmit(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const btn = document.getElementById('submitOrderBtn');
+
+      const filledRows = productRows.filter(r => !isRowEmpty(r));
+      if (!filledRows.length) {
+        alert('Đơn hàng chưa có sản phẩm. Hãy dán link sản phẩm từ web Hàn hoặc chọn sản phẩm trong kho hàng.');
+        const first = document.querySelector('#productItemsContainer [data-field="link"]');
+        if (first) first.focus();
+        return;
+      }
+      const missingIndex = productRows.findIndex(r => !isRowEmpty(r) && !r.link.trim() && !r.title.trim());
+      if (missingIndex !== -1) {
+        alert(`Sản phẩm #${missingIndex + 1} cần có link hoặc tên sản phẩm.`);
+        return;
+      }
+
+      const customerName = document.getElementById('customerName').value.trim();
+      const customerPhone = document.getElementById('customerPhone').value.trim();
+      const customerAddress = document.getElementById('customerAddress').value.trim();
+      const phoneDigits = customerPhone.replace(/\D/g, '');
+      if (phoneDigits.length < 9 || phoneDigits.length > 12) {
+        alert('Số điện thoại / Zalo chưa đúng, bạn kiểm tra lại giúp shop nhé.');
+        document.getElementById('customerPhone').focus();
+        return;
+      }
+
+      const totals = computeOrderTotals(filledRows);
+      const formattedItems = filledRows.map((r, i) => {
+        const calc = calcItemPrice(r.krw, r.kg);
+        const matched = findProduct(r.productId) || {};
+        const realTitle = r.title.trim() || matched.title || `Sản phẩm #${i + 1}`;
+        const variant = r.variant.trim();
+        return {
+          id: r.productId || r.rowId,
+          link: r.link.trim(),
+          krw: r.krw,
+          qty: r.qty,
+          weightClass: calc.billedKg >= 1 ? 'over1' : 'under1',
+          estKg: calc.billedKg,
+          variant: variant,
+          title: realTitle,
+          name: realTitle,
+          productName: realTitle,
+          fullName: `${realTitle}${variant ? ` [${variant}]` : ''} (SL: ${r.qty})`,
+          itemTotalVND: r.krw > 0 ? calc.allInVND * r.qty : 0
+        };
+      });
+
+      const payload = {
+        customerName,
+        customerPhone,
+        customerAddress,
+        items: formattedItems,
+        grandTotalVND: formatVND(totals.grand) + (totals.waitingQuote ? ` (+ ${totals.waitingQuote} món chờ báo giá)` : '')
+      };
+
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ Đang gửi đơn...'; }
+      try {
+        const res = await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+        const result = await res.json();
+        if (result && result.status === 'success') {
+          const orderIdCode = result.orderId || ('ORD-' + Date.now().toString().slice(-6));
+          document.getElementById('modalOrderCode').textContent = orderIdCode;
+          document.getElementById('modalSummaryText').innerHTML = `
+            <div>👤 <strong>Khách:</strong> ${escapeHtml(customerName)} (${escapeHtml(customerPhone)})</div>
+            <div>📍 <strong>Nhận tại:</strong> ${escapeHtml(customerAddress)}</div>
+            <div>📦 <strong>Số món:</strong> ${formattedItems.reduce((s, it) => s + it.qty, 0)}</div>
+            <div>💰 <strong>Giá trọn gói:</strong> <span class="text-rose-600 font-black">${escapeHtml(payload.grandTotalVND)}</span></div>`;
+          const modal = document.getElementById('orderSuccessModal');
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+          setBodyScrollLocked(true);
+
+          // Thông báo Telegram giờ do Google Apps Script gửi (token không lộ ra web)
+
+          // Xóa giỏ sau khi đặt thành công để tránh gửi trùng đơn
+          productRows = [createRow()];
+          renderOrderRows();
+        } else {
+          alert('Có lỗi khi lưu đơn. Bạn vui lòng nhắn Zalo 0383-774-099 để shop hỗ trợ ngay nhé!');
+        }
+      } catch (err) {
+        console.error('Lỗi gửi đơn:', err);
+        alert('Chưa kết nối được máy chủ đơn hàng. Bạn kiểm tra mạng và thử lại, hoặc nhắn Zalo 0383-774-099 nhé!');
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = '🚀 Gửi Đơn & Nhận Mã ORD'; }
+      }
+    }
+
+    function closeSuccessModal() {
+      const modal = document.getElementById('orderSuccessModal');
+      if (modal && !modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        setBodyScrollLocked(false);
+      }
+    }
+
+    // ---------- 12. GỬI ẢNH BÁO GIÁ (ĐỌC CHỮ TRONG ẢNH) ----------
+    // Trước đây ảnh nào cũng ra "kem d'Alba 34.000₩". Giờ hệ thống đọc chữ thật trong ảnh.
+    const OCR_BRANDS = [
+      { label: 'Medicube', re: /medicube|메디큐브/i },
+      { label: 'Mediheal', re: /mediheal|메디힐/i },
+      { label: 'Laneige', re: /laneige|라네즈/i },
+      { label: 'Torriden', re: /torriden|토리든/i },
+      { label: 'Dr.G', re: /dr\.?\s?g\b|닥터지/i },
+      { label: "d'Alba", re: /d'?alba|달바/i },
+      { label: 'Anua', re: /anua|아누아/i },
+      { label: 'Aestura', re: /aestura|에스트라/i },
+      { label: 'Biodance', re: /biodance|바이오던스/i },
+      { label: 'Wellage', re: /wellage|웰라쥬/i },
+      { label: 'UNOVE', re: /unove|어노브/i },
+      { label: 'Illiyoon', re: /illiyoon|일리윤/i },
+      { label: 'Round Lab', re: /round\s?lab|라운드랩/i },
+      { label: 'Beauty of Joseon', re: /beauty\s?of\s?joseon|조선미녀/i },
+      { label: 'COSRX', re: /cosrx|코스알엑스/i },
+      { label: 'Innisfree', re: /innisfree|이니스프리/i },
+      { label: 'Clio', re: /clio|클리오/i },
+      { label: 'Rom&nd', re: /rom&?nd|롬앤/i },
+      { label: 'Peripera', re: /peripera|페리페라/i },
+      { label: 'Sulwhasoo', re: /sulwhasoo|설화수/i },
+      { label: 'Etude', re: /etude|에뛰드/i },
+      { label: 'Isntree', re: /isntree|이즈앤트리/i },
+      { label: 'SKIN1004', re: /skin\s?1004|스킨1004/i },
+      { label: 'Numbuzin', re: /numbuzin|넘버즈인/i },
+      { label: 'Bioheal BOH', re: /bioheal|바이오힐보/i },
+      { label: 'Medianswer', re: /medianswer|메디앤서/i },
+      { label: 'Tonymoly', re: /tonymoly|토니모리/i },
+      { label: 'KGC Hồng Sâm', re: /정관장|홍삼|everytime/i },
+      { label: 'Nike', re: /nike|나이키/i },
+      { label: 'Adidas', re: /adidas|아디다스/i },
+      { label: 'New Balance', re: /new\s?balance|뉴발란스/i },
+      { label: 'Salomon', re: /salomon|살로몬/i },
+      { label: 'The North Face', re: /north\s?face|노스페이스/i },
+      { label: 'Asics', re: /asics|아식스/i }
+    ];
+    const OCR_MALLS = [
+      { label: 'Olive Young', re: /olive\s?young|올리브영/i },
+      { label: 'Musinsa', re: /musinsa|무신사/i },
+      { label: 'Coupang', re: /coupang|쿠팡/i },
+      { label: 'KREAM', re: /kream/i }
+    ];
+
+    let tesseractLoadPromise = null;
+    let ocrWorkerPromise = null;
+    let ocrProgressHandler = null;
+    let scanToken = 0;
+    let lensMatchedProductId = '';
+
+    function loadTesseractLib() {
+      if (window.Tesseract) return Promise.resolve(window.Tesseract);
+      if (!tesseractLoadPromise) {
+        tesseractLoadPromise = new Promise((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';
+          s.async = true;
+          s.onload = () => window.Tesseract ? resolve(window.Tesseract) : reject(new Error('Tesseract không khả dụng'));
+          s.onerror = () => { tesseractLoadPromise = null; reject(new Error('Không tải được Tesseract')); };
+          document.head.appendChild(s);
+        });
+      }
+      return tesseractLoadPromise;
+    }
+
+    function getOcrWorker() {
+      if (!ocrWorkerPromise) {
+        ocrWorkerPromise = loadTesseractLib()
+          .then(T => T.createWorker('kor+eng', 1, { logger: m => { if (ocrProgressHandler) ocrProgressHandler(m); } }))
+          .catch(err => { ocrWorkerPromise = null; throw err; });
+      }
+      return ocrWorkerPromise;
+    }
+
+    function withTimeout(promise, ms) {
+      return Promise.race([promise, new Promise((_, reject) => setTimeout(() => reject(new Error('Quá thời gian chờ')), ms))]);
+    }
+
+    // Thu nhỏ ảnh lớn để đọc nhanh hơn trên điện thoại
+    function downscaleImage(dataUrl, maxSide) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => {
+          const scale = Math.min(1, maxSide / Math.max(img.width, img.height));
+          if (scale >= 1) return resolve(dataUrl);
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', 0.92));
+        };
+        img.onerror = () => resolve(dataUrl);
+        img.src = dataUrl;
+      });
+    }
+
+    function setLensNote(html, tone) {
+      const el = document.getElementById('lensScanNote');
+      if (!el) return;
+      const tones = {
+        info: 'text-slate-600 bg-slate-50 border-slate-200',
+        ok: 'text-emerald-800 bg-emerald-50 border-emerald-200',
+        warn: 'text-amber-900 bg-amber-50 border-amber-200'
+      };
+      el.className = 'text-[11px] leading-relaxed border rounded-xl px-3 py-2 ' + (tones[tone] || tones.info);
+      el.innerHTML = html;
+    }
+
+    function showLensOverlay(show, text) {
+      const overlay = document.getElementById('lensLaserOverlay');
+      if (!overlay) return;
+      overlay.classList.toggle('hidden', !show);
+      overlay.classList.toggle('flex', show);
+      if (text) {
+        const st = document.getElementById('lensScanStatus');
+        if (st) st.textContent = text;
+      }
+    }
+
+    function describeOcrProgress(m) {
+      const pct = m && typeof m.progress === 'number' ? ` ${Math.round(m.progress * 100)}%` : '';
+      const status = (m && m.status) || '';
+      if (status.includes('recognizing')) return 'Đang đọc chữ trong ảnh...' + pct;
+      if (status.includes('traineddata')) return 'Đang tải bộ nhận diện chữ (lần đầu ~5MB)...' + pct;
+      return 'Đang khởi động bộ nhận diện...';
+    }
+
+    function processLensFile(file) {
+      if (!file || !/^image\//.test(file.type)) {
+        alert('Vui lòng chọn file ảnh (JPG, PNG...)');
+        return;
+      }
+      currentUploadedFile = file;
+      const reader = new FileReader();
+      reader.onload = ev => {
+        document.getElementById('lensUploadPrompt').classList.add('hidden');
+        document.getElementById('lensPreviewContainer').classList.remove('hidden');
+        document.getElementById('lensPreviewImg').src = ev.target.result;
+        runImageScan(ev.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleImageFileSelect(e) {
+      const file = e.target.files && e.target.files[0];
+      if (file) processLensFile(file);
+      e.target.value = '';   // cho phép chọn lại cùng 1 ảnh
+    }
+
+    window.addEventListener('paste', e => {
+      const items = e.clipboardData && e.clipboardData.items;
+      if (!items) return;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.includes('image')) {
+          const f = items[i].getAsFile();
+          if (f) {
+            switchPageView('lens');
+            processLensFile(f);
+            break;
+          }
+        }
+      }
+    });
+
+    async function runImageScan(dataUrl) {
+      const token = ++scanToken;
+      lensMatchedProductId = '';
+      renderLensSuggestions([]);
+      showLensOverlay(true, 'Đang chuẩn bị...');
+      setLensNote('⏳ Đang đọc chữ trong ảnh, vui lòng chờ vài giây...', 'info');
+
+      let text = '';
+      let failed = false;
+      try {
+        const small = await downscaleImage(dataUrl, 1800);
+        ocrProgressHandler = m => { if (token === scanToken) showLensOverlay(true, describeOcrProgress(m)); };
+        const worker = await withTimeout(getOcrWorker(), 90000);
+        const result = await withTimeout(worker.recognize(small), 90000);
+        text = (result && result.data && result.data.text) || '';
+      } catch (err) {
+        console.warn('Không đọc được chữ trong ảnh:', err);
+        failed = true;
+      }
+      if (token !== scanToken) return;   // khách đã chọn ảnh khác
+      showLensOverlay(false);
+      applyOcrResult(text, failed);
+    }
+
+    function extractKrwPrices(lines) {
+      const EXCLUDE = /배송|적립|포인트|쿠폰|이상|무료|최대|카드|할부|리뷰|point|coupon|delivery|shipping/i;
+      const strong = /(?:₩|￦)\s*(\d{1,3}(?:[,.]\s?\d{3})+|\d{4,7})|(\d{1,3}(?:[,.]\s?\d{3})+|\d{4,7})\s*(?:원|won|krw)/gi;
+      const weak = /(?:^|\s)(\d{1,3}(?:,\d{3})+)(?=\s|$)/g;
+      const found = [];
+      const collect = (re) => {
+        lines.forEach(line => {
+          if (EXCLUDE.test(line.replace(/\s+/g, ''))) return;
+          let m;
+          re.lastIndex = 0;
+          while ((m = re.exec(line)) !== null) {
+            const n = Number(String(m[1] || m[2] || '').replace(/[^\d]/g, ''));
+            if (n >= 1000 && n <= PRICING.MAX_SANE_KRW) found.push(n);
+          }
+        });
+      };
+      collect(strong);
+      if (!found.length) collect(weak);
+      if (!found.length) return 0;
+      // Giá xuất hiện nhiều lần nhất; nếu bằng nhau lấy giá thấp hơn (thường là giá sale)
+      const counts = {};
+      found.forEach(n => { counts[n] = (counts[n] || 0) + 1; });
+      return Object.keys(counts).map(Number).sort((a, b) => (counts[b] - counts[a]) || (a - b))[0];
+    }
+
+    function productTokens(title) {
+      const STOP = new Set(['the', 'and', 'set', 'for', 'with', 'new', 'olive', 'young', 'chính', 'hãng', 'hộp', 'miếng']);
+      return Array.from(new Set(
+        String(title || '').toLowerCase().replace(/\[[^\]]*\]/g, ' ')
+          .split(/[^0-9a-z가-힣à-ỹđ]+/i)
+          .filter(w => (/[가-힣]/.test(w) ? w.length >= 2 : w.length >= 3) && !STOP.has(w))
+      ));
+    }
+
+    function matchCatalogProducts(text) {
+      const squashed = String(text || '').toLowerCase().replace(/\s+/g, '');
+      if (squashed.length < 4) return [];
+      const brandHits = OCR_BRANDS.filter(b => b.re.test(text) || b.re.test(squashed)).map(b => b.label.toLowerCase());
+      return currentProductsList.map(p => {
+        const tokens = productTokens(p.title);
+        const hit = tokens.filter(t => squashed.includes(t)).length;
+        let score = tokens.length ? (hit / tokens.length) * 6 : 0;
+        const brand = String(p.brand || '').toLowerCase();
+        if (brand && (squashed.includes(brand.replace(/\s+/g, '')) || brandHits.includes(brand))) score += 3;
+        return { p, score, hit };
+      }).filter(x => x.score >= 4 && x.hit >= 2).sort((a, b) => b.score - a.score).slice(0, 3);
+    }
+
+    function guessTitleFromLines(lines, brandLabel) {
+      const JUNK = /원|₩|배송|쿠폰|리뷰|구매|장바구니|할인|적립|포인트|http|www\.|\d{1,3},\d{3}/i;
+      const candidates = lines
+        .map(l => l.replace(/[|{}<>_=~^*]+/g, ' ').replace(/\s+/g, ' ').trim())
+        .filter(l => l.length >= 6 && l.length <= 120 && !JUNK.test(l))
+        .filter(l => (l.match(/[가-힣a-zA-Z]/g) || []).length >= 5);
+      if (!candidates.length) return '';
+      const brand = OCR_BRANDS.find(b => b.label === brandLabel);
+      const withBrand = brand ? candidates.filter(l => brand.re.test(l) || brand.re.test(l.replace(/\s+/g, ''))) : [];
+      const pool = withBrand.length ? withBrand : candidates;
+      return pool.sort((a, b) => (b.match(/[가-힣a-zA-Z]/g) || []).length - (a.match(/[가-힣a-zA-Z]/g) || []).length)[0];
+    }
+
+    function applyOcrResult(text, failed) {
+      const elName = document.getElementById('lensDetectedName');
+      const elBrand = document.getElementById('lensDetectedBrand');
+      const elPrice = document.getElementById('lensPriceKRW');
+      const elVariant = document.getElementById('lensDetectedBenefit');
+      const elKg = document.getElementById('lensKg');
+
+      const lines = String(text || '').split(/\n+/).map(l => l.replace(/\s+/g, ' ').trim()).filter(l => l.length >= 2);
+      const squashed = String(text || '').replace(/\s+/g, '');
+      const brand = OCR_BRANDS.find(b => b.re.test(text) || b.re.test(squashed));
+      const mall = OCR_MALLS.find(m => m.re.test(text) || m.re.test(squashed));
+      const ocrPrice = extractKrwPrices(lines);
+      const matches = matchCatalogProducts(text);
+      renderLensSuggestions(matches.map(m => m.p));
+
+      const best = matches.length && matches[0].score >= 6 ? matches[0].p : null;
+      let name = '', brandText = '', price = ocrPrice, kg = 0.5, variant = '';
+      if (best) {
+        lensMatchedProductId = String(best.id);
+        name = best.title;
+        brandText = `${best.brand} / ${best.mall}`;
+        price = ocrPrice || best.krw;
+        kg = best.estKg;
+        variant = best.variant || '';
+      } else {
+        name = guessTitleFromLines(lines, brand && brand.label);
+        brandText = [brand && brand.label, mall && mall.label].filter(Boolean).join(' / ');
+        kg = estimateSmartWeight(name, '', 0).billedKg;
+      }
+
+      elName.value = name;
+      elBrand.value = brandText;
+      elPrice.value = price || '';
+      elVariant.value = variant;
+      elKg.innerHTML = kgOptionsHtml(kg);
+      recalculateLensVND();
+
+      if (failed || !lines.length) {
+        setLensNote('❗ Chưa đọc được chữ trong ảnh. Bạn hãy tự điền <strong>tên</strong> và <strong>giá KRW</strong>, hoặc bấm <strong>"Nhờ Shop báo giá qua Zalo"</strong> / <strong>"Mở Google Lens"</strong>.', 'warn');
+      } else if (best) {
+        setLensNote(`✅ Ảnh khớp với sản phẩm có sẵn trong kho HàBu${ocrPrice ? ` · Giá đọc từ ảnh: <strong>${ocrPrice.toLocaleString()}₩</strong>` : ''}. Bạn kiểm tra lại rồi bấm <strong>Đưa vào đơn hàng</strong>.`, 'ok');
+      } else if (price) {
+        setLensNote(`✅ Đã đọc được giá <strong>${price.toLocaleString()}₩</strong>${brand ? ` · hãng <strong>${escapeHtml(brand.label)}</strong>` : ''}. Chữ đọc từ ảnh có thể chưa chuẩn 100%, bạn sửa lại tên &amp; giá nếu cần nhé.`, 'ok');
+      } else {
+        setLensNote(`⚠️ ${brand ? `Nhận ra hãng <strong>${escapeHtml(brand.label)}</strong> nhưng ` : ''}chưa đọc được giá. Bạn nhập <strong>giá KRW</strong> trên web Hàn, hoặc bấm <strong>"Nhờ Shop báo giá qua Zalo"</strong>.`, 'warn');
+      }
+    }
+
+    function renderLensSuggestions(products) {
+      const box = document.getElementById('lensSuggestedMatchesBox');
+      const list = document.getElementById('lensSuggestedMatchesList');
+      if (!box || !list) return;
+      if (!products.length) {
+        box.classList.add('hidden');
+        list.innerHTML = '';
+        return;
+      }
+      box.classList.remove('hidden');
+      list.innerHTML = products.map(p => {
+        const calc = calcItemPrice(p.krw, p.estKg, p.oldKrw);
+        return `
+          <div class="flex items-center gap-3 p-2 rounded-xl border border-slate-200 bg-slate-50">
+            <img src="${escapeHtml(safeUrl(p.image, DEFAULT_IMAGE))}" alt="" class="w-12 h-12 rounded-lg object-cover bg-white shrink-0" onerror="this.onerror=null;this.src='${escapeHtml(DEFAULT_IMAGE)}'" />
+            <div class="min-w-0 flex-1">
+              <div class="text-xs font-bold text-slate-900 line-clamp-2">${escapeHtml(p.title)}</div>
+              <div class="text-[11px] font-black text-rose-600">${formatVND(calc.allInVND)}</div>
+            </div>
+            <button type="button" data-action="lens-pick" data-id="${escapeHtml(p.id)}" class="shrink-0 px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-700 text-white text-[11px] font-bold cursor-pointer">Chọn</button>
+          </div>`;
+      }).join('');
+    }
+
+    function pickLensSuggestion(id) {
+      const p = findProduct(id);
+      if (!p) return;
+      lensMatchedProductId = String(p.id);
+      document.getElementById('lensDetectedName').value = p.title;
+      document.getElementById('lensDetectedBrand').value = `${p.brand} / ${p.mall}`;
+      document.getElementById('lensPriceKRW').value = p.krw;
+      document.getElementById('lensDetectedBenefit').value = p.variant || '';
+      document.getElementById('lensKg').innerHTML = kgOptionsHtml(p.estKg);
+      recalculateLensVND();
+      setLensNote('✅ Đã chọn sản phẩm có sẵn trong kho HàBu. Bấm <strong>Đưa vào đơn hàng</strong> để đặt.', 'ok');
+    }
+
+    function recalculateLensVND() {
+      const el = document.getElementById('lensPriceKRW');
+      if (!el) return;
+      const krw = parseKrw(el.value);
+      const kgEl = document.getElementById('lensKg');
+      const kg = kgEl && kgEl.value ? Number(kgEl.value) : 0.5;
+      const calc = calcItemPrice(krw, kg);
+      const resEl = document.getElementById('lensResultAllInVND');
+      if (resEl) resEl.textContent = krw > 0 ? formatVND(calc.allInVND) : '—';
+      const br = document.getElementById('lensResultBreakdown');
+      if (br) br.textContent = krw > 0
+        ? `${formatVND(calc.convertedVND)} + công ${formatVND(calc.buyingFee)} + cước ${calc.weightLabel} ${formatVND(calc.shipVND)}`
+        : 'Nhập giá KRW để tính giá về tay';
+    }
+
+    function addLensProductToOrderForm(isQuoteOnly) {
+      let title = document.getElementById('lensDetectedName').value.trim();
+      const brandText = document.getElementById('lensDetectedBrand').value.trim();
+      const variant = document.getElementById('lensDetectedBenefit').value.trim();
+      const krw = parseKrw(document.getElementById('lensPriceKRW').value);
+      const kg = Number(document.getElementById('lensKg').value) || 0.5;
+
+      if (!isQuoteOnly && (!title || !krw)) {
+        alert('Vui lòng điền tên sản phẩm và giá KRW (hoặc bấm "Nhờ Shop báo giá qua Zalo").');
+        return;
+      }
+      const brandName = brandText.split('/')[0].trim();
+      if (brandName && title && !title.toLowerCase().includes(brandName.toLowerCase())) title = `${brandName} – ${title}`;
+      const matched = lensMatchedProductId ? findProduct(lensMatchedProductId) : null;
+
+      addRowToCart({
+        productId: matched ? matched.id : '',
+        title: title || 'Sản phẩm theo ảnh gửi shop',
+        link: matched ? matched.link : '',
+        krw: isQuoteOnly ? 0 : krw,
+        kg: kg,
+        variant: isQuoteOnly ? `[Nhờ shop báo giá] ${variant}`.trim() : variant
+      });
+      switchPageView('order');
+      if (isQuoteOnly) {
+        window.open(ZALO_LINK, '_blank', 'noopener');
+        showToast('Đã thêm vào đơn. Gửi ảnh cho shop qua Zalo để được báo giá nhé!');
+      } else {
+        showToast('Đã thêm vào đơn hàng ✓');
+      }
+    }
+
+    function submitDirectToGoogleLens() {
+      if (!currentUploadedFile) {
+        window.open('https://lens.google.com/', '_blank', 'noopener');
+        return;
+      }
+      try {
+        const dt = new DataTransfer();
+        dt.items.add(currentUploadedFile);
+        document.getElementById('googleLensHiddenFile').files = dt.files;
+        document.getElementById('googleLensDirectForm').submit();
+      } catch (e) {
+        window.open('https://lens.google.com/', '_blank', 'noopener');
+      }
+    }
+
+    // ---------- 13. DỊCH TÊN SẢN PHẨM SANG TIẾNG VIỆT (CHỈ ADMIN) ----------
+    // Trước đây nút này hiện cho mọi khách và ghi đè dữ liệu lên Google Sheets.
+    async function translateAllCatalogTitlesToVietnamese() {
+      if (!isAdminLoggedIn) { alert('Chỉ quản trị viên mới dùng được chức năng này.'); return; }
+      if (!currentProductsList.length) { alert('Kho hàng đang trống.'); return; }
+      const btn = document.getElementById('translateAllBtn');
+      if (btn) btn.disabled = true;
+
+      const dictionary = [
+        // Brand
+        { r: /메디앤서/gi, v: 'Medianswer' },
+        { r: /메디힐/gi, v: 'Mediheal' },
+        { r: /바이오던스/gi, v: 'Biodance' },
+        { r: /라네즈/gi, v: 'Laneige' },
+        { r: /닥터지/gi, v: 'Dr.G' },
+        { r: /어노브/gi, v: 'UNOVE' },
+        { r: /바이오힐보/gi, v: 'Bioheal BOH' },
+        { r: /달바/gi, v: "d'Alba" },
+        { r: /에스트라/gi, v: 'Aestura' },
+        { r: /일리윤/gi, v: 'Illiyoon' },
+        { r: /토니모리/gi, v: 'Tonymoly' },
+        { r: /오리온/gi, v: 'Orion' },
+        // Dòng sản phẩm & mặt nạ
+        { r: /비타\s*콜라겐/gi, v: 'Vita Collagen Trắng Da' },
+        { r: /포어\s*콜라겐/gi, v: 'Pore Collagen Se Khít Lỗ Chân Lông' },
+        { r: /카밍\s*콜라겐/gi, v: 'Calming Collagen Dịu Da' },
+        { r: /나노샷\s*마스크|나노샷/gi, v: 'Mặt Nạ Thạch Nanoshot' },
+        { r: /콜라겐\s*마스크/gi, v: 'Mặt Nạ Thạch Collagen' },
+        { r: /마스크팩|마스크/gi, v: 'Mặt Nạ Dưỡng Da' },
+        { r: /크림스킨/gi, v: 'Nước Hoa Hồng Dưỡng Ẩm Cream Skin' },
+        { r: /트리트먼트|헤어팩/gi, v: 'Ủ Tóc Phục Hồi' },
+        { r: /선크림|선블록/gi, v: 'Kem Chống Nắng' },
+        { r: /수딩크림|수딩\s*크림/gi, v: 'Kem Dưỡng Dịu Da Soothing Cream' },
+        { r: /세럼|앰플/gi, v: 'Tinh Chất Serum' },
+        // Quy cách số lượng
+        { r: /10\/10\+1매|10\+1매/gi, v: 'Hộp 10 Tặng 1 Miếng' },
+        { r: /7\+1매|7\+1\s*기획/gi, v: 'Hộp 7 Tặng 1 Miếng' },
+        { r: /100\+100매/gi, v: 'Set 2 Hộp (100+100 Miếng)' },
+        { r: /(\d+)\s*매(?:세트)?/gi, v: 'Hộp $1 Miếng' },
+        { r: /포어\/카밍\s*택1/gi, v: 'Tùy Chọn Pore hoặc Calming' },
+        { r: /(\d+)\s*종택1|택1/gi, v: 'Tùy Chọn Phân Loại' },
+        { r: /2종/gi, v: 'Set 2 Loại' },
+        { r: /기획세트|기획/gi, v: 'Set Quà Tặng' },
+        { r: /리미티드/gi, v: 'Bản Giới Hạn' }
+      ];
+      const HANGUL = /[ㄱ-ㅎㅏ-ㅣ가-힣]/;
+
+      async function translateFallback(text) {
+        try {
+          const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=ko&tl=vi&dt=t&q=${encodeURIComponent(text)}`);
+          const data = await res.json();
+          let out = '';
+          if (data && data[0]) data[0].forEach(item => { if (item[0]) out += item[0]; });
+          return out || text;
+        } catch (e) {
+          return text;
+        }
+      }
+
+      let done = 0;
+      for (const p of currentProductsList) {
+        done++;
+        if (btn) btn.textContent = `⏳ Đang dịch ${done}/${currentProductsList.length}...`;
+        let t = p.title || '';
+        let b = p.brand || '';
+        t = t.replace(/\[[^\]]*\]/g, ' ');   // dọn chữ quảng cáo trong [ ]
+        dictionary.forEach(rule => {
+          t = t.replace(rule.r, rule.v);
+          b = b.replace(rule.r, rule.v);
+        });
+        if (HANGUL.test(t)) t = await translateFallback(t);
+        t = t.replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, '')
+             .replace(/[\+\,\/]\s*[\+\,\/]/g, ', ')
+             .replace(/^[\s\/\+\,\-]+/, '')
+             .replace(/[\s\/\+\,\-]+$/, '')
+             .replace(/\s+/g, ' ')
+             .trim();
+        if (b && t.toLowerCase().startsWith(b.toLowerCase())) t = t.substring(b.length).trim();
+        p.brand = b.trim() || 'Chính hãng';
+        p.title = `${p.brand} ${t}`.trim();
+        // Chỉ thay phân loại khi đang trống hoặc còn chữ Hàn (trước đây ghi đè mất phân loại đã cào)
+        if (!p.variant || p.variant === 'Chính hãng từ Hàn Quốc' || HANGUL.test(p.variant)) {
+          p.variant = 'Nguyên hộp / Nguyên set chính hãng';
+        }
+      }
+
+      saveProductsToStorage();
+      renderAllProductViews();
+      renderAdminManageList();
+      if (btn) btn.textContent = '⏳ Đang đồng bộ Google Sheets...';
+      const ok = await uploadProductsToGoogleSheets();
+      if (btn) { btn.disabled = false; btn.textContent = '🌐 Dịch tất cả tên SP sang Tiếng Việt'; }
+      alert(ok ? '🎉 Đã dịch xong toàn bộ tên sản phẩm sang tiếng Việt!' : 'Đã dịch trên web nhưng chưa đồng bộ được Google Sheets, hãy thử lại.');
+    }
+
+    // ---------- 14. SỰ KIỆN CHUNG ----------
+    // Một bộ xử lý cho mọi nút trong thẻ sản phẩm / admin / form (an toàn với mọi kiểu ID)
+    document.addEventListener('click', e => {
+      const el = e.target.closest('[data-action]');
+      if (!el || el.tagName === 'INPUT') return;
+      const id = el.getAttribute('data-id');
+      switch (el.getAttribute('data-action')) {
+        case 'detail': openProductDetailModal(id); break;
+        case 'order': orderProductItemDirect(id); break;
+        case 'admin-delete': deleteProductByAdmin(id); break;
+        case 'remove-row': removeProductRow(Number(id)); break;
+        case 'lens-pick': pickLensSuggestion(id); break;
+      }
+    });
+
+    document.addEventListener('change', e => {
+      const el = e.target;
+      if (el && el.getAttribute && el.getAttribute('data-action') === 'admin-select') {
+        toggleSelectProduct(el.getAttribute('data-id'), el.checked);
+      }
+    });
+
+    document.addEventListener('keydown', e => {
+      if (e.key !== 'Escape') return;
+      closeProductDetailModal();
+      closeSuccessModal();
+      const panel = document.getElementById('floatingAiPanel');
+      if (panel && !panel.classList.contains('hidden')) panel.classList.add('hidden');
+    });
+
+    // Kéo thả ảnh vào khung Gửi ảnh
+    (function setupLensDropzone() {
+      const zone = document.getElementById('lensDropzone');
+      if (!zone) return;
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('border-sky-600', 'bg-sky-50'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('border-sky-600', 'bg-sky-50'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('border-sky-600', 'bg-sky-50');
+        const file = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+        if (file) processLensFile(file);
+      });
+    })();
+
+    // ---------- 15. BANNER ĐẦU TRANG: TUYẾT RƠI & VIDEO NỀN ----------
+    function initHeroBanner() {
+      const hero = document.getElementById('habuHero');
+      if (!hero) return;
+      const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const video = document.getElementById('heroSkyVideo');
+
+      // Tuyết rơi: bông tuyết 3D + chấm tuyết nhỏ, rơi chậm với tốc độ & độ lắc khác nhau
+      const snow = document.getElementById('heroSnow');
+      if (snow && !reduceMotion) {
+        const count = window.innerWidth < 768 ? 16 : 30;
+        const rand = (a, b) => a + Math.random() * (b - a);
+        let html = '';
+        for (let i = 0; i < count; i++) {
+          const useImage = i % 3 === 0;
+          const size = useImage ? rand(14, 28) : rand(4, 9);
+          const fall = rand(9, 18);
+          const sway = rand(2.5, 5);
+          html += `<div class="snow-flake" style="left:${rand(0, 100).toFixed(1)}%;width:${size.toFixed(0)}px;opacity:${rand(.55, .95).toFixed(2)};animation-duration:${fall.toFixed(1)}s;animation-delay:-${rand(0, fall).toFixed(1)}s">` +
+            `<span style="animation-duration:${sway.toFixed(1)}s">` +
+            (useImage ? '<img src="snowflake.webp" alt="">' : `<i class="snow-dot" style="display:block;width:${size.toFixed(0)}px;height:${size.toFixed(0)}px"></i>`) +
+            '</span></div>';
+        }
+        snow.innerHTML = html;
+      }
+
+      // Video mây: chỉ chạy khi banner đang hiện trên màn hình (đỡ tốn pin điện thoại)
+      if (!video) return;
+      if (reduceMotion) { video.removeAttribute('autoplay'); video.pause(); return; }
+      const tryPlay = () => { const p = video.play(); if (p && p.catch) p.catch(() => {}); };
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(entries => {
+          entries.forEach(en => { if (en.isIntersecting && !document.hidden) tryPlay(); else video.pause(); });
+        }, { threshold: 0.05 }).observe(hero);
+      }
+      document.addEventListener('visibilitychange', () => { if (document.hidden) video.pause(); });
+    }
+
+    // ---------- 16. KHỞI CHẠY ----------
+    function initApp() {
+      initHeroBanner();
+      const lensKg = document.getElementById('lensKg');
+      if (lensKg) lensKg.innerHTML = kgOptionsHtml(0.5);
+      renderOrderRows();
+      recalculateLensVND();
+      showJourneyStage(1);
+      startAutoJourney();
+      renderAllProductViews();
+
+      const initialView = location.hash.replace('#', '');
+      if (['catalog', 'lens', 'order'].includes(initialView)) {
+        switchPageView(initialView, null, { fromHistory: true });
+      }
+      try { history.replaceState({ view: ['catalog', 'lens', 'order'].includes(initialView) ? initialView : 'intro', filter: currentCatalogFilter }, ''); } catch (e) {}
+
+      loadProducts();
+    }
+
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initApp);
+    else initApp();
+  </script>
+</body>
+</html>
