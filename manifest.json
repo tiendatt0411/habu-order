@@ -1,0 +1,23 @@
+{
+  "name": "Habu Order - Mỹ Phẩm Hàn Quốc",
+  "short_name": "Habu Order",
+  "description": "Đặt hàng mỹ phẩm xách tay chính hãng từ Hàn Quốc",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "./logo-minimal.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./logo-minimal.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
