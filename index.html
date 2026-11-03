@@ -289,6 +289,24 @@
       cursor: pointer !important;
     }
   </style>
+  <!-- Cấu hình PWA cho Android & iOS -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#3b82f6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Habu Order">
+  <link rel="apple-touch-icon" href="./logo-minimal.png">
+
+  <!-- Đăng ký Service Worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('PWA Service Worker đã chạy:', reg.scope))
+          .catch(err => console.log('Lỗi đăng ký PWA:', err));
+      });
+    }
+  </script>
 </head>
 <body class="selection:bg-sky-500 selection:text-white flex flex-col min-h-screen">
 
