@@ -284,29 +284,43 @@
       .habu-hero .hero-snow { display: none; }
     }
 
+    /* =================== Ô CHỌN PHÂN LOẠI =================== */
+    .vchip { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 12px; border-radius: 10px; border: 1px solid #cbd5e1; background: #fff; color: #0f172a; font-size: 12px; font-weight: 700; cursor: pointer; transition: border-color .15s, background .15s; }
+    .vchip:hover { border-color: #0284c7; }
+    .vchip img { width: 24px; height: 24px; border-radius: 6px; object-fit: cover; }
+    .vchip.selected { border: 2px solid #0284c7; background: #f0f9ff; color: #075985; padding: 5px 11px; }
+    .vchip.hidden { display: none; }
+    .vchip.unavailable { color: #94a3b8; background: #f8fafc; border-style: dashed; text-decoration: line-through; cursor: not-allowed; }
+
+    /* =================== GỢI Ý TÌM KIẾM =================== */
+    .search-suggest {
+      position: absolute; top: calc(100% + 8px); right: 0; width: 460px; max-width: 94vw;
+      max-height: min(72vh, 600px); overflow-y: auto; overscroll-behavior: contain;
+      background: #fff; border: 1px solid #e2e8f0; border-radius: 18px; padding: 6px;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, .2); z-index: 60; text-align: left;
+    }
+    .sg-group { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .07em; color: #94a3b8; padding: 10px 10px 4px; }
+    .sg-item { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 7px 10px; border-radius: 12px; cursor: pointer; background: none; border: 0; }
+    .sg-item.active, .sg-item:hover { background: #f0f9ff; }
+    .sg-icon { width: 36px; height: 36px; border-radius: 10px; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; overflow: hidden; }
+    .sg-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .sg-text { min-width: 0; flex: 1; }
+    .sg-title { font-size: 13px; font-weight: 700; color: #0f172a; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .sg-sub { font-size: 11px; color: #64748b; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sg-price { font-size: 12px; font-weight: 800; color: #e11d48; white-space: nowrap; flex-shrink: 0; }
+    .sg-item mark { background: #fef08a; color: inherit; border-radius: 3px; padding: 0 1px; }
+    .sg-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 4px 10px 8px; }
+    .sg-chip { font-size: 12px; font-weight: 700; color: #0369a1; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 999px; padding: 5px 11px; cursor: pointer; }
+    .sg-chip.active, .sg-chip:hover { background: #0284c7; color: #fff; border-color: #0284c7; }
+    .sg-empty { padding: 12px 10px 4px; font-size: 13px; color: #475569; }
+    .sg-footer { display: block; width: 100%; margin-top: 4px; padding: 10px; border-top: 1px solid #f1f5f9; font-size: 12px; font-weight: 700; color: #0284c7; text-align: center; background: none; border-radius: 0 0 12px 12px; cursor: pointer; }
+    .sg-footer.active, .sg-footer:hover { background: #f0f9ff; }
+
     .force-clickable {
       pointer-events: auto !important;
       cursor: pointer !important;
     }
   </style>
-  <!-- Cấu hình PWA cho Android & iOS -->
-  <link rel="manifest" href="./manifest.json">
-  <meta name="theme-color" content="#3b82f6">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Habu Order">
-  <link rel="apple-touch-icon" href="./logo-minimal.png">
-
-  <!-- Đăng ký Service Worker -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('PWA Service Worker đã chạy:', reg.scope))
-          .catch(err => console.log('Lỗi đăng ký PWA:', err));
-      });
-    }
-  </script>
 </head>
 <body class="selection:bg-sky-500 selection:text-white flex flex-col min-h-screen">
 
@@ -452,14 +466,21 @@
 
       <!-- KHUNG BÊN PHẢI -->
       <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 lg:flex-none justify-end">
-        <form onsubmit="handleNikeSearch(event)" class="relative min-w-0 flex-1 lg:flex-none lg:w-52" role="search">
+        <form id="headerSearchForm" onsubmit="handleNikeSearch(event)" class="relative min-w-0 flex-1 lg:flex-none lg:w-56 lg:focus-within:w-80 transition-[width] duration-200" role="search">
           <input
             type="search"
             id="nikeSearchInput"
-            placeholder="Tìm Medicube, Mediheal..."
+            placeholder="Tìm hãng, sản phẩm, tác vụ..."
             enterkeyhint="search"
+            autocomplete="off"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded="false"
+            aria-controls="searchSuggest"
             class="w-full pl-8 pr-3 py-2 rounded-full bg-slate-100 hover:bg-slate-200/80 focus:bg-white border border-transparent focus:border-sky-500 outline-none text-xs font-medium text-slate-800 transition"
           />
+          <!-- Khung gợi ý khi gõ tìm kiếm -->
+          <div id="searchSuggest" class="search-suggest hidden" role="listbox" aria-label="Gợi ý tìm kiếm"></div>
           <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none">🔍</span>
         </form>
 
@@ -1108,6 +1129,72 @@
     </div>
   </div>
 
+  <!-- MODAL NHẬP PHÂN LOẠI (QUẢN TRỊ) -->
+  <div id="variantEditorModal" onclick="if (event.target === this) closeVariantEditor()" class="fixed inset-0 z-[1000000] bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="veTitle">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl max-h-[92vh] overflow-y-auto custom-scrollbar space-y-4 text-xs">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <h3 id="veTitle" class="text-base font-black text-slate-900">✏️ Phân loại sản phẩm</h3>
+          <p id="veProductName" class="text-slate-500 mt-0.5"></p>
+        </div>
+        <button type="button" onclick="closeVariantEditor()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold shrink-0" aria-label="Đóng">✕</button>
+      </div>
+
+      <div class="flex flex-wrap gap-4 font-bold text-slate-700">
+        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="veSteps" value="1" onchange="refreshVariantEditor()" checked> 1 bước <span class="font-normal text-slate-400">(dung tích, size, mùi...)</span></label>
+        <label class="flex items-center gap-2 cursor-pointer"><input type="radio" name="veSteps" value="2" onchange="refreshVariantEditor()"> 2 bước <span class="font-normal text-slate-400">(Màu → Size)</span></label>
+      </div>
+
+      <div class="grid sm:grid-cols-2 gap-3">
+        <div>
+          <label for="veGroup1" class="block font-bold text-slate-700 mb-1">Tên nhóm 1</label>
+          <input id="veGroup1" list="veGroupNames" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-sky-500 outline-none font-bold" placeholder="Dung tích / Màu / Size">
+        </div>
+        <div id="veGroup2Wrap" class="hidden">
+          <label for="veGroup2" class="block font-bold text-slate-700 mb-1">Tên nhóm 2</label>
+          <input id="veGroup2" list="veGroupNames" class="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-sky-500 outline-none font-bold" placeholder="Size">
+        </div>
+        <datalist id="veGroupNames"><option value="Dung tích"><option value="Màu"><option value="Size"><option value="Mùi hương"><option value="Mẫu"><option value="Loại"></datalist>
+      </div>
+
+      <div class="space-y-2">
+        <div class="font-bold text-slate-700">Mẫu nhanh:</div>
+        <div class="flex flex-wrap gap-2">
+          <button type="button" onclick="veTemplate('shoe')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 font-bold">👟 Size giày 220–290</button>
+          <button type="button" onclick="veTemplate('clothes')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 font-bold">👕 Size áo S–XXL</button>
+          <button type="button" onclick="veTemplate('volume')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 font-bold">🧴 Dung tích</button>
+          <button type="button" onclick="veTemplate('clear')" class="px-3 py-1.5 rounded-full bg-white border border-slate-200 hover:bg-slate-50 font-bold text-slate-500">Xóa ô bên dưới</button>
+        </div>
+        <div id="veComboWrap" class="hidden p-3 rounded-2xl bg-sky-50 border border-sky-100 space-y-2">
+          <div class="font-bold text-sky-900">Tạo nhanh tổ hợp nhóm 1 × nhóm 2</div>
+          <div class="grid sm:grid-cols-2 gap-2">
+            <input id="veComboA" class="px-3 py-2 rounded-xl border border-sky-200 outline-none" placeholder="Nhóm 1, VD: Đen, Trắng, Be">
+            <input id="veComboB" class="px-3 py-2 rounded-xl border border-sky-200 outline-none" placeholder="Nhóm 2, VD: 250, 260, 270">
+          </div>
+          <button type="button" onclick="veGenerateCombos()" class="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold">＋ Tạo các dòng</button>
+        </div>
+      </div>
+
+      <div>
+        <label for="veLines" class="block font-bold text-slate-700 mb-1">Danh sách phân loại — mỗi dòng 1 loại</label>
+        <textarea id="veLines" rows="9" oninput="refreshVariantEditor()" class="w-full p-3 rounded-2xl border border-slate-300 focus:border-sky-500 outline-none font-mono text-[12px] leading-relaxed"></textarea>
+        <p class="text-[11px] text-slate-500 mt-1 leading-relaxed">
+          Dạng: <code class="bg-slate-100 px-1 rounded">tên loại | giá KRW | giá gốc | hết | link ảnh</code> — chỉ tên là bắt buộc.
+          Bỏ trống giá = dùng giá chung của sản phẩm. 2 bước thì viết <code class="bg-slate-100 px-1 rounded">Đen / 260 | 145000</code>. Ghi <code class="bg-slate-100 px-1 rounded">hết</code> để báo hết hàng.
+        </p>
+        <div id="vePreview" class="mt-2 space-y-1"></div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="saveVariantEditor(true)" class="px-3 py-2 rounded-xl text-rose-600 hover:bg-rose-50 font-bold">🗑 Xóa phân loại</button>
+        <div class="flex gap-2">
+          <button type="button" onclick="closeVariantEditor()" class="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 font-bold">Hủy</button>
+          <button type="button" onclick="saveVariantEditor(false)" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black">💾 Lưu &amp; đồng bộ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL ĐẶT HÀNG THÀNH CÔNG -->
   <div id="orderSuccessModal" onclick="if (event.target === this) closeSuccessModal()" class="fixed inset-0 z-[1000000] bg-black/75 backdrop-blur-sm hidden items-center justify-center p-4" role="dialog" aria-modal="true">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center shadow-2xl">
@@ -1319,7 +1406,8 @@
         benefit: item.benefit || 'Hàng chính hãng nội địa Hàn Quốc.',
         benefits: item.benefits || ['Sản phẩm nội địa Hàn Quốc chính hãng từ Olive Young/KREAM.'],
         targetAudience: item.targetAudience || 'Mọi loại da, phù hợp với thị hiếu người dùng châu Á.',
-        usageGuide: item.usageGuide || 'Sử dụng đều đặn theo hướng dẫn của nhà sản xuất.'
+        usageGuide: item.usageGuide || 'Sử dụng đều đặn theo hướng dẫn của nhà sản xuất.',
+        options: normalizeOptions(item.options) || undefined
       });
     }
 
@@ -1511,9 +1599,12 @@
               <img src="${escapeHtml(safeUrl(p.image, DEFAULT_IMAGE))}" alt="" loading="lazy" class="w-12 h-12 rounded-xl object-cover bg-white shrink-0 border border-slate-200" onerror="this.onerror=null;this.src='${escapeHtml(DEFAULT_IMAGE)}'" />
               <div class="min-w-0">
                 <div class="font-bold text-slate-900 truncate">${escapeHtml(p.title)}</div>
-                <div class="text-[11px] text-slate-500 truncate">${escapeHtml(p.brand)} • ${escapeHtml(p.mall)} • <strong>${(p.krw || 0).toLocaleString()} ₩</strong></div>
+                <div class="text-[11px] text-slate-500 truncate">${escapeHtml(p.brand)} • ${escapeHtml(p.mall)} • <strong>${(p.krw || 0).toLocaleString()} ₩</strong>${hasOptions(p) ? ` • <span class="text-sky-700 font-bold">${p.options.items.length} phân loại</span>` : ''}</div>
               </div>
             </label>
+            <button type="button" data-action="admin-variants" data-id="${id}" class="px-3 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 font-black text-xs shrink-0 transition cursor-pointer" title="Thêm / sửa phân loại (size, màu, dung tích...)">
+              ✏️ Phân loại
+            </button>
             <button type="button" data-action="admin-delete" data-id="${id}" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-black text-xs shrink-0 transition cursor-pointer">
               Xóa lẻ
             </button>
@@ -1574,7 +1665,11 @@
       const mOlive = link.match(/goodsNo=([A-Za-z0-9]+)/);
       if (mOlive) return 'OY_' + mOlive[1];
       const mKream = link.match(/products\/(\d+)/);
-      if (mKream) return 'KREAM_' + mKream[1];
+      if (mKream) {
+        // KREAM giữ khóa cũ; sàn khác (Musinsa…) thêm tên miền để không trùng số với KREAM
+        const host = (link.match(/\/\/(?:www\.|m\.)?([^/]+)/) || [])[1] || '';
+        return (!host || /kream/i.test(host) ? 'KREAM_' : host + '_') + mKream[1];
+      }
       return (item.title || '').toLowerCase().replace(/[^a-z0-9가-힣]/g, '');
     }
 
@@ -1612,11 +1707,17 @@
       const combined = list.map(sanitizeProductDetails).concat(currentProductsList);
       const seenKeys = new Set();
       const uniqueProducts = [];
+      const keptByKey = new Map();
       combined.forEach(prod => {
         const key = getProductUniqueKey(prod);
         if (!seenKeys.has(key)) {
           seenKeys.add(key);
           uniqueProducts.push(prod);
+          keptByKey.set(key, prod);
+        } else {
+          // Bản mới (lấy từ trang danh sách) không có phân loại thì giữ phân loại đã nhập trước đó
+          const kept = keptByKey.get(key);
+          if (kept && !hasOptions(kept) && hasOptions(prod)) kept.options = prod.options;
         }
       });
       const duplicateCount = combined.length - uniqueProducts.length;
@@ -1692,13 +1793,7 @@
       const squash = s => normalizeText(s).replace(/[.\-_\s]+/g, '');
       const val = squash(value);
 
-      if (type === 'search') {
-        const words = String(value || '').trim().split(/\s+/).map(squash).filter(Boolean);
-        return list.filter(p => {
-          const hay = squash(`${p.title} ${p.brand} ${p.category} ${p.subCategory} ${p.mall} ${p.variant}`);
-          return hay.includes(val) || words.every(w => hay.includes(w));
-        });
-      }
+      if (type === 'search') return searchProducts(value);   // không dấu, sai chính tả nhẹ, tên Hàn, xếp món khớp nhất lên đầu
       if (type === 'brand') return list.filter(p => squash(p.brand).includes(val) || squash(p.title).includes(val));
       if (type === 'mall') return list.filter(p => squash(p.mall) === val);
       if (type === 'category') return list.filter(p => squash(p.category) === val);
@@ -1747,6 +1842,10 @@
         grid.innerHTML = skeletonCardsHtml(8);
         return;
       }
+      if (filtered.length === 0 && filterType === 'search') {
+        grid.innerHTML = searchEmptyHtml(filterVal);
+        return;
+      }
       if (filtered.length === 0) {
         grid.innerHTML = `
           <div class="col-span-full py-12 text-center space-y-3">
@@ -1761,8 +1860,42 @@
       grid.innerHTML = filtered.map(renderProductCardHtml).join('');
     }
 
+    // Không tìm thấy sản phẩm: gợi ý hãng/tác vụ gần giống + cách đặt khác
+    let searchEmptyActions = [];
+    function searchEmptyHtml(q) {
+      const near = buildSuggestions(q);
+      const related = [];
+      if (!near.empty) near.groups.forEach(g => g.items.forEach(it => { if (it.kind !== 'product') related.push(it); }));
+      searchEmptyActions = [];
+      const btn = (label, run, primary) => {
+        searchEmptyActions.push(run);
+        return `<button type="button" data-action="search-empty" data-id="${searchEmptyActions.length - 1}" class="px-4 py-2 rounded-xl text-xs font-bold cursor-pointer ${primary ? 'bg-sky-600 hover:bg-sky-700 text-white' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'}">${label}</button>`;
+      };
+      const relatedBtns = related.slice(0, 5).map(it => {
+        const label = it.kind === 'brand' ? `🏷️ Hãng ${it.b.label}` : it.kind === 'filter' ? `${it.f.icon} ${it.f.label}` : `${it.a.icon} ${it.a.label}`;
+        return btn(escapeHtml(label), () => runSuggestItem(it, q));
+      }).join('');
+      return `
+        <div class="col-span-full py-10 text-center space-y-4">
+          <div class="text-4xl">🔍</div>
+          <div class="text-slate-700 text-sm font-bold">Chưa có sản phẩm nào khớp “${escapeHtml(q)}” trong kho hàng.</div>
+          ${relatedBtns ? `<div class="space-y-2"><div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Có thể bạn muốn tìm</div><div class="flex flex-wrap justify-center gap-2">${relatedBtns}</div></div>` : ''}
+          <div class="space-y-2 pt-2">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Shop vẫn mua hộ được</div>
+            <div class="flex flex-wrap justify-center gap-2">
+              ${btn(`🔗 Nhờ shop mua “${escapeHtml(q)}” theo link`, () => orderByName(q), true)}
+              ${btn('📸 Gửi ảnh báo giá', () => switchPageView('lens'))}
+              ${btn('💬 Hỏi shop qua Zalo', () => window.open(ZALO_LINK, '_blank', 'noopener'))}
+              ${btn('Xem tất cả sản phẩm', () => switchSmartCatalogFilter('all'))}
+            </div>
+          </div>
+        </div>`;
+    }
+
     function renderProductCardHtml(item) {
       const calc = calcItemPrice(item.krw, item.estKg, item.oldKrw);
+      const multi = hasOptions(item);
+      const range = multi ? optionPriceRange(item) : null;
       const id = escapeHtml(item.id);
       const title = escapeHtml(item.title);
       const img = escapeHtml(safeUrl(item.image, DEFAULT_IMAGE));
@@ -1781,21 +1914,25 @@
             <div class="space-y-1">
               <div class="text-[11px] font-black uppercase text-sky-700">${escapeHtml(item.brand || 'CHÍNH HÃNG')}</div>
               <h3 class="text-xs font-bold text-slate-800 line-clamp-2 leading-snug group-hover:text-sky-600 transition" title="${title}">${title}</h3>
-              <p class="text-[10px] text-slate-400 line-clamp-1">Phân loại: ${escapeHtml(item.variant || 'Chính hãng từ Hàn Quốc')}</p>
+              ${multi
+                ? `<p class="text-[10px] font-bold text-sky-700 line-clamp-1">🎨 ${escapeHtml(optionsSummary(item))}: ${escapeHtml(uniqueValues(item.options.items, 0).slice(0, 4).join(', '))}${uniqueValues(item.options.items, 0).length > 4 ? '…' : ''}</p>`
+                : `<p class="text-[10px] text-slate-400 line-clamp-1">Phân loại: ${escapeHtml(item.variant || 'Chính hãng từ Hàn Quốc')}</p>`}
             </div>
           </div>
 
           <div class="px-4 pb-4 pt-1 space-y-3 border-t border-slate-100">
             <div class="flex items-baseline justify-between">
               <div>
-                ${calc.oldAllInVND > calc.allInVND ? `<div class="text-[10px] text-slate-400 line-through">${formatVND(calc.oldAllInVND)}</div>` : ''}
-                <div class="text-base font-black text-rose-600">${formatVND(calc.allInVND)}</div>
+                ${multi
+                  ? `<div class="text-[10px] text-slate-400">${range.min === range.max ? 'Giá về tay' : 'Từ'}</div><div class="text-base font-black text-rose-600">${formatVND(range.min)}</div>`
+                  : `${calc.oldAllInVND > calc.allInVND ? `<div class="text-[10px] text-slate-400 line-through">${formatVND(calc.oldAllInVND)}</div>` : ''}
+                <div class="text-base font-black text-rose-600">${formatVND(calc.allInVND)}</div>`}
               </div>
               <div class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-lg">Cước: ${calc.weightLabel}</div>
             </div>
             <div class="grid grid-cols-2 gap-2">
               <button type="button" data-action="detail" data-id="${id}" class="w-full py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs cursor-pointer">Chi tiết →</button>
-              <button type="button" data-action="order" data-id="${id}" class="w-full py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs cursor-pointer">Đặt ngay</button>
+              <button type="button" data-action="order" data-id="${id}" class="w-full py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs cursor-pointer">${multi ? 'Chọn loại' : 'Đặt ngay'}</button>
             </div>
           </div>
         </div>`;
@@ -1836,6 +1973,369 @@
         }
       }
       return score;
+    }
+
+    // ---------- 6b. TÌM KIẾM THÔNG MINH (gợi ý khi gõ) ----------
+    // Hiểu chữ không dấu, sai chính tả nhẹ ("mediheel" → Mediheal) và tên hãng tiếng Hàn (메디힐).
+
+    // Tên gọi khác của các hãng (tiếng Hàn, viết tắt...) để tìm kiếm nhận ra
+    const BRAND_ALIASES = {
+      'Mediheal': ['메디힐', 'medi heal'], 'Medicube': ['메디큐브', 'medi cube'], 'Laneige': ['라네즈', 'lanaige'],
+      'Torriden': ['토리든', 'toriden'], 'Dr.G': ['닥터지', 'drg', 'dr g', 'doctor g'], "d'Alba": ['달바', 'dalba'],
+      'Anua': ['아누아'], 'Aestura': ['에스트라'], 'Biodance': ['바이오던스'], 'Wellage': ['웰라쥬'], 'UNOVE': ['어노브'],
+      'Illiyoon': ['일리윤'], 'Round Lab': ['라운드랩', 'roundlab'], 'COSRX': ['코스알엑스'], 'Innisfree': ['이니스프리'],
+      'Beauty of Joseon': ['조선미녀', 'boj'], 'Sulwhasoo': ['설화수'], 'Etude': ['에뛰드', 'etude house'], 'Clio': ['클리오'],
+      'Rom&nd': ['롬앤', 'romand'], 'Peripera': ['페리페라'], 'Isntree': ['이즈앤트리'], 'SKIN1004': ['스킨1004', 'skin 1004'],
+      'Numbuzin': ['넘버즈인'], 'Bioheal BOH': ['바이오힐보', 'bioheal', 'boh'], 'Medianswer': ['메디앤서'], 'Tonymoly': ['토니모리'],
+      'KGC Hồng Sâm': ['정관장', 'hong sam', 'kgc', 'everytime'], 'Nike': ['나이키'], 'Adidas': ['아디다스'],
+      'New Balance': ['뉴발란스', 'nb'], 'Salomon': ['살로몬'], 'The North Face': ['노스페이스', 'north face', 'tnf'], 'Asics': ['아식스']
+    };
+
+    // Sàn & loại sản phẩm
+    const SEARCH_FILTERS = [
+      { label: 'Olive Young', sub: 'Sàn mỹ phẩm số 1 Hàn Quốc', icon: '💄', keys: 'olive young oliveyoung 올리브영 my pham', filter: { filterType: 'mall', value: 'Olive Young' } },
+      { label: 'KREAM', sub: 'Sneaker & streetwear', icon: '👟', keys: 'kream sneaker giay streetwear', filter: { filterType: 'mall', value: 'KREAM' } },
+      { label: 'Musinsa', sub: 'Thời trang Hàn', icon: '👕', keys: 'musinsa 무신사 thoi trang quan ao', filter: { filterType: 'mall', value: 'Musinsa' } },
+      { label: 'Coupang', sub: 'Đồ gia dụng, thực phẩm, sâm', icon: '🚀', keys: 'coupang 쿠팡 gia dung thuc pham', filter: { filterType: 'mall', value: 'Coupang' } },
+      { label: 'Mặt nạ (Mask & Lip)', sub: 'Loại sản phẩm', icon: '🎭', keys: 'mat na mask lip sleeping 마스크 dap mat', filter: { filterType: 'subCategory', value: 'Mặt nạ' } },
+      { label: 'Toner Pad & Serum', sub: 'Loại sản phẩm', icon: '🧴', keys: 'toner pad serum ampoule tinh chat essence 토너 패드 세럼', filter: { filterType: 'subCategory', value: 'Toner Pad' } },
+      { label: 'Mỹ phẩm & Skincare', sub: 'Danh mục', icon: '✨', keys: 'my pham skincare duong da kem duong cream', filter: { filterType: 'category', value: 'Mỹ phẩm' } },
+      { label: 'Hàng Sale', sub: 'Toàn bộ món đang giảm giá', icon: '🔥', keys: 'sale giam gia khuyen mai deal re hot', filter: { filterType: 'sale' } }
+    ];
+
+    // Tác vụ trên web
+    const SEARCH_ACTIONS = [
+      { label: 'Gửi ảnh báo giá', sub: 'Chụp / dán ảnh sản phẩm để tính giá về tay', icon: '📸', keys: 'gui anh bao gia chup anh hinh anh tim bang anh lens nhan dien screenshot', run: () => switchPageView('lens') },
+      { label: 'Đặt hàng theo link web Hàn', sub: 'Dán link Olive Young, Musinsa, Coupang...', icon: '🔗', keys: 'dat hang order link mua ho dan link web han oder', run: () => switchPageView('order') },
+      { label: 'Giỏ hàng / Đơn hàng của bạn', sub: 'Xem các món đã chọn và gửi đơn', icon: '🛒', keys: 'gio hang don hang cart thanh toan gui don ma ord', run: () => switchPageView('order') },
+      { label: 'Hỏi đáp & Tư vấn AI', sub: 'Hỏi về sản phẩm, quà tặng, cước phí', icon: '🤖', keys: 'hoi dap tu van ai chat ho tro hoi shop chatbot', run: () => openAiChatWith('') },
+      { label: 'Cách tính giá về tay', sub: 'Tỷ giá, công mua, cước bay theo kg', icon: '💰', keys: 'tinh gia cong thuc ty gia phi ship cuoc can nang cong mua bao nhieu tien gia ve tay bang gia', run: () => openAiChatWith('Cách tính giá về tay như thế nào?') },
+      { label: 'Thời gian hàng về Việt Nam', sub: 'Bay thẳng Busan → Hà Nội 3-5 ngày', icon: '✈️', keys: 'bao lau may ngay thoi gian van chuyen ship ve viet nam lich bay giao hang', run: () => openAiChatWith('Đặt hàng thì bao lâu hàng về đến Việt Nam?') },
+      { label: 'Chọn size giày / quần áo', sub: 'Hướng dẫn size Hàn Quốc', icon: '📏', keys: 'size co giay ao quan chon size bang size mm', run: () => openAiChatWith('Cách chọn size giày và quần áo?') },
+      { label: 'Quà biếu cho bố mẹ', sub: 'Gợi ý sâm, dưỡng da, sức khỏe', icon: '🎁', keys: 'qua bieu qua tang bo me ong ba suc khoe sam', run: () => openAiChatWith('Gợi ý quà tặng sức khỏe cho bố mẹ?') },
+      { label: 'Chat Zalo với shop', sub: '0383 774 099 • 0973 726 066', icon: '💬', keys: 'zalo lien he chat shop hotline so dien thoai sdt goi', run: () => window.open(ZALO_LINK, '_blank', 'noopener') },
+      { label: 'Fanpage Facebook HàBu Order', sub: 'Nhắn tin qua Facebook / Messenger', icon: '📘', keys: 'facebook fanpage fb messenger mess', run: () => window.open('https://www.facebook.com/profile.php?id=61577854719150', '_blank', 'noopener') }
+    ];
+
+    function searchNorm(s) {
+      return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').normalize('NFC')
+        .replace(/đ/g, 'd').replace(/[^a-z0-9가-힣㄰-㆏]+/g, ' ').trim();
+    }
+
+    // Số lần sửa ký tự để biến a thành b (cho phép gõ sai nhẹ)
+    function editDistance(a, b, max) {
+      if (Math.abs(a.length - b.length) > max) return max + 1;
+      let prev2 = null, prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+      for (let i = 1; i <= a.length; i++) {
+        const cur = [i];
+        let rowMin = i;
+        for (let j = 1; j <= b.length; j++) {
+          let v = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+          if (prev2 && i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) v = Math.min(v, prev2[j - 2] + 1);
+          cur.push(v);
+          rowMin = Math.min(rowMin, v);
+        }
+        if (rowMin > max) return max + 1;
+        prev2 = prev; prev = cur;
+      }
+      return prev[b.length];
+    }
+
+    function makeEntry(text) {
+      const n = searchNorm(text);
+      return { words: Array.from(new Set(n.split(' ').filter(Boolean))), squash: n.replace(/ /g, '') };
+    }
+
+    function tokenScore(q, words) {
+      let best = 0;
+      for (const w of words) {
+        if (w === q) return 3;
+        if (w.startsWith(q)) best = Math.max(best, q.length >= 2 ? 2.4 : 1);
+        else if (q.length >= 3 && w.includes(q)) best = Math.max(best, 1.5);
+        else if (q.length >= 4 && best < 1.1) {
+          const max = q.length >= 7 ? 2 : 1;
+          const cmp = w.length > q.length + max ? w.slice(0, q.length) : w;   // cho phép sai ở đoạn đầu chữ dài
+          if (editDistance(q, cmp, max) <= max) best = 1.1;
+        }
+      }
+      return best;
+    }
+
+    function scoreEntry(query, entry, labelSquash) {
+      const qn = searchNorm(query);
+      const tokens = qn.split(' ').filter(Boolean);
+      const squash = qn.replace(/ /g, '');
+      if (!tokens.length) return 0;
+      let total = 0;
+      for (const t of tokens) {
+        const s = tokenScore(t, entry.words);
+        if (!s) { total = 0; break; }
+        total += s;
+      }
+      if (squash.length >= 3 && entry.squash.includes(squash)) total = Math.max(total, 2) + 1;   // "oliveyoung", "drg"...
+      if (!total && labelSquash && squash.length >= 4) {            // tên ngắn gõ sai cả cụm: "olivyoung"
+        const max = squash.length >= 7 ? 2 : 1;
+        if (editDistance(squash, labelSquash, max) <= max) total = 1.2;
+      }
+      return total;
+    }
+
+    // Chỉ mục (tự làm lại khi danh sách sản phẩm thay đổi)
+    let searchIndexCache = { list: null, products: [], brands: [] };
+    function getSearchIndex() {
+      if (searchIndexCache.list === currentProductsList) return searchIndexCache;
+      const aliasKey = name => Object.keys(BRAND_ALIASES).find(k => searchNorm(k) === searchNorm(name));
+      const brandMap = new Map();
+      Object.keys(BRAND_ALIASES).forEach(label => brandMap.set(searchNorm(label), { label, count: 0 }));
+      const products = currentProductsList.map(p => {
+        const bKey = searchNorm(p.brand);
+        if (bKey && !['olive young', 'chinh hang'].includes(bKey)) {
+          if (!brandMap.has(bKey)) brandMap.set(bKey, { label: p.brand, count: 0 });
+          brandMap.get(bKey).count++;
+        }
+        const ak = aliasKey(p.brand);
+        const aliases = ak ? BRAND_ALIASES[ak].join(' ') : '';
+        const optWords = hasOptions(p) ? p.options.items.map(it => it.v.join(' ')).join(' ') : '';
+        return { p, entry: makeEntry(`${p.title} ${p.brand} ${aliases} ${p.mall} ${p.category} ${p.subCategory} ${p.variant} ${optWords}`) };
+      });
+      const brands = Array.from(brandMap.values()).map(b => ({
+        label: b.label, count: b.count,
+        entry: makeEntry(`${b.label} ${(BRAND_ALIASES[aliasKey(b.label)] || []).join(' ')}`),
+        squash: searchNorm(b.label).replace(/ /g, '')
+      }));
+      searchIndexCache = { list: currentProductsList, products, brands };
+      return searchIndexCache;
+    }
+    const filterEntries = SEARCH_FILTERS.map(f => ({ f, entry: makeEntry(`${f.label} ${f.keys}`), squash: searchNorm(f.label).replace(/ /g, '') }));
+    const actionEntries = SEARCH_ACTIONS.map(a => ({ a, entry: makeEntry(`${a.label} ${a.keys}`), squash: searchNorm(a.label).replace(/ /g, '') }));
+
+    function searchProducts(query) {
+      return getSearchIndex().products
+        .map(x => ({ p: x.p, score: scoreEntry(query, x.entry) }))
+        .filter(x => x.score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(x => x.p);
+    }
+
+    // Tô vàng phần chữ khớp với từ khóa (giữ nguyên dấu của chữ gốc)
+    function highlightMatch(text, query) {
+      const raw = String(text || '');
+      const flat = Array.from(raw).map(ch => { const n = ch.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); return (n === 'đ' ? 'd' : n)[0] || ' '; }).join('');
+      const marks = new Array(raw.length).fill(false);
+      searchNorm(query).split(' ').filter(t => t.length >= 2).forEach(t => {
+        let i = flat.indexOf(t);
+        while (i !== -1) { for (let k = i; k < i + t.length; k++) marks[k] = true; i = flat.indexOf(t, i + t.length); }
+      });
+      let out = '', open = false;
+      Array.from(raw).forEach((ch, i) => {
+        if (marks[i] && !open) { out += '<mark>'; open = true; }
+        if (!marks[i] && open) { out += '</mark>'; open = false; }
+        out += escapeHtml(ch);
+      });
+      return out + (open ? '</mark>' : '');
+    }
+
+    function openAiChatWith(question) {
+      const panel = document.getElementById('floatingAiPanel');
+      if (panel && panel.classList.contains('hidden')) toggleFloatingAiChat();
+      if (question) sendQuickFloatingAi(question);
+    }
+
+    // Không có sẵn trong kho → mở form đặt hàng với tên món đã gõ, chỉ cần dán link
+    function orderByName(name) {
+      addRowToCart({ title: name });
+      switchPageView('order');
+      const row = [...productRows].reverse().find(r => r.title === name);
+      setTimeout(() => {
+        const input = row && document.querySelector(`#productItemsContainer [data-row="${row.rowId}"] [data-field="link"]`);
+        if (input) input.focus();
+      }, 350);
+      showToast('Dán link sản phẩm từ web Hàn để shop mua hộ nhé!');
+    }
+
+    function goBrand(b) {
+      if (b.count > 0) switchPageView('catalog', { filterType: 'brand', value: b.label });
+      else orderByName(b.label + ' – ');
+    }
+
+    // Tạo danh sách gợi ý theo nhóm, nhóm khớp nhất xếp trước
+    function buildSuggestions(query) {
+      const q = String(query || '').trim();
+      const idx = getSearchIndex();
+      if (!q) {
+        const topBrands = idx.brands.filter(b => b.count > 0).sort((a, b) => b.count - a.count).slice(0, 8);
+        return {
+          groups: [{ title: 'Tác vụ nhanh', items: SEARCH_ACTIONS.slice(0, 4).map(a => ({ kind: 'action', a })) }],
+          chips: topBrands.map(b => ({ label: b.label, run: () => goBrand(b) }))
+            .concat(SEARCH_FILTERS.slice(0, 4).map(f => ({ label: f.label, run: () => switchPageView('catalog', f.filter) }))),
+          chipsTitle: 'Hãng & sàn nổi bật', empty: false
+        };
+      }
+      const pick = (arr, scoreFn, n) => arr.map(x => ({ x, s: scoreFn(x) })).filter(y => y.s > 0).sort((a, b) => b.s - a.s).slice(0, n);
+      const brands = pick(idx.brands, b => { const sc = scoreEntry(q, b.entry, b.squash); return sc > 0 ? sc + (b.count > 0 ? 0.3 : 0) : 0; }, 4);
+      const filters = pick(filterEntries, f => scoreEntry(q, f.entry, f.squash), 3);
+      const actions = pick(actionEntries, a => scoreEntry(q, a.entry, a.squash), 4);
+      const products = pick(idx.products, x => scoreEntry(q, x.entry), 6);
+
+      const groups = [];
+      const brandItems = brands.map(y => ({ kind: 'brand', b: y.x, s: y.s })).concat(filters.map(y => ({ kind: 'filter', f: y.x.f, s: y.s })));
+      if (brandItems.length) groups.push({ title: 'Hãng & Sàn', items: brandItems, best: Math.max(...brandItems.map(i => i.s)) });
+      if (products.length) groups.push({ title: 'Sản phẩm', items: products.map(y => ({ kind: 'product', p: y.x.p })), best: products[0].s });
+      if (actions.length) groups.push({ title: 'Tác vụ', items: actions.map(y => ({ kind: 'action', a: y.x.a })), best: actions[0].s });
+      groups.sort((a, b) => b.best - a.best);
+
+      if (!groups.length) {
+        return {
+          empty: true,
+          groups: [{ title: 'Bạn có thể', items: [
+            { kind: 'custom', icon: '🔗', label: `Nhờ shop mua “${q}” theo link`, sub: 'Dán link sản phẩm từ web Hàn, shop mua hộ', run: () => orderByName(q) },
+            { kind: 'action', a: SEARCH_ACTIONS[0] },
+            { kind: 'action', a: SEARCH_ACTIONS[8] }
+          ] }],
+          chips: idx.brands.filter(b => b.count > 0).sort((a, b) => b.count - a.count).slice(0, 6).map(b => ({ label: b.label, run: () => goBrand(b) })),
+          chipsTitle: 'Hãng đang có hàng'
+        };
+      }
+      return { groups, empty: false, productCount: searchProducts(q).length };
+    }
+
+    let suggestState = { open: false, actions: [], active: -1, query: '' };
+
+    function suggestItemHtml(item, i, q) {
+      const cls = `sg-item" id="sg-opt-${i}" data-sg="${i}" role="option`;
+      if (item.kind === 'product') {
+        const p = item.p, calc = calcItemPrice(p.krw, p.estKg, p.oldKrw);
+        return `<button type="button" class="${cls}"><span class="sg-icon"><img src="${escapeHtml(safeUrl(p.image, DEFAULT_IMAGE))}" alt="" loading="lazy" onerror="this.onerror=null;this.src='${escapeHtml(DEFAULT_IMAGE)}'"></span>
+          <span class="sg-text"><span class="sg-title">${highlightMatch(p.title, q)}</span><span class="sg-sub">${escapeHtml(p.brand)} • ${escapeHtml(p.mall)}</span></span>
+          <span class="sg-price">${formatVND(calc.allInVND)}</span></button>`;
+      }
+      if (item.kind === 'brand') {
+        const b = item.b;
+        return `<button type="button" class="${cls}"><span class="sg-icon">🏷️</span><span class="sg-text"><span class="sg-title">Hãng: ${highlightMatch(b.label, q)}</span>
+          <span class="sg-sub">${b.count > 0 ? `${b.count} sản phẩm có sẵn` : 'Chưa có sẵn – bấm để đặt theo link'}</span></span></button>`;
+      }
+      const d = item.kind === 'filter' ? { icon: item.f.icon, label: item.f.label, sub: item.f.sub }
+        : item.kind === 'action' ? item.a : item;
+      return `<button type="button" class="${cls}"><span class="sg-icon">${d.icon}</span><span class="sg-text"><span class="sg-title">${highlightMatch(d.label, q)}</span><span class="sg-sub">${escapeHtml(d.sub || '')}</span></span></button>`;
+    }
+
+    function runSuggestItem(item, q) {
+      if (item.kind === 'product') return openProductDetailModal(item.p.id);
+      if (item.kind === 'brand') return goBrand(item.b);
+      if (item.kind === 'filter') return switchPageView('catalog', item.f.filter);
+      if (item.kind === 'action') return item.a.run();
+      if (item.run) return item.run();
+    }
+
+    function renderSuggest() {
+      const input = document.getElementById('nikeSearchInput');
+      const box = document.getElementById('searchSuggest');
+      if (!input || !box) return;
+      const q = input.value.trim();
+      const data = buildSuggestions(q);
+      const actions = [];
+      let html = '';
+      if (data.empty) html += `<div class="sg-empty">Không tìm thấy <strong>“${escapeHtml(q)}”</strong> trong kho hàng.</div>`;
+      data.groups.forEach(g => {
+        html += `<div class="sg-group">${g.title}</div>`;
+        g.items.forEach(item => { html += suggestItemHtml(item, actions.length, q); actions.push(() => runSuggestItem(item, q)); });
+      });
+      if (data.chips && data.chips.length) {
+        html += `<div class="sg-group">${data.chipsTitle}</div><div class="sg-chips">`;
+        data.chips.forEach(c => { html += `<button type="button" class="sg-chip" id="sg-opt-${actions.length}" data-sg="${actions.length}" role="option">${escapeHtml(c.label)}</button>`; actions.push(c.run); });
+        html += '</div>';
+      }
+      if (q && !data.empty) {
+        html += `<button type="button" class="sg-footer" id="sg-opt-${actions.length}" data-sg="${actions.length}" role="option">🔍 Xem tất cả ${data.productCount ? data.productCount + ' ' : ''}sản phẩm khớp “${escapeHtml(q)}” →</button>`;
+        actions.push(() => submitSearch(q));
+      }
+      box.innerHTML = html;
+      suggestState = { open: true, actions, active: -1, query: q };
+      positionSuggest();
+      box.classList.remove('hidden');
+      input.setAttribute('aria-expanded', 'true');
+      input.removeAttribute('aria-activedescendant');
+    }
+
+    // Điện thoại: khung gợi ý trải rộng gần hết màn hình
+    function positionSuggest() {
+      const box = document.getElementById('searchSuggest');
+      const form = document.getElementById('headerSearchForm');
+      if (!box || !form) return;
+      if (window.innerWidth < 1024) {
+        const r = form.getBoundingClientRect();
+        box.style.left = (8 - r.left) + 'px';
+        box.style.right = 'auto';
+        box.style.width = (window.innerWidth - 16) + 'px';
+        box.style.maxWidth = 'none';
+        box.style.maxHeight = Math.max(240, window.innerHeight - r.bottom - 20) + 'px';
+      } else {
+        box.style.left = box.style.width = box.style.maxWidth = box.style.maxHeight = '';
+        box.style.right = '0';
+      }
+    }
+
+    function closeSuggest() {
+      const box = document.getElementById('searchSuggest');
+      const input = document.getElementById('nikeSearchInput');
+      if (box) box.classList.add('hidden');
+      if (input) { input.setAttribute('aria-expanded', 'false'); input.removeAttribute('aria-activedescendant'); }
+      suggestState.open = false;
+      suggestState.active = -1;
+    }
+
+    function setSuggestActive(i) {
+      const box = document.getElementById('searchSuggest');
+      const input = document.getElementById('nikeSearchInput');
+      box.querySelectorAll('[data-sg]').forEach(el => el.classList.remove('active'));
+      suggestState.active = i;
+      const el = box.querySelector(`[data-sg="${i}"]`);
+      if (el) {
+        el.classList.add('active');
+        el.scrollIntoView({ block: 'nearest' });
+        input.setAttribute('aria-activedescendant', el.id);
+      }
+    }
+
+    function submitSearch(q) {
+      const input = document.getElementById('nikeSearchInput');
+      closeSuggest();
+      if (input) input.blur();
+      if (q) switchPageView('catalog', { filterType: 'search', value: q });
+    }
+
+    function initSmartSearch() {
+      const input = document.getElementById('nikeSearchInput');
+      const box = document.getElementById('searchSuggest');
+      const form = document.getElementById('headerSearchForm');
+      if (!input || !box || !form) return;
+
+      input.addEventListener('focus', renderSuggest);
+      input.addEventListener('input', renderSuggest);
+      input.addEventListener('keydown', e => {
+        if (!suggestState.open && (e.key === 'ArrowDown' || e.key === 'ArrowUp')) renderSuggest();
+        const n = suggestState.actions.length;
+        if (e.key === 'ArrowDown' && n) { e.preventDefault(); setSuggestActive((suggestState.active + 1) % n); }
+        else if (e.key === 'ArrowUp' && n) { e.preventDefault(); setSuggestActive(suggestState.active <= 0 ? n - 1 : suggestState.active - 1); }
+        else if (e.key === 'Enter' && suggestState.open && suggestState.active >= 0) {
+          e.preventDefault();
+          const run = suggestState.actions[suggestState.active];
+          closeSuggest(); input.blur(); input.value = '';
+          run();
+        } else if (e.key === 'Escape') { closeSuggest(); }
+      });
+      // mousedown để chọn trước khi ô tìm kiếm mất focus
+      box.addEventListener('mousedown', e => e.preventDefault());
+      box.addEventListener('click', e => {
+        const el = e.target.closest('[data-sg]');
+        if (!el) return;
+        const run = suggestState.actions[Number(el.getAttribute('data-sg'))];
+        closeSuggest(); input.blur();
+        if (!el.classList.contains('sg-footer')) input.value = '';
+        if (run) run();
+      });
+      document.addEventListener('click', e => { if (suggestState.open && !form.contains(e.target)) closeSuggest(); });
+      window.addEventListener('resize', () => { if (suggestState.open) positionSuggest(); });
     }
 
     // ---------- 7. CHUYỂN TRANG (có hỗ trợ nút Back của điện thoại) ----------
@@ -1889,9 +2389,303 @@
       if (e && e.preventDefault) e.preventDefault();
       const input = document.getElementById('nikeSearchInput');
       const val = input.value.trim();
-      if (!val) return;
-      input.blur();
-      switchPageView('catalog', { filterType: 'search', value: val });
+      if (!val) { input.focus(); return; }
+      submitSearch(val);
+    }
+
+    // ---------- 7b. PHÂN LOẠI SẢN PHẨM (dung tích, màu, size...) ----------
+    // Dữ liệu: product.options = { groups: ['Màu', 'Size'], items: [{ v: ['Đen', '260'], krw, old, img, out }] }
+    // 1 bước: groups có 1 tên (VD 'Dung tích'); 2 bước: chọn nhóm 1 rồi nhóm 2 (VD Màu → Size).
+    function normalizeOptions(raw) {
+      let o = raw;
+      if (!o) return null;
+      if (typeof o === 'string') { try { o = JSON.parse(o); } catch (e) { return null; } }
+      const groups = (Array.isArray(o.groups) ? o.groups : []).map(g => String(g || '').trim()).filter(Boolean).slice(0, 2);
+      if (!groups.length) groups.push('Phân loại');
+      const seen = new Set();
+      const items = (Array.isArray(o.items) ? o.items : []).map(it => {
+        if (!it) return null;
+        let v = Array.isArray(it.v) ? it.v : String(it.v || it.name || '').split(' / ');
+        v = v.map(x => String(x == null ? '' : x).trim()).slice(0, groups.length);
+        if (v.length < groups.length || v.some(x => !x)) return null;
+        const key = v.join('\u0001');
+        if (seen.has(key)) return null;
+        seen.add(key);
+        const out = { v, krw: parseKrw(it.krw), old: parseKrw(it.old || it.oldKrw) };
+        if (out.krw > PRICING.MAX_SANE_KRW) out.krw = 0;
+        if (out.old > PRICING.MAX_SANE_KRW) out.old = 0;
+        const img = safeUrl(it.img || it.image);
+        if (img) out.img = img;
+        if (parseBool(it.out != null ? it.out : it.soldOut, false)) out.out = true;
+        return out;
+      }).filter(Boolean);
+      return items.length ? { groups, items } : null;
+    }
+
+    function hasOptions(p) { return !!(p && p.options && p.options.items && p.options.items.length); }
+    function optionPrice(p, it) { return (it && it.krw) || p.krw; }
+    function optionLabel(p, it) { return p.options.groups.map((g, i) => `${g}: ${it.v[i]}`).join(', '); }
+    function uniqueValues(items, idx) { const s = []; items.forEach(it => { if (!s.includes(it.v[idx])) s.push(it.v[idx]); }); return s; }
+
+    // Giá về tay thấp nhất – cao nhất trong các loại còn hàng
+    function optionPriceRange(p, items) {
+      const list = (items || p.options.items).filter(it => !it.out);
+      const use = list.length ? list : (items || p.options.items);
+      const prices = use.map(it => calcItemPrice(optionPrice(p, it), p.estKg).allInVND);
+      return { min: Math.min(...prices), max: Math.max(...prices) };
+    }
+
+    function optionsSummary(p) {
+      const g = p.options.groups;
+      return g.map((name, i) => `${uniqueValues(p.options.items, i).length} ${name}`).join(' · ');
+    }
+
+    // ----- Khung chọn phân loại trong trang chi tiết -----
+    let modalVariant = { id: null, sel: [null, null] };
+
+    function variantPickerHtml(p) {
+      const g = p.options.groups;
+      return `
+        <div class="p-3.5 rounded-2xl bg-white border border-slate-200 space-y-3" id="variantPicker">
+          ${g.map((name, gi) => `
+            <div>
+              <div class="text-xs font-bold text-slate-600 mb-1.5">${escapeHtml(name)}: <span class="font-black text-sky-700" data-vsel="${gi}">Chưa chọn</span></div>
+              <div class="flex flex-wrap gap-2">
+                ${uniqueValues(p.options.items, gi).map(val => {
+                  const withImg = gi === 0 ? p.options.items.find(it => it.v[0] === val && it.img) : null;
+                  return `<button type="button" class="vchip" data-action="vchip" data-g="${gi}" data-val="${escapeHtml(val)}">${withImg ? `<img src="${escapeHtml(withImg.img)}" alt="" loading="lazy" onerror="this.remove()">` : ''}<span>${escapeHtml(val)}</span></button>`;
+                }).join('')}
+              </div>
+            </div>`).join('')}
+          <p id="variantError" class="hidden text-[11px] font-bold text-rose-600"></p>
+        </div>`;
+    }
+
+    function selectedOptionItem(p) {
+      const s = modalVariant.sel;
+      return p.options.items.find(it => it.v.every((x, i) => x === s[i])) || null;
+    }
+
+    function priceBoxHtml(p) {
+      const it = hasOptions(p) ? selectedOptionItem(p) : null;
+      if (hasOptions(p) && !it) {
+        const s = modalVariant.sel;
+        const partial = p.options.items.filter(x => x.v.every((val, i) => s[i] == null || val === s[i]));
+        const r = optionPriceRange(p, partial.length ? partial : null);
+        const pending = p.options.groups.filter((g, i) => s[i] == null).join(' và ').toLowerCase();
+        return `
+          <div class="flex justify-between items-center text-slate-500"><span>Chọn ${escapeHtml(pending)} để xem giá chính xác</span></div>
+          <div class="flex justify-between items-baseline pt-1 border-t border-sky-100">
+            <span class="text-xs font-black text-slate-800 uppercase">Giá về tay:</span>
+            <span class="text-xl sm:text-2xl font-black text-rose-600 whitespace-nowrap">${r.min === r.max ? formatVND(r.min) : `${formatVND(r.min).replace(' đ', '')} – ${formatVND(r.max)}`}</span>
+          </div>`;
+      }
+      const krw = it ? optionPrice(p, it) : p.krw;
+      const old = it ? (it.old || 0) : p.oldKrw;
+      const calc = calcItemPrice(krw, p.estKg, old);
+      return `
+        ${it ? `<div class="flex justify-between items-center"><span class="text-slate-500">Đã chọn:</span><span class="font-black text-sky-700 text-right">${escapeHtml(it.v.join(' / '))}</span></div>` : ''}
+        <div class="flex justify-between items-center"><span class="text-slate-500">Giá web Hàn:</span><span class="font-bold text-slate-800">${Number(krw).toLocaleString()} ₩ → ${formatVND(calc.convertedVND)}</span></div>
+        <div class="flex justify-between items-center"><span class="text-slate-500">Công mua hộ:</span><span class="font-bold text-slate-800">${formatVND(calc.buyingFee)}</span></div>
+        <div class="flex justify-between items-center"><span class="text-slate-500">Cước bay (${calc.weightLabel} dự kiến):</span><span class="font-bold text-slate-800">${formatVND(calc.shipVND)}</span></div>
+        ${calc.oldAllInVND > calc.allInVND ? `<div class="flex justify-between items-center"><span class="text-slate-500">Giá niêm yết cũ:</span><span class="text-slate-400 line-through">${formatVND(calc.oldAllInVND)}</span></div>` : ''}
+        <div class="flex justify-between items-baseline pt-1 border-t border-sky-100">
+          <span class="text-xs font-black text-slate-800 uppercase">${p.isRetailCalc ? 'Giá 1 món về tay:' : 'Giá về tay trọn gói:'}</span>
+          <span class="text-2xl font-black text-rose-600 whitespace-nowrap">${formatVND(calc.allInVND)}</span>
+        </div>`;
+    }
+
+    function updateVariantUI() {
+      const p = findProduct(modalVariant.id);
+      if (!p || !hasOptions(p)) return;
+      const s = modalVariant.sel;
+      const items = p.options.items;
+      document.querySelectorAll('#variantPicker .vchip').forEach(btn => {
+        const g = Number(btn.getAttribute('data-g'));
+        const val = btn.getAttribute('data-val');
+        let available;
+        if (g === 0) available = items.some(it => it.v[0] === val && !it.out);
+        else available = items.some(it => it.v[1] === val && !it.out && (s[0] == null || it.v[0] === s[0]));
+        const exists = g === 0 || s[0] == null || items.some(it => it.v[0] === s[0] && it.v[1] === val);
+        btn.classList.toggle('selected', s[g] === val);
+        btn.classList.toggle('unavailable', !available);
+        btn.classList.toggle('hidden', !exists);
+        btn.title = available ? '' : 'Hết hàng';
+      });
+      p.options.groups.forEach((g, gi) => {
+        const el = document.querySelector(`#variantPicker [data-vsel="${gi}"]`);
+        if (el) el.textContent = s[gi] == null ? 'Chưa chọn' : s[gi];
+      });
+      const box = document.getElementById('modalPriceBox');
+      if (box) box.innerHTML = priceBoxHtml(p);
+      const it = selectedOptionItem(p) || (s[0] != null ? items.find(x => x.v[0] === s[0] && x.img) : null);
+      const img = document.getElementById('modalMainImage');
+      if (img) img.src = (it && it.img) || safeUrl(p.image, DEFAULT_IMAGE);
+      const err = document.getElementById('variantError');
+      if (err && selectedOptionItem(p)) err.classList.add('hidden');
+    }
+
+    function handleVariantChip(btn) {
+      const p = findProduct(modalVariant.id);
+      if (!p || btn.classList.contains('unavailable')) return;
+      const g = Number(btn.getAttribute('data-g'));
+      const val = btn.getAttribute('data-val');
+      modalVariant.sel[g] = val;
+      if (g === 0 && p.options.groups.length > 1) {
+        const ok = p.options.items.some(it => it.v[0] === val && it.v[1] === modalVariant.sel[1] && !it.out);
+        if (!ok) modalVariant.sel[1] = null;
+      }
+      updateVariantUI();
+    }
+
+    function orderSelectedVariant() {
+      const p = findProduct(modalVariant.id);
+      if (!p) return;
+      if (!hasOptions(p)) return orderProductItemDirect(p.id);
+      const it = selectedOptionItem(p);
+      if (!it || it.out) {
+        const missing = p.options.groups.filter((g, i) => modalVariant.sel[i] == null);
+        const err = document.getElementById('variantError');
+        if (err) {
+          err.textContent = it && it.out ? 'Loại này đã hết hàng, bạn chọn loại khác nhé.' : `Vui lòng chọn ${missing.join(' và ').toLowerCase()} trước khi đặt.`;
+          err.classList.remove('hidden');
+        }
+        const picker = document.getElementById('variantPicker');
+        if (picker) {
+          picker.classList.add('ring-2', 'ring-rose-400');
+          picker.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(() => picker.classList.remove('ring-2', 'ring-rose-400'), 1400);
+        }
+        return;
+      }
+      closeProductDetailModal();
+      addRowToCart({ productId: p.id, title: p.title, link: p.link, krw: optionPrice(p, it), kg: p.estKg, variant: optionLabel(p, it) });
+      switchPageView('order');
+      showToast(`Đã thêm ${it.v.join(' / ')} vào đơn hàng ✓`);
+    }
+
+    // ----- Trình nhập phân loại (trang Quản trị) -----
+    let variantEditorId = null;
+
+    function optionsToLines(o) {
+      if (!o) return '';
+      return o.items.map(it => {
+        const parts = [it.v.join(' / '), it.krw || '', it.old || '', it.out ? 'hết' : '', it.img || ''].map(String);
+        while (parts.length > 1 && parts[parts.length - 1] === '') parts.pop();
+        return parts.join(' | ');
+      }).join('\n');
+    }
+
+    // Mỗi dòng: "tên loại | giá KRW | giá gốc | hết | link ảnh" (chỉ tên là bắt buộc)
+    function parseVariantLines(text, groupCount) {
+      const items = [], errors = [];
+      String(text || '').split('\n').forEach((line, i) => {
+        if (!line.trim()) return;
+        const parts = line.split('|').map(x => x.trim());
+        const names = groupCount > 1 ? parts[0].split('/').map(x => x.trim()) : [parts[0].replace(/\s*\/\s*/g, ' / ')];
+        if (names.length < groupCount || names.some(x => !x)) {
+          errors.push(`Dòng ${i + 1}: cần dạng "${groupCount > 1 ? 'Màu / Size' : 'Tên loại'} | giá"`);
+          return;
+        }
+        const it = { v: names.slice(0, groupCount), krw: 0, old: 0 };
+        let numbers = 0;
+        parts.slice(1).forEach(part => {
+          if (!part) { numbers++; return; }
+          if (/^(het|hết|out|soldout|sold out|품절)$/i.test(part)) it.out = true;
+          else if (/^https?:\/\//i.test(part)) it.img = part;
+          else if (/\d/.test(part)) { if (numbers === 0) it.krw = parseKrw(part); else if (numbers === 1) it.old = parseKrw(part); numbers++; }
+        });
+        items.push(it);
+      });
+      return { items, errors };
+    }
+
+    function openVariantEditor(id) {
+      if (!isAdminLoggedIn) { alert('Bạn không có quyền thực hiện thao tác này!'); return; }
+      const p = findProduct(id);
+      if (!p) return;
+      variantEditorId = String(p.id);
+      const o = p.options;
+      const two = !!(o && o.groups.length > 1);
+      document.getElementById('veProductName').textContent = `${p.title} — giá chung ${Number(p.krw).toLocaleString()} ₩`;
+      document.querySelector(`input[name="veSteps"][value="${two ? 2 : 1}"]`).checked = true;
+      document.getElementById('veGroup1').value = o ? o.groups[0] : (/giày|sneaker|shoes|kream|신발/i.test(`${p.title} ${p.category} ${p.mall}`) ? 'Size' : 'Phân loại');
+      document.getElementById('veGroup2').value = two ? o.groups[1] : 'Size';
+      document.getElementById('veLines').value = optionsToLines(o);
+      document.getElementById('veComboA').value = '';
+      document.getElementById('veComboB').value = '';
+      refreshVariantEditor();
+      const modal = document.getElementById('variantEditorModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      setBodyScrollLocked(true);
+    }
+
+    function closeVariantEditor() {
+      const modal = document.getElementById('variantEditorModal');
+      if (modal && !modal.classList.contains('hidden')) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        setBodyScrollLocked(false);
+      }
+    }
+
+    function veSteps() { const r = document.querySelector('input[name="veSteps"]:checked'); return r && r.value === '2' ? 2 : 1; }
+
+    function refreshVariantEditor() {
+      const steps = veSteps();
+      document.getElementById('veGroup2Wrap').classList.toggle('hidden', steps < 2);
+      document.getElementById('veComboWrap').classList.toggle('hidden', steps < 2);
+      document.getElementById('veLines').placeholder = steps > 1
+        ? 'Đen / 250 | 139000\nĐen / 260 | 145000\nTrắng / 260 | 145000 | | hết'
+        : '75ml | 16000\n120ml | 22000 | 28000\nSet 75ml + 120ml | 34000';
+      const p = findProduct(variantEditorId);
+      const { items, errors } = parseVariantLines(document.getElementById('veLines').value, steps);
+      const box = document.getElementById('vePreview');
+      if (!items.length && !errors.length) { box.innerHTML = '<span class="text-slate-400">Chưa có phân loại nào — sản phẩm sẽ chỉ có 1 giá.</span>'; return; }
+      const prices = items.map(it => it.krw || (p ? p.krw : 0));
+      box.innerHTML = (items.length ? `<span class="text-emerald-700 font-bold">✓ ${items.length} phân loại · giá ${Math.min(...prices).toLocaleString()}₩ – ${Math.max(...prices).toLocaleString()}₩${items.some(i => i.out) ? ` · ${items.filter(i => i.out).length} loại hết hàng` : ''}</span>` : '') +
+        errors.slice(0, 4).map(e => `<div class="text-rose-600 font-bold">⚠️ ${escapeHtml(e)}</div>`).join('');
+    }
+
+    function veTemplate(kind) {
+      const area = document.getElementById('veLines');
+      const add = lines => { area.value = (area.value.trim() ? area.value.trim() + '\n' : '') + lines.join('\n'); refreshVariantEditor(); };
+      if (kind === 'shoe') { if (veSteps() === 1) document.getElementById('veGroup1').value = 'Size'; const a = []; for (let s = 220; s <= 290; s += 5) a.push(`${s} | `); add(a); }
+      if (kind === 'clothes') { if (veSteps() === 1) document.getElementById('veGroup1').value = 'Size'; add(['S | ', 'M | ', 'L | ', 'XL | ', 'XXL | ']); }
+      if (kind === 'volume') { document.getElementById('veGroup1').value = 'Dung tích'; add(['50ml | ', '100ml | ']); }
+      if (kind === 'clear') { area.value = ''; refreshVariantEditor(); }
+    }
+
+    // Tạo tổ hợp nhóm 1 × nhóm 2 (VD 3 màu × 5 size = 15 dòng)
+    function veGenerateCombos() {
+      const a = document.getElementById('veComboA').value.split(',').map(x => x.trim()).filter(Boolean);
+      const b = document.getElementById('veComboB').value.split(',').map(x => x.trim()).filter(Boolean);
+      if (!a.length || !b.length) { alert('Nhập danh sách cho cả 2 nhóm, cách nhau bởi dấu phẩy. VD: Đen, Trắng và 250, 260, 270'); return; }
+      const area = document.getElementById('veLines');
+      const lines = [];
+      a.forEach(x => b.forEach(y => lines.push(`${x} / ${y} | `)));
+      area.value = (area.value.trim() ? area.value.trim() + '\n' : '') + lines.join('\n');
+      refreshVariantEditor();
+    }
+
+    async function saveVariantEditor(clearAll) {
+      const p = findProduct(variantEditorId);
+      if (!p) return;
+      const steps = veSteps();
+      const groups = [document.getElementById('veGroup1').value.trim() || 'Phân loại'];
+      if (steps > 1) groups.push(document.getElementById('veGroup2').value.trim() || 'Size');
+      const { items, errors } = parseVariantLines(document.getElementById('veLines').value, steps);
+      if (!clearAll && errors.length) { alert('Còn dòng chưa đúng định dạng:\n' + errors.slice(0, 5).join('\n')); return; }
+      if (clearAll && !confirm('Xóa toàn bộ phân loại của sản phẩm này?')) return;
+      const opts = clearAll ? null : normalizeOptions({ groups, items });
+      if (opts) p.options = opts; else delete p.options;
+      saveProductsToStorage();
+      renderAllProductViews();
+      renderAdminManageList();
+      closeVariantEditor();
+      const ok = await uploadProductsToGoogleSheets();
+      showToast(ok ? (opts ? `Đã lưu ${opts.items.length} phân loại ✓` : 'Đã xóa phân loại') : 'Đã lưu trên web nhưng chưa đồng bộ được Google Sheets');
     }
 
     // ---------- 8. CHI TIẾT SẢN PHẨM ----------
@@ -1910,12 +2704,16 @@
       const hasRating = item.rating && !isNaN(parseFloat(item.rating));
       const summaryText = item.summary || item.benefit || 'Sản phẩm nội địa Hàn Quốc chính hãng, được tuyển chọn kỹ lưỡng theo đánh giá và xu hướng tiêu dùng tại Hàn.';
       const link = safeUrl(item.link);
+      const multi = hasOptions(item);
+      modalVariant = { id: String(item.id), sel: [null, null] };
+      // Chỉ có 1 lựa chọn ở nhóm nào thì chọn sẵn luôn
+      if (multi) item.options.groups.forEach((g, gi) => { const vals = uniqueValues(item.options.items, gi); if (vals.length === 1) modalVariant.sel[gi] = vals[0]; });
 
       body.innerHTML = `
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
           <div class="space-y-3">
             <div class="rounded-2xl overflow-hidden bg-slate-100 h-72 flex items-center justify-center border border-slate-200 relative">
-              <img src="${escapeHtml(safeUrl(item.image, DEFAULT_IMAGE))}" alt="${escapeHtml(item.title)}" class="w-full h-full object-cover"
+              <img id="modalMainImage" src="${escapeHtml(safeUrl(item.image, DEFAULT_IMAGE))}" alt="${escapeHtml(item.title)}" class="w-full h-full object-cover"
                    onerror="this.onerror=null;this.src='${escapeHtml(DEFAULT_IMAGE)}'" />
               <span class="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-900/80 backdrop-blur-md text-white font-bold text-xs uppercase">${escapeHtml(item.mall || 'Hàn Quốc')}</span>
               ${item.isRetailCalc ? `<span class="absolute bottom-3 left-3 px-2.5 py-1 rounded-lg bg-emerald-600/90 text-white font-black text-[11px] shadow">Giá tách lẻ từ Set</span>` : ''}
@@ -1923,7 +2721,7 @@
             <div class="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-xs space-y-2">
               <div class="font-extrabold text-slate-900 uppercase text-[11px] border-b border-slate-200 pb-1">📋 Thông số cơ bản:</div>
               <div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Thương hiệu:</span><span class="font-bold text-slate-800 text-right">${escapeHtml(item.brand || 'Chính hãng')}</span></div>
-              <div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Phân loại / Quy cách:</span><span class="font-bold text-slate-800 text-right">${escapeHtml(item.variant || 'Bản tiêu chuẩn')}</span></div>
+              <div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Phân loại / Quy cách:</span><span class="font-bold text-slate-800 text-right">${escapeHtml(multi ? optionsSummary(item) : (item.variant || 'Bản tiêu chuẩn'))}</span></div>
               <div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Loại sản phẩm:</span><span class="font-bold text-slate-800 text-right">${escapeHtml(item.category || 'Mỹ phẩm / Thời trang')}</span></div>
               <div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Nguồn sàn gốc:</span><span class="font-bold text-sky-600 text-right">${escapeHtml(item.mall || 'Korea Official')}</span></div>
               ${item.totalSetKrw && item.isRetailCalc ? `<div class="flex justify-between border-t border-slate-200 pt-1 text-[11px]"><span class="text-slate-400">Giá gốc cả set (${escapeHtml(item.unitCount)} món):</span><span class="font-bold text-slate-600">${Number(item.totalSetKrw).toLocaleString()} KRW</span></div>` : ''}
@@ -1949,20 +2747,13 @@
               <span class="font-bold text-slate-800">💡 Mô tả tóm tắt:</span> ${escapeHtml(summaryText)}
             </div>
 
-            <div class="p-3.5 rounded-2xl bg-sky-50/60 border border-sky-100 text-xs space-y-2">
-              <div class="flex justify-between items-center"><span class="text-slate-500">Giá web Hàn:</span><span class="font-bold text-slate-800">${Number(item.krw).toLocaleString()} ₩ → ${formatVND(calc.convertedVND)}</span></div>
-              <div class="flex justify-between items-center"><span class="text-slate-500">Công mua hộ:</span><span class="font-bold text-slate-800">${formatVND(calc.buyingFee)}</span></div>
-              <div class="flex justify-between items-center"><span class="text-slate-500">Cước bay (${calc.weightLabel} dự kiến):</span><span class="font-bold text-slate-800">${formatVND(calc.shipVND)}</span></div>
-              ${calc.oldAllInVND > calc.allInVND ? `<div class="flex justify-between items-center"><span class="text-slate-500">Giá niêm yết cũ:</span><span class="text-slate-400 line-through">${formatVND(calc.oldAllInVND)}</span></div>` : ''}
-              <div class="flex justify-between items-baseline pt-1 border-t border-sky-100">
-                <span class="text-xs font-black text-slate-800 uppercase">${item.isRetailCalc ? 'Giá 1 món về tay:' : 'Giá về tay trọn gói:'}</span>
-                <span class="text-2xl font-black text-rose-600">${formatVND(calc.allInVND)}</span>
-              </div>
-            </div>
+            ${multi ? variantPickerHtml(item) : ''}
+
+            <div id="modalPriceBox" class="p-3.5 rounded-2xl bg-sky-50/60 border border-sky-100 text-xs space-y-2">${priceBoxHtml(item)}</div>
 
             <div class="grid ${link ? 'grid-cols-2' : 'grid-cols-1'} gap-2 pt-2">
               ${link ? `<a href="${escapeHtml(link)}" target="_blank" rel="noopener noreferrer" class="py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs text-center transition">Xem link web Hàn ↗</a>` : ''}
-              <button type="button" data-action="order" data-id="${escapeHtml(item.id)}" class="py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs transition shadow-md shadow-sky-600/20 cursor-pointer">Đặt mua ngay</button>
+              <button type="button" data-action="order-variant" data-id="${escapeHtml(item.id)}" class="py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs transition shadow-md shadow-sky-600/20 cursor-pointer">Đặt mua ngay</button>
             </div>
           </div>
         </div>`;
@@ -1970,6 +2761,7 @@
       modal.classList.remove('hidden');
       modal.classList.add('flex');
       setBodyScrollLocked(true);
+      if (multi) updateVariantUI();
     }
 
     function closeProductDetailModal() {
@@ -2353,7 +3145,7 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
 
     // Thêm vào đơn (trước đây "Đặt ngay" ghi đè mất món đã chọn trước đó)
     function addRowToCart(data) {
-      const existing = data.productId ? productRows.find(r => r.productId && sameId(r.productId, data.productId)) : null;
+      const existing = data.productId ? productRows.find(r => r.productId && sameId(r.productId, data.productId) && r.variant === String(data.variant || '')) : null;
       if (existing) {
         existing.qty += 1;
       } else {
@@ -2369,6 +3161,11 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
       const item = findProduct(id);
       if (!item) {
         console.warn('Không tìm thấy sản phẩm có ID:', id);
+        return;
+      }
+      if (hasOptions(item)) {
+        openProductDetailModal(item.id);
+        showToast('Chọn phân loại trước khi đặt nhé');
         return;
       }
       closeProductDetailModal();
@@ -2991,6 +3788,10 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
         case 'admin-delete': deleteProductByAdmin(id); break;
         case 'remove-row': removeProductRow(Number(id)); break;
         case 'lens-pick': pickLensSuggestion(id); break;
+        case 'vchip': handleVariantChip(el); break;
+        case 'order-variant': orderSelectedVariant(); break;
+        case 'admin-variants': openVariantEditor(id); break;
+        case 'search-empty': { const run = searchEmptyActions[Number(id)]; if (run) run(); break; }
       }
     });
 
@@ -3003,6 +3804,7 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
 
     document.addEventListener('keydown', e => {
       if (e.key !== 'Escape') return;
+      closeVariantEditor();
       closeProductDetailModal();
       closeSuccessModal();
       const panel = document.getElementById('floatingAiPanel');
@@ -3064,6 +3866,7 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
     // ---------- 16. KHỞI CHẠY ----------
     function initApp() {
       initHeroBanner();
+      initSmartSearch();
       const lensKg = document.getElementById('lensKg');
       if (lensKg) lensKg.innerHTML = kgOptionsHtml(0.5);
       renderOrderRows();
@@ -3084,62 +3887,5 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initApp);
     else initApp();
   </script>
-  <!-- POPUP HƯỚNG DẪN CÀI APP CHO IPHONE (TỰ ĐỘNG HIỆN KHI DÙNG SAFARI) -->
-<div id="iosInstallPrompt" class="hidden fixed bottom-4 left-4 right-4 z-50 bg-white/95 backdrop-blur-md border border-slate-200/80 p-4 rounded-2xl shadow-2xl transition-all duration-300 max-w-md mx-auto">
-  <div class="flex items-start justify-between gap-3 mb-2">
-    <div class="flex items-center gap-3">
-      <img src="./logo-minimal.png" class="w-10 h-10 rounded-xl border border-slate-200 object-contain p-1 bg-white shadow-sm" alt="Logo">
-      <div>
-        <h4 class="font-bold text-slate-800 text-sm">Cài đặt ứng dụng Habu Order</h4>
-        <p class="text-xs text-slate-500">Mua sắm tiện lợi, mở app ngay trên màn hình</p>
-      </div>
-    </div>
-    <button onclick="dismissIosPrompt()" class="text-slate-400 hover:text-slate-600 text-lg font-bold px-1">&times;</button>
-  </div>
-
-  <div class="bg-sky-50 rounded-xl p-2.5 text-xs text-slate-700 space-y-1.5 border border-sky-100">
-    <div class="flex items-center gap-2">
-      <span class="w-5 h-5 rounded-full bg-sky-500 text-white font-bold flex items-center justify-center text-[10px]">1</span>
-      <span>Nhấn nút <strong>Chia sẻ</strong> <svg class="inline-block w-4 h-4 text-sky-600 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg> (hoặc icon <span class="font-bold text-sky-700">⎋/↑</span> ở đáy màn hình).</span>
-    </div>
-    <div class="flex items-center gap-2">
-      <span class="w-5 h-5 rounded-full bg-sky-500 text-white font-bold flex items-center justify-center text-[10px]">2</span>
-      <span>Cuộn xuống chọn <strong>Thêm vào MH chính</strong> (Add to Home Screen).</span>
-    </div>
-  </div>
-
-  <!-- Mũi tên chỉ xuống nút công cụ của Safari -->
-  <div class="flex justify-center -mb-5 mt-1">
-    <div class="w-4 h-4 bg-white/95 border-r border-b border-slate-200 rotate-45"></div>
-  </div>
-</div>
-
-<script>
-  (function initIosPrompt() {
-    // 1. Kiểm tra xem có đúng là thiết bị iOS (iPhone/iPad) hay không
-    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    
-    // 2. Kiểm tra xem web đã được mở dưới dạng App hay chưa
-    const isStandalone = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
-
-    // 3. Kiểm tra xem người dùng đã từng tắt thông báo này chưa
-    const isDismissed = localStorage.getItem('hideIosInstallPrompt');
-
-    if (isIos && !isStandalone && !isDismissed) {
-      // Tự động bật thông báo sau 2 giây khi khách vào web
-      setTimeout(() => {
-        const promptBox = document.getElementById('iosInstallPrompt');
-        if (promptBox) promptBox.classList.remove('hidden');
-      }, 2000);
-    }
-  })();
-
-  function dismissIosPrompt() {
-    const promptBox = document.getElementById('iosInstallPrompt');
-    if (promptBox) promptBox.classList.add('hidden');
-    // Lưu trạng thái để không làm phiền khách liên tục
-    localStorage.setItem('hideIosInstallPrompt', 'true');
-  }
-</script>
 </body>
 </html>
