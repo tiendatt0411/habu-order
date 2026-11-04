@@ -980,9 +980,6 @@
             <button type="button" onclick="resetToStandardProducts()" class="text-xs font-bold text-sky-700 hover:underline cursor-pointer">
               🔄 Tải lại từ Google Sheets
             </button>
-            <button type="button" onclick="copyLinksNeedingOptions()" class="text-xs font-bold text-sky-800 bg-white hover:bg-sky-100 border border-sky-300 px-3 py-1.5 rounded-full transition cursor-pointer" title="Chép link các sản phẩm chưa có phân loại để bookmarklet Hút Sale tự lấy hàng loạt">
-              📋 Chép link cần lấy phân loại
-            </button>
             <button type="button" onclick="translateAllCatalogTitlesToVietnamese()" id="translateAllBtn" class="text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-3 py-1.5 rounded-full transition cursor-pointer">
               🌐 Dịch tất cả tên SP sang Tiếng Việt
             </button>
@@ -991,6 +988,16 @@
             ⚡ Nạp Lên Web &amp; Đồng Bộ Google Sheets
           </button>
         </div>
+      </div>
+
+      <div id="autoSyncBox" class="p-6 rounded-3xl bg-white border border-sky-200 space-y-3">
+        <div>
+          <p class="text-sm font-black text-sky-950 uppercase">🔄 Tự lấy phân loại · loại sản phẩm · dung tích cho hàng đang có</p>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">Bấm tên sàn → web mở sàn đó ở tab mới → ở tab đó bấm dấu trang <b>Hút Sale</b> 1 lần rồi để yên. Kết quả tự về đây và tự lưu lên Google Sheets. Tên đã dịch, giá, ảnh giữ nguyên.</p>
+        </div>
+        <div id="autoSyncMalls" class="flex flex-wrap gap-2"></div>
+        <div id="autoSyncStatus" class="hidden text-xs font-semibold leading-relaxed rounded-2xl p-3 bg-sky-50 border border-sky-100 text-sky-950"></div>
+        <button type="button" onclick="copyLinksNeedingOptions()" class="text-[11px] text-slate-400 hover:text-slate-600 underline cursor-pointer">Cách dự phòng: chép danh sách link để dán tay vào Hút Sale</button>
       </div>
 
       <div class="bg-white p-6 rounded-3xl border border-slate-200 space-y-4">
@@ -1405,7 +1412,7 @@
       if (!krw) krw = 20000;
       let oldKrw = parseKrw(item.oldKrw);
       if (!oldKrw || oldKrw > PRICING.MAX_SANE_KRW) oldKrw = Math.round(krw * 1.2);
-      const wInfo = estimateSmartWeight(item.title, item.category, item.estKg);
+      const wInfo = estimateSmartWeight(item.title, `${item.category || ''} ${item.subCategory || ''}`, item.estKg);
       const hasId = item.id !== undefined && item.id !== null && String(item.id).trim() !== '';
 
       return Object.assign({}, item, {
@@ -1548,6 +1555,7 @@
           updateAdminStatusUI();
           openAdminPanel();
           showToast('Đăng nhập Quản Trị Viên thành công!');
+          if (pendingImport) processPendingImport();
         } else {
           updateAdminStatusUI();
           alert('Mật khẩu không chính xác! Chỉ quản trị viên mới có quyền thao tác.');
@@ -1600,6 +1608,7 @@
     }
 
     function renderAdminManageList() {
+      renderAutoSyncBox();
       const box = document.getElementById('adminProductManageList');
       if (!box) return;
       updateAdminCount();
@@ -1702,46 +1711,101 @@
       return link.replace(/^https?:\/\/(www\.|m\.)?/i, '').replace(/[?#].*$/, '').replace(/\/+$/, '').toLowerCase();
     }
 
-    // Kết quả bookmarklet chế độ "danh sách link": chỉ gắn phân loại, giữ nguyên tên đã dịch, giá, ảnh...
-    function applyOptionUpdates(updates) {
+    // Kết quả bookmarklet dạng "chỉ cập nhật thông tin" cho hàng đã có: phân loại, loại sản phẩm, dung tích.
+    // Giữ nguyên tên đã dịch, giá, ảnh đã sửa trên web.
+    function applyInfoUpdates(updates) {
       const byKey = new Map();
-      currentProductsList.forEach(p => { const k = productLinkKey(p.link); if (k && !byKey.has(k)) byKey.set(k, []); if (k) byKey.get(k).push(p); });
-      const stat = { withOpt: 0, noOpt: 0, notFound: 0 };
+      currentProductsList.forEach(p => { const k = productLinkKey(p.link); if (!k) return; if (!byKey.has(k)) byKey.set(k, []); byKey.get(k).push(p); });
+      const stat = { withOpt: 0, noOpt: 0, notFound: 0, failed: 0 };
       updates.forEach(u => {
         const targets = byKey.get(productLinkKey(u.link));
         if (!targets) { stat.notFound++; return; }
+        if (u.failed) { stat.failed++; return; }
         const opts = normalizeOptions(u.options);
         targets.forEach(p => {
           if (opts) { p.options = opts; delete p.optChecked; }
           else if (!hasOptions(p)) p.optChecked = 1;   // đã kiểm tra: sản phẩm không có phân loại
+          const sub = String(p.subCategory || '').toLowerCase();
+          if (u.subCategory && (u.catFrom === 'web' || !sub || sub === 'skincare')) {
+            p.subCategory = String(u.subCategory).slice(0, 40);
+            if (u.category) p.category = String(u.category).slice(0, 40);
+          }
+          if (u.volume) p.volume = String(u.volume).slice(0, 80);
+          if (u._habu === 'info') p.infoAt = Date.now();
         });
         opts ? stat.withOpt++ : stat.noOpt++;
       });
       return stat;
     }
 
-    // Chép link các sản phẩm chưa có phân loại (chưa kiểm tra lần nào) để dán vào bookmarklet
+    const VI_LETTERS = /[ăâđêôơưàáạảãằắặẳẵầấậẩẫèéẹẻẽềếệểễìíịỉĩòóọỏõồốộổỗờớợởỡùúụủũừứựửữỳýỵỷỹ]/i;
+    // Nạp dữ liệu từ bookmarklet (dán JSON, gửi thẳng qua đường link, hoặc tự lấy thông tin)
+    async function importItems(list, opts = {}) {
+      list = (Array.isArray(list) ? list : []).filter(x => x && typeof x === 'object');
+      const isInfo = x => x._habu === 'options' || x._habu === 'info';
+      const products = list.filter(x => !isInfo(x));
+      const report = { info: null, added: 0, updated: 0, total: 0, synced: true };
+      const infoUpdates = list.filter(isInfo);
+      if (infoUpdates.length) report.info = applyInfoUpdates(infoUpdates);
+      if (products.length) {
+        const oldByKey = new Map();
+        currentProductsList.forEach(p => { const k = getProductUniqueKey(p); if (!oldByKey.has(k)) oldByKey.set(k, p); });
+        const seen = new Set(), unique = [];
+        products.map(sanitizeProductDetails).concat(currentProductsList).forEach(prod => {
+          const key = getProductUniqueKey(prod);
+          if (seen.has(key)) return;
+          seen.add(key);
+          const old = oldByKey.get(key);
+          if (old && old !== prod) {
+            report.updated++;
+            // Giữ phần đã làm trên web: tên đã dịch, phân loại / dung tích đã có (khi bản mới không có), ID cũ
+            if (VI_LETTERS.test(old.title || '') && !VI_LETTERS.test(prod.title || '')) prod.title = old.title;
+            if (!hasOptions(prod) && hasOptions(old)) prod.options = old.options;
+            if (!prod.volume && old.volume) prod.volume = old.volume;
+            if (!prod.infoAt && old.infoAt) prod.infoAt = old.infoAt;
+            prod.id = old.id;
+          } else if (!old) report.added++;
+          unique.push(prod);
+        });
+        setProducts(unique);
+      } else {
+        setProducts(currentProductsList);   // tính lại cân nặng theo loại sản phẩm mới
+      }
+      saveProductsToStorage();
+      renderAllProductViews();
+      renderAdminManageList();
+      report.total = currentProductsList.length;
+      if (!opts.skipUpload) report.synced = await uploadProductsToGoogleSheets();
+      return report;
+    }
+    function importReportText(r) {
+      const lines = [];
+      if (r.added || r.updated) lines.push(`• ${r.added} món mới, ${r.updated} món cập nhật.`);
+      if (r.info) {
+        lines.push(`• ${r.info.withOpt} món có phân loại, ${r.info.noOpt} món không có phân loại.`);
+        if (r.info.failed) lines.push(`• ${r.info.failed} món không đọc được (lần sau thử lại).`);
+        if (r.info.notFound) lines.push(`• ${r.info.notFound} link không còn trên web (bỏ qua).`);
+      }
+      lines.push(`• Tổng sản phẩm trên web: ${r.total} món.`);
+      if (!r.synced) lines.push('⚠️ Chưa đồng bộ được Google Sheets, hãy thử lại.');
+      return lines.join('\n');
+    }
+
+    // Chép link các sản phẩm chưa lấy thông tin (cách dự phòng: dán tay vào Hút Sale)
     async function copyLinksNeedingOptions() {
       if (!isAdminLoggedIn) return;
-      const need = currentProductsList.filter(p => safeUrl(p.link) && !hasOptions(p) && !p.optChecked);
-      const skipped = currentProductsList.filter(p => !hasOptions(p) && p.optChecked).length;
-      if (!need.length) {
-        alert('Không còn sản phẩm nào cần lấy phân loại 🎉' + (skipped ? `\n(${skipped} món đã kiểm tra là không có phân loại.)` : ''));
-        return;
-      }
-      const byMall = {};
-      need.forEach(p => { const m = p.mall || 'Khác'; (byMall[m] = byMall[m] || []).push(p.link); });
-      const textOut = Object.values(byMall).map(a => a.join('\n')).join('\n');
+      const groups = pendingSyncGroups();
+      const total = groups.reduce((n, g) => n + g.links.length, 0);
+      if (!total) { alert('Tất cả sản phẩm đã có đủ thông tin 🎉'); return; }
+      const textOut = groups.map(g => g.links.join('\n')).join('\n');
       let copied = false;
       try { await navigator.clipboard.writeText(textOut); copied = true; } catch (e) {
         const ta = document.createElement('textarea'); ta.value = textOut; document.body.appendChild(ta); ta.select();
         try { copied = document.execCommand('copy'); } catch (e2) {}
         ta.remove();
       }
-      const lines = Object.entries(byMall).map(([m, a]) => `• ${m}: ${a.length} link`).join('\n');
-      alert((copied ? `📋 Đã chép ${need.length} link sản phẩm chưa có phân loại:\n` : `Không tự chép được, hãy thử lại. Có ${need.length} link:\n`) + lines +
-        '\n\nCách làm: mở trang chủ của sàn (VD oliveyoung.co.kr) → bấm dấu trang Hút Sale → "📋 Lấy phân loại cho danh sách link" → dán → Bắt đầu.' +
-        '\nXong thì dán kết quả vào ô "Thêm sản phẩm nhanh" và bấm Nạp.' + (skipped ? `\n\n(Bỏ qua ${skipped} món đã kiểm tra là không có phân loại.)` : ''));
+      alert((copied ? `📋 Đã chép ${total} link:\n` : `Không tự chép được, hãy thử lại. Có ${total} link:\n`) + groups.map(g => `• ${g.mall}: ${g.links.length} link`).join('\n') +
+        '\n\nMở trang của sàn → bấm Hút Sale → "Dán danh sách link thủ công" → dán → Bắt đầu → xong bấm "📤 Đưa lên web HàBu".');
     }
 
     async function handleAdminImportSubmit() {
@@ -1773,55 +1837,177 @@
         return;
       }
 
-      // Kết quả "chỉ lấy phân loại" (bookmarklet chế độ danh sách link)
-      const optionUpdates = list.filter(x => x && x._habu === 'options');
-      list = list.filter(x => x && x._habu !== 'options');
-      if (optionUpdates.length && !list.length) {
-        if (importBtn) { importBtn.disabled = true; importBtn.textContent = '⏳ Đang gắn phân loại & đồng bộ...'; }
-        const st = applyOptionUpdates(optionUpdates);
+      if (importBtn) { importBtn.disabled = true; importBtn.textContent = '⏳ Đang lọc trùng & đồng bộ...'; }
+      const r = await importItems(list);
+      inputEl.value = '';
+      if (importBtn) { importBtn.disabled = false; importBtn.textContent = '⚡ Nạp Lên Web & Đồng Bộ Google Sheets'; }
+      alert('✅ Đã nạp xong!\n' + importReportText(r));
+    }
+
+    // ---------- 5b. TỰ LẤY THÔNG TIN TỪ SÀN & NHẬN DỮ LIỆU GỬI THẲNG TỪ HÚT SALE ----------
+    // Nén / giải nén dữ liệu đi qua đường link (#habu-job=... gửi sang sàn, #habu-import=... nhận về)
+    async function packData(obj) {
+      let bytes = new TextEncoder().encode(JSON.stringify(obj)), pre = 'r';
+      if (typeof CompressionStream !== 'undefined') {
+        try { bytes = new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate'))).arrayBuffer()); pre = 'z'; } catch (e) {}
+      }
+      let bin = '';
+      for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+      return pre + btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+    async function unpackData(str) {
+      let b = String(str).slice(1).replace(/-/g, '+').replace(/_/g, '/');
+      while (b.length % 4) b += '=';
+      const bin = atob(b), bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      const out = str[0] === 'z' ? new Uint8Array(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate'))).arrayBuffer()) : bytes;
+      return JSON.parse(new TextDecoder().decode(out));
+    }
+
+    const SYNC_MALL_HOME = { 'oliveyoung.co.kr': 'https://www.oliveyoung.co.kr/store/main/main.do', 'kream.co.kr': 'https://kream.co.kr/', 'musinsa.com': 'https://www.musinsa.com/' };
+    const siteOfLink = link => { try { return new URL(link).hostname.replace(/^(www|m|mobile)\./, ''); } catch (e) { return ''; } };
+    // Sản phẩm chưa lấy thông tin chi tiết, gom theo sàn
+    function pendingSyncGroups() {
+      const groups = new Map();
+      currentProductsList.forEach(p => {
+        if (p.infoAt || !safeUrl(p.link)) return;
+        const site = siteOfLink(p.link);
+        if (!site) return;
+        if (!groups.has(site)) groups.set(site, { site, mall: p.mall || site, links: [] });
+        groups.get(site).links.push(p.link);
+      });
+      return [...groups.values()].sort((a, b) => b.links.length - a.links.length);
+    }
+    function renderAutoSyncBox() {
+      const wrap = document.getElementById('autoSyncMalls');
+      if (!wrap) return;
+      const groups = pendingSyncGroups();
+      wrap.innerHTML = groups.length
+        ? groups.map(g => `<button type="button" data-action="auto-sync" data-id="${escapeHtml(g.site)}" class="px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs cursor-pointer transition">${escapeHtml(g.mall)} · ${g.links.length} món ▶</button>`).join('')
+        : `<span class="text-xs font-bold text-emerald-700">${productsLoaded ? '✓ Tất cả sản phẩm đã có đủ thông tin.' : '⏳ Đang tải sản phẩm...'}</span>`;
+    }
+
+    let syncJob = null;
+    async function startAutoSync(site) {
+      if (!isAdminLoggedIn) return;
+      const g = pendingSyncGroups().find(x => x.site === site);
+      if (!g) return;
+      const win = window.open('about:blank', 'habu_sync');   // mở ngay khi bấm để trình duyệt không chặn
+      if (!win) { alert('Trình duyệt đang chặn mở tab mới. Hãy cho phép cửa sổ bật lên (pop-up) cho trang này rồi bấm lại.'); return; }
+      if (syncJob) clearInterval(syncJob.timer);
+      syncJob = { site, mall: g.mall, links: g.links, win, total: g.links.length, got: 0, withOpt: 0, noOpt: 0, failed: 0, connected: false, done: false, sinceUpload: 0 };
+      const home = SYNC_MALL_HOME[site] || (new URL(g.links[0]).origin + '/');
+      let url = home;
+      try { url = home + '#habu-job=' + await packData({ links: g.links }); } catch (e) {}
+      win.location.href = url;
+      setSyncStatus();
+      syncJob.timer = setInterval(() => { if (syncJob && !syncJob.done && syncJob.win.closed) finishAutoSync(true); }, 2000);
+    }
+    async function finishAutoSync(tabClosed) {
+      const j = syncJob;
+      if (!j || j.done) return;
+      j.done = true;
+      clearInterval(j.timer);
+      if (j.got) {
+        setProducts(currentProductsList);
         saveProductsToStorage();
         renderAllProductViews();
         renderAdminManageList();
-        const synced = await uploadProductsToGoogleSheets();
-        inputEl.value = '';
-        if (importBtn) { importBtn.disabled = false; importBtn.textContent = '⚡ Nạp Lên Web & Đồng Bộ Google Sheets'; }
-        alert(`✅ Đã cập nhật phân loại!\n• ${st.withOpt} món đã có phân loại.\n• ${st.noOpt} món không có phân loại (lần sau không chép link món này nữa).` +
-          (st.notFound ? `\n• ${st.notFound} link không còn trên web (bỏ qua).` : '') +
-          '\nTên, giá, ảnh trên web giữ nguyên.' + (synced ? '' : '\n⚠️ Chưa đồng bộ được Google Sheets, hãy thử lại.'));
-        return;
+        j.synced = await uploadProductsToGoogleSheets();
       }
+      setSyncStatus(tabClosed);
+    }
+    function setSyncStatus(tabClosed) {
+      const el = document.getElementById('autoSyncStatus');
+      const j = syncJob;
+      if (!el || !j) return;
+      el.classList.remove('hidden');
+      const mall = escapeHtml(j.mall);
+      if (!j.done && !j.connected) el.innerHTML = `⏳ Đã mở <b>${mall}</b> ở tab mới. Sang tab đó, bấm dấu trang <b>Hút Sale</b> 1 lần rồi để yên (${j.total} món, khoảng ${Math.max(1, Math.ceil(j.total * 1.5 / 60))} phút).`;
+      else if (!j.done) el.innerHTML = `⏳ Đang lấy thông tin từ ${mall}: <b>${j.got}/${j.total}</b> món · ${j.withOpt} món có phân loại. Có thể làm việc khác, chỉ đừng đóng 2 tab này.`;
+      else if (!j.got) el.innerHTML = tabClosed
+        ? `Tab ${mall} chưa gửi kết quả về đây. Nếu Hút Sale đã chạy xong ở tab đó, bấm <b>📤 Đưa lên web HàBu</b> trên khung Hút Sale – kết quả sẽ tự nạp vào trang này.`
+        : 'Không có món nào được cập nhật.';
+      else el.innerHTML = `✅ Xong ${mall}: đã cập nhật <b>${j.got}</b> món · ${j.withOpt} món có phân loại · ${j.noOpt} món không có` +
+        (j.failed ? ` · ${j.failed} món không đọc được (bấm lại để thử lần nữa)` : '') + '. ' +
+        (j.synced === false ? '⚠️ Chưa lưu được lên Google Sheets, hãy bấm lại.' : 'Đã lưu lên Google Sheets.');
+    }
+    // Tab của sàn (đang chạy Hút Sale) nói chuyện với trang này
+    window.addEventListener('message', e => {
+      const d = e.data, j = syncJob;
+      if (!j || !d || typeof d !== 'object' || e.source !== j.win || siteOfLink(e.origin + '/') !== j.site) return;
+      if (d.type === 'habu-hello') {
+        e.source.postMessage({ type: 'habu-job', links: j.links }, e.origin);
+        j.connected = true;
+        setSyncStatus();
+      } else if (d.type === 'habu-start') {
+        j.connected = true;
+        if (d.total) j.total = d.total;
+        setSyncStatus();
+      } else if (d.type === 'habu-result' && d.item && d.item._habu === 'info' && !j.done) {
+        const st = applyInfoUpdates([d.item]);
+        j.got++; j.withOpt += st.withOpt; j.noOpt += st.noOpt; j.failed += st.failed;
+        saveProductsToStorage();
+        if (++j.sinceUpload >= 20) { j.sinceUpload = 0; uploadProductsToGoogleSheets(); }
+        setSyncStatus();
+      } else if (d.type === 'habu-done') {
+        finishAutoSync(false);
+      }
+    });
 
-      if (importBtn) { importBtn.disabled = true; importBtn.textContent = '⏳ Đang lọc trùng & đồng bộ...'; }
-
-      if (optionUpdates.length) applyOptionUpdates(optionUpdates);
-      const combined = list.map(sanitizeProductDetails).concat(currentProductsList);
-      const seenKeys = new Set();
-      const uniqueProducts = [];
-      const keptByKey = new Map();
-      combined.forEach(prod => {
-        const key = getProductUniqueKey(prod);
-        if (!seenKeys.has(key)) {
-          seenKeys.add(key);
-          uniqueProducts.push(prod);
-          keptByKey.set(key, prod);
-        } else {
-          // Bản mới (lấy từ trang danh sách) không có phân loại thì giữ phân loại đã nhập trước đó
-          const kept = keptByKey.get(key);
-          if (kept && !hasOptions(kept) && hasOptions(prod)) kept.options = prod.options;
+    // Nhận dữ liệu "📤 Đưa lên web HàBu": tab mới mở ra sẽ chuyển cho tab Quản trị đang đăng nhập (nếu có)
+    const adminChannel = (() => { try { return new BroadcastChannel('habu-admin'); } catch (e) { return null; } })();
+    let pendingImport = null;
+    if (adminChannel) adminChannel.addEventListener('message', async ev => {
+      const d = ev.data || {};
+      if (d.type !== 'import-request' || !isAdminLoggedIn || !Array.isArray(d.items)) return;
+      adminChannel.postMessage({ type: 'import-ack', id: d.id });
+      if (syncJob && !syncJob.done) { clearInterval(syncJob.timer); syncJob.done = true; }
+      const r = await importItems(d.items);
+      showImportNotice(r, d.items.length);
+    });
+    function showImportNotice(r, n) {
+      const el = document.getElementById('autoSyncStatus');
+      if (el) {
+        el.classList.remove('hidden');
+        el.innerHTML = `✅ Đã nhận ${n} món từ Hút Sale:<br>` + escapeHtml(importReportText(r)).replace(/\n/g, '<br>');
+      }
+      showToast(`Đã nạp ${n} món từ Hút Sale ✓`);
+    }
+    async function receiveHabuImport(packed) {
+      let items = null;
+      try { items = await unpackData(packed); } catch (e) {}
+      if (!Array.isArray(items) || !items.length) { alert('Dữ liệu từ Hút Sale bị lỗi. Hãy bấm "📤 Đưa lên web HàBu" lại.'); return; }
+      if (adminChannel) {
+        const id = Date.now() + '-' + Math.random().toString(36).slice(2);
+        const accepted = await new Promise(res => {
+          const t = setTimeout(() => { adminChannel.removeEventListener('message', on); res(false); }, 1500);
+          function on(ev) { if (ev.data && ev.data.type === 'import-ack' && ev.data.id === id) { clearTimeout(t); adminChannel.removeEventListener('message', on); res(true); } }
+          adminChannel.addEventListener('message', on);
+          adminChannel.postMessage({ type: 'import-request', id, items });
+        });
+        if (accepted) {
+          const note = document.createElement('div');
+          note.className = 'fixed inset-0 z-[2000000] bg-black/60 flex items-center justify-center p-6';
+          note.innerHTML = `<div class="bg-white rounded-3xl p-6 max-w-sm text-center space-y-2"><p class="text-3xl">✅</p><p class="font-black text-slate-900">Đã chuyển ${items.length} món sang tab Quản trị đang mở</p><p class="text-xs text-slate-500">Có thể đóng tab này.</p></div>`;
+          note.onclick = () => note.remove();
+          document.body.appendChild(note);
+          setTimeout(() => { try { window.close(); } catch (e) {} }, 1500);
+          return;
         }
-      });
-      const duplicateCount = combined.length - uniqueProducts.length;
-
-      setProducts(uniqueProducts);
-      saveProductsToStorage();
-      renderAllProductViews();
-      renderAdminManageList();
-      const ok = await uploadProductsToGoogleSheets();
-
-      inputEl.value = '';
-      if (importBtn) { importBtn.disabled = false; importBtn.textContent = '⚡ Nạp Lên Web & Đồng Bộ Google Sheets'; }
-      alert(`✅ Đã nạp thành công!\n• Tổng sản phẩm hiện có: ${currentProductsList.length} món.\n• Đã tự động loại bỏ: ${duplicateCount} món bị trùng lặp.` +
-        (ok ? '' : '\n⚠️ Chưa đồng bộ được Google Sheets, hãy thử lại.'));
+      }
+      pendingImport = items;
+      if (isAdminLoggedIn) return processPendingImport();
+      showToast(`Nhận ${items.length} món từ Hút Sale – đăng nhập Quản trị để nạp`);
+      await handleAdminAccess();
+    }
+    async function processPendingImport() {
+      if (!pendingImport || !isAdminLoggedIn) return;
+      const items = pendingImport;
+      pendingImport = null;
+      const r = await importItems(items);
+      showImportNotice(r, items.length);
+      alert(`✅ Đã nạp ${items.length} món từ Hút Sale!\n` + importReportText(r));
     }
 
     async function resetToStandardProducts() {
@@ -2186,7 +2372,7 @@
         const ak = aliasKey(p.brand);
         const aliases = ak ? BRAND_ALIASES[ak].join(' ') : '';
         const optWords = hasOptions(p) ? p.options.items.map(it => it.v.join(' ')).join(' ') : '';
-        return { p, entry: makeEntry(`${p.title} ${p.brand} ${aliases} ${p.mall} ${p.category} ${p.subCategory} ${p.variant} ${optWords}`) };
+        return { p, entry: makeEntry(`${p.title} ${p.brand} ${aliases} ${p.mall} ${p.category} ${p.subCategory} ${p.volume || ''} ${p.variant} ${optWords}`) };
       });
       const brands = Array.from(brandMap.values()).map(b => ({
         label: b.label, count: b.count,
@@ -2816,7 +3002,8 @@
               <div class="font-extrabold text-slate-900 uppercase text-[11px] border-b border-slate-200 pb-1">📋 Thông số cơ bản:</div>
               <div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Thương hiệu:</span><span class="font-bold text-slate-800 text-right">${escapeHtml(item.brand || 'Chính hãng')}</span></div>
               <div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Phân loại / Quy cách:</span><span class="font-bold text-slate-800 text-right">${escapeHtml(multi ? optionsSummary(item) : (item.variant || 'Bản tiêu chuẩn'))}</span></div>
-              <div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Loại sản phẩm:</span><span class="font-bold text-slate-800 text-right">${escapeHtml(item.category || 'Mỹ phẩm / Thời trang')}</span></div>
+              <div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Loại sản phẩm:</span><span class="font-bold text-slate-800 text-right">${escapeHtml([item.category || 'Mỹ phẩm / Thời trang', item.subCategory && !/^skincare$/i.test(item.subCategory) ? item.subCategory : ''].filter(Boolean).join(' › '))}</span></div>
+              ${item.volume ? `<div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Dung tích / Khối lượng:</span><span class="font-bold text-slate-800 text-right">${escapeHtml(item.volume)}</span></div>` : ''}
               <div class="flex justify-between gap-3"><span class="text-slate-500 shrink-0">Nguồn sàn gốc:</span><span class="font-bold text-sky-600 text-right">${escapeHtml(item.mall || 'Korea Official')}</span></div>
               ${item.totalSetKrw && item.isRetailCalc ? `<div class="flex justify-between border-t border-slate-200 pt-1 text-[11px]"><span class="text-slate-400">Giá gốc cả set (${escapeHtml(item.unitCount)} món):</span><span class="font-bold text-slate-600">${Number(item.totalSetKrw).toLocaleString()} KRW</span></div>` : ''}
             </div>
@@ -3886,6 +4073,7 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
         case 'vchip': handleVariantChip(el); break;
         case 'order-variant': orderSelectedVariant(); break;
         case 'admin-variants': openVariantEditor(id); break;
+        case 'auto-sync': startAutoSync(id); break;
         case 'search-empty': { const run = searchEmptyActions[Number(id)]; if (run) run(); break; }
       }
     });
@@ -3970,13 +4158,17 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
       startAutoJourney();
       renderAllProductViews();
 
+      // Dữ liệu gửi thẳng từ Hút Sale ("📤 Đưa lên web HàBu")
+      const habuImport = (location.hash.match(/^#habu-import=(.+)$/) || [])[1];
+      if (habuImport) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
       const initialView = location.hash.replace('#', '');
       if (['catalog', 'lens', 'order'].includes(initialView)) {
         switchPageView(initialView, null, { fromHistory: true });
       }
       try { history.replaceState({ view: ['catalog', 'lens', 'order'].includes(initialView) ? initialView : 'intro', filter: currentCatalogFilter }, ''); } catch (e) {}
 
-      loadProducts();
+      const loading = loadProducts();
+      if (habuImport) Promise.resolve(loading).then(() => receiveHabuImport(habuImport));
     }
 
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initApp);
