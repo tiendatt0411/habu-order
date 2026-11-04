@@ -1713,6 +1713,10 @@
 
     // Kết quả bookmarklet dạng "chỉ cập nhật thông tin" cho hàng đã có: phân loại, loại sản phẩm, dung tích.
     // Giữ nguyên tên đã dịch, giá, ảnh đã sửa trên web.
+    // Phiên bản cách đọc: bản 2 đọc thẳng dữ liệu gốc của Olive Young → hàng đã lấy bằng bản cũ sẽ được lấy lại 1 lần
+    const INFO_VERSION = 2;
+    // Tên bị bản cũ đọc nhầm (lấy phải chữ của nút "Chia sẻ"/"Nhận coupon"...)
+    const BROKEN_TITLE = /공유하기|쿠폰 ?받기|Chia sẻ|Nhận (mã|phiếu)? ?giảm giá|\bshare\b/i;
     function applyInfoUpdates(updates) {
       const byKey = new Map();
       currentProductsList.forEach(p => { const k = productLinkKey(p.link); if (!k) return; if (!byKey.has(k)) byKey.set(k, []); byKey.get(k).push(p); });
@@ -1724,14 +1728,16 @@
         const opts = normalizeOptions(u.options);
         targets.forEach(p => {
           if (opts) { p.options = opts; delete p.optChecked; }
+          else if (u.exact) { delete p.options; p.optChecked = 1; }   // dữ liệu gốc của sàn nói không có phân loại → bỏ phân loại đọc nhầm trước đây
           else if (!hasOptions(p)) p.optChecked = 1;   // đã kiểm tra: sản phẩm không có phân loại
+          if (u.exact && u.title && BROKEN_TITLE.test(p.title || '')) p.title = String(u.title).slice(0, 200);
           const sub = String(p.subCategory || '').toLowerCase();
           if (u.subCategory && (u.catFrom === 'web' || !sub || sub === 'skincare')) {
             p.subCategory = String(u.subCategory).slice(0, 40);
             if (u.category) p.category = String(u.category).slice(0, 40);
           }
           if (u.volume) p.volume = String(u.volume).slice(0, 80);
-          if (u._habu === 'info') p.infoAt = Date.now();
+          if (u._habu === 'info') { p.infoAt = Date.now(); p.infoV = Number(u.infoV) || 1; }
         });
         opts ? stat.withOpt++ : stat.noOpt++;
       });
@@ -1759,10 +1765,10 @@
           if (old && old !== prod) {
             report.updated++;
             // Giữ phần đã làm trên web: tên đã dịch, phân loại / dung tích đã có (khi bản mới không có), ID cũ
-            if (VI_LETTERS.test(old.title || '') && !VI_LETTERS.test(prod.title || '')) prod.title = old.title;
-            if (!hasOptions(prod) && hasOptions(old)) prod.options = old.options;
+            if (VI_LETTERS.test(old.title || '') && !VI_LETTERS.test(prod.title || '') && !BROKEN_TITLE.test(old.title)) prod.title = old.title;
+            if (!hasOptions(prod) && hasOptions(old) && !prod.exact) prod.options = old.options;
             if (!prod.volume && old.volume) prod.volume = old.volume;
-            if (!prod.infoAt && old.infoAt) prod.infoAt = old.infoAt;
+            if (!prod.infoAt && old.infoAt) { prod.infoAt = old.infoAt; prod.infoV = old.infoV; }
             prod.id = old.id;
           } else if (!old) report.added++;
           unique.push(prod);
@@ -1870,7 +1876,7 @@
     function pendingSyncGroups() {
       const groups = new Map();
       currentProductsList.forEach(p => {
-        if (p.infoAt || !safeUrl(p.link)) return;
+        if ((p.infoAt && (Number(p.infoV) || 1) >= INFO_VERSION) || !safeUrl(p.link)) return;
         const site = siteOfLink(p.link);
         if (!site) return;
         if (!groups.has(site)) groups.set(site, { site, mall: p.mall || site, links: [] });
