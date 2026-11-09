@@ -980,9 +980,6 @@
             <button type="button" onclick="resetToStandardProducts()" class="text-xs font-bold text-sky-700 hover:underline cursor-pointer">
               🔄 Tải lại từ Google Sheets
             </button>
-            <button type="button" onclick="translateAllCatalogTitlesToVietnamese()" id="translateAllBtn" class="text-xs font-bold text-amber-900 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-3 py-1.5 rounded-full transition cursor-pointer">
-              🌐 Dịch tất cả tên SP sang Tiếng Việt
-            </button>
           </div>
           <button type="button" id="adminImportBtn" onclick="handleAdminImportSubmit()" class="px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs shadow-md transition cursor-pointer">
             ⚡ Nạp Lên Web &amp; Đồng Bộ Google Sheets
@@ -998,6 +995,21 @@
         <div id="autoSyncMalls" class="flex flex-wrap gap-2"></div>
         <div id="autoSyncStatus" class="hidden text-xs font-semibold leading-relaxed rounded-2xl p-3 bg-sky-50 border border-sky-100 text-sky-950"></div>
         <button type="button" onclick="copyLinksNeedingOptions()" class="text-[11px] text-slate-400 hover:text-slate-600 underline cursor-pointer">Cách dự phòng: chép danh sách link để dán tay vào Hút Sale</button>
+      </div>
+
+      <div id="aiTranslateBox" class="p-6 rounded-3xl bg-white border border-amber-200 space-y-3">
+        <div>
+          <p class="text-sm font-black text-amber-950 uppercase">🌐 Dịch tên sản phẩm bằng AI</p>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">AI (Gemini) dịch từ <b>tên gốc tiếng Hàn</b> theo kiểu tên của shop mỹ phẩm Việt: loại sản phẩm + hãng + dòng sản phẩm + dung tích. Hàng mới hút về sẽ tự dịch. Tên bạn tự sửa tay sẽ không bị AI ghi đè.</p>
+        </div>
+        <div id="aiTranslateSummary" class="text-xs text-slate-700 leading-relaxed"></div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" id="aiTranslateBtn" onclick="runAiTranslate()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-black text-xs shadow-sm transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">🌐 Dịch tên chưa dịch</button>
+          <button type="button" id="aiRetranslateBtn" onclick="retranslateSelected()" class="px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 font-bold text-xs transition cursor-pointer">🔁 Dịch lại các món đang tích chọn</button>
+          <button type="button" id="aiTranslateStop" onclick="stopAiTranslate()" class="hidden px-3 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs transition cursor-pointer">⏹ Dừng</button>
+        </div>
+        <div id="aiTranslateStatus" class="hidden text-xs font-semibold leading-relaxed rounded-2xl p-3 bg-amber-50 border border-amber-100 text-amber-950"></div>
+        <div id="aiTranslateReview" class="hidden"></div>
       </div>
 
       <div class="bg-white p-6 rounded-3xl border border-slate-200 space-y-4">
@@ -1609,6 +1621,7 @@
 
     function renderAdminManageList() {
       renderAutoSyncBox();
+      renderTrBox();
       const box = document.getElementById('adminProductManageList');
       if (!box) return;
       updateAdminCount();
@@ -1628,10 +1641,13 @@
               <input type="checkbox" class="w-4 h-4 shrink-0 text-sky-600 rounded border-slate-300 cursor-pointer" data-action="admin-select" data-id="${id}" ${checked} />
               <img src="${escapeHtml(safeUrl(p.image, DEFAULT_IMAGE))}" alt="" loading="lazy" class="w-12 h-12 rounded-xl object-cover bg-white shrink-0 border border-slate-200" onerror="this.onerror=null;this.src='${escapeHtml(DEFAULT_IMAGE)}'" />
               <div class="min-w-0">
-                <div class="font-bold text-slate-900 truncate">${escapeHtml(p.title)}</div>
-                <div class="text-[11px] text-slate-500 truncate">${escapeHtml(p.brand)} • ${escapeHtml(p.mall)} • <strong>${(p.krw || 0).toLocaleString()} ₩</strong>${hasOptions(p) ? ` • <span class="text-sky-700 font-bold">${p.options.items.length} phân loại</span>` : ''}</div>
+                <div class="font-bold text-slate-900 truncate" title="${escapeHtml(p.titleKo ? p.titleKo : p.title)}">${escapeHtml(p.title)}</div>
+                <div class="text-[11px] text-slate-500 truncate">${escapeHtml(p.brand)} • ${escapeHtml(p.mall)} • <strong>${(p.krw || 0).toLocaleString()} ₩</strong>${hasOptions(p) ? ` • <span class="text-sky-700 font-bold">${p.options.items.length} phân loại</span>` : ''}${trNeed(p) && trNeed(p) !== 'opts' ? ' • <span class="text-amber-700 font-bold">chờ dịch</span>' : ''}</div>
               </div>
             </label>
+            <button type="button" data-action="admin-rename" data-id="${id}" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-black text-xs shrink-0 transition cursor-pointer" title="Sửa tên tiếng Việt (AI sẽ không ghi đè)">
+              ✏️ Tên
+            </button>
             <button type="button" data-action="admin-variants" data-id="${id}" class="px-3 py-1.5 rounded-xl bg-sky-50 hover:bg-sky-100 text-sky-700 font-black text-xs shrink-0 transition cursor-pointer" title="Thêm / sửa phân loại (size, màu, dung tích...)">
               ✏️ Phân loại
             </button>
@@ -1714,7 +1730,8 @@
     // Kết quả bookmarklet dạng "chỉ cập nhật thông tin" cho hàng đã có: phân loại, loại sản phẩm, dung tích.
     // Giữ nguyên tên đã dịch, giá, ảnh đã sửa trên web.
     // Phiên bản cách đọc: bản 2 đọc thẳng dữ liệu gốc của Olive Young → hàng đã lấy bằng bản cũ sẽ được lấy lại 1 lần
-    const INFO_VERSION = 2;
+    // bản 3: lấy thêm tên gốc tiếng Hàn + tên hãng tiếng Anh (để AI dịch tên chuẩn)
+    const INFO_VERSION = 3;
     // Tên bị bản cũ đọc nhầm (lấy phải chữ của nút "Chia sẻ"/"Nhận coupon"...)
     const BROKEN_TITLE = /공유하기|쿠폰 ?받기|Chia sẻ|Nhận (mã|phiếu)? ?giảm giá|\bshare\b/i;
     function applyInfoUpdates(updates) {
@@ -1727,10 +1744,13 @@
         if (u.failed) { stat.failed++; return; }
         const opts = normalizeOptions(u.options);
         targets.forEach(p => {
-          if (opts) { p.options = opts; delete p.optChecked; }
+          if (opts) { p.options = JSON.parse(JSON.stringify(opts)); delete p.optChecked; applyOptVi(p); }
           else if (u.exact) { delete p.options; p.optChecked = 1; }   // dữ liệu gốc của sàn nói không có phân loại → bỏ phân loại đọc nhầm trước đây
           else if (!hasOptions(p)) p.optChecked = 1;   // đã kiểm tra: sản phẩm không có phân loại
           if (u.exact && u.title && BROKEN_TITLE.test(p.title || '')) p.title = String(u.title).slice(0, 200);
+          // Tên gốc tiếng Hàn & tên hãng tiếng Anh: để AI dịch lại từ tên gốc (tên tiếng Việt đang có giữ nguyên tới khi dịch xong)
+          if (u.titleKo && HANGUL_RE.test(u.titleKo) && (u.exact || !p.titleKo)) p.titleKo = String(u.titleKo).slice(0, 300);
+          if (u.brandEn) p.brandEn = String(u.brandEn).slice(0, 60);
           const sub = String(p.subCategory || '').toLowerCase();
           if (u.subCategory && (u.catFrom === 'web' || !sub || sub === 'skincare')) {
             p.subCategory = String(u.subCategory).slice(0, 40);
@@ -1757,7 +1777,13 @@
         const oldByKey = new Map();
         currentProductsList.forEach(p => { const k = getProductUniqueKey(p); if (!oldByKey.has(k)) oldByKey.set(k, p); });
         const seen = new Set(), unique = [];
-        products.map(sanitizeProductDetails).concat(currentProductsList).forEach(prod => {
+        const incoming = new Set();
+        products.map(sanitizeProductDetails).forEach(prod => {
+          // Tên tiếng Hàn từ sàn = tên gốc để AI dịch
+          if (!prod.titleKo && HANGUL_RE.test(prod.title || '') && !VI_LETTERS.test(prod.title || '')) prod.titleKo = prod.title;
+          incoming.add(prod);
+        });
+        [...incoming].concat(currentProductsList).forEach(prod => {
           const key = getProductUniqueKey(prod);
           if (seen.has(key)) return;
           seen.add(key);
@@ -1765,8 +1791,14 @@
           if (old && old !== prod) {
             report.updated++;
             // Giữ phần đã làm trên web: tên đã dịch, phân loại / dung tích đã có (khi bản mới không có), ID cũ
-            if (VI_LETTERS.test(old.title || '') && !VI_LETTERS.test(prod.title || '') && !BROKEN_TITLE.test(old.title)) prod.title = old.title;
+            const oldTranslated = (old.trAt || VI_LETTERS.test(old.title || '')) && !BROKEN_TITLE.test(old.title || '');
+            if (oldTranslated && (HANGUL_RE.test(prod.title || '') || !VI_LETTERS.test(prod.title || ''))) prod.title = old.title;
+            ['trSrc', 'trAt', 'trBy', 'optVi'].forEach(k => { if (old[k] !== undefined && prod[k] === undefined) prod[k] = old[k]; });
+            if (!prod.titleKo && old.titleKo) prod.titleKo = old.titleKo;
+            if (!prod.brandEn && old.brandEn) prod.brandEn = old.brandEn;
+            if (BAD_BRAND(prod.brand) && !BAD_BRAND(old.brand)) prod.brand = old.brand;
             if (!hasOptions(prod) && hasOptions(old) && !prod.exact) prod.options = old.options;
+            else applyOptVi(prod);
             if (!prod.volume && old.volume) prod.volume = old.volume;
             if (!prod.infoAt && old.infoAt) { prod.infoAt = old.infoAt; prod.infoV = old.infoV; }
             prod.id = old.id;
@@ -1782,6 +1814,7 @@
       renderAdminManageList();
       report.total = currentProductsList.length;
       if (!opts.skipUpload) report.synced = await uploadProductsToGoogleSheets();
+      scheduleAutoTranslate();
       return report;
     }
     function importReportText(r) {
@@ -1920,6 +1953,7 @@
         renderAllProductViews();
         renderAdminManageList();
         j.synced = await uploadProductsToGoogleSheets();
+        scheduleAutoTranslate();
       }
       setSyncStatus(tabClosed);
     }
@@ -2378,7 +2412,7 @@
         const ak = aliasKey(p.brand);
         const aliases = ak ? BRAND_ALIASES[ak].join(' ') : '';
         const optWords = hasOptions(p) ? p.options.items.map(it => it.v.join(' ')).join(' ') : '';
-        return { p, entry: makeEntry(`${p.title} ${p.brand} ${aliases} ${p.mall} ${p.category} ${p.subCategory} ${p.volume || ''} ${p.variant} ${optWords}`) };
+        return { p, entry: makeEntry(`${p.title} ${p.brand} ${p.brandEn || ''} ${aliases} ${p.mall} ${p.category} ${p.subCategory} ${p.volume || ''} ${p.variant} ${optWords} ${p.titleKo || ''}`) };
       });
       const brands = Array.from(brandMap.values()).map(b => ({
         label: b.label, count: b.count,
@@ -3969,99 +4003,300 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
       }
     }
 
-    // ---------- 13. DỊCH TÊN SẢN PHẨM SANG TIẾNG VIỆT (CHỈ ADMIN) ----------
-    // Trước đây nút này hiện cho mọi khách và ghi đè dữ liệu lên Google Sheets.
-    async function translateAllCatalogTitlesToVietnamese() {
-      if (!isAdminLoggedIn) { alert('Chỉ quản trị viên mới dùng được chức năng này.'); return; }
-      if (!currentProductsList.length) { alert('Kho hàng đang trống.'); return; }
-      const btn = document.getElementById('translateAllBtn');
-      if (btn) btn.disabled = true;
+    // ---------- 13. DỊCH TÊN SẢN PHẨM BẰNG AI (CHỈ ADMIN) ----------
+    // Cách cũ (từ điển + Google Dịch từng chữ) làm tên ngớ ngẩn và dịch chồng lên chính nó mỗi lần bấm.
+    // Cách mới: luôn giữ tên gốc tiếng Hàn (titleKo), gửi lên Apps Script → Gemini dịch 1 lần theo kiểu tên shop Việt.
+    //   trSrc: tên gốc (đã bỏ chữ quảng cáo trong [ ]) đã dùng để dịch → tên gốc đổi thì dịch lại
+    //   trBy:  'ai' | 'tay' (admin tự sửa → AI không ghi đè)  ·  optVi: bảng dịch tên phân loại { tiếng Hàn: tiếng Việt }
+    var HANGUL_RE = /[ㄱ-ㅎㅏ-ㅣ가-힣]/;
+    var TR_BATCH = 15;          // số món mỗi lần gọi AI
+    var TR_GAP_MS = 6500;       // bản miễn phí ~10 lần/phút → giãn cách cho an toàn
+    var trJob = null;
+    var trReview = [];
+    var trAutoTimer = null;
 
-      const dictionary = [
-        // Brand
-        { r: /메디앤서/gi, v: 'Medianswer' },
-        { r: /메디힐/gi, v: 'Mediheal' },
-        { r: /바이오던스/gi, v: 'Biodance' },
-        { r: /라네즈/gi, v: 'Laneige' },
-        { r: /닥터지/gi, v: 'Dr.G' },
-        { r: /어노브/gi, v: 'UNOVE' },
-        { r: /바이오힐보/gi, v: 'Bioheal BOH' },
-        { r: /달바/gi, v: "d'Alba" },
-        { r: /에스트라/gi, v: 'Aestura' },
-        { r: /일리윤/gi, v: 'Illiyoon' },
-        { r: /토니모리/gi, v: 'Tonymoly' },
-        { r: /오리온/gi, v: 'Orion' },
-        // Dòng sản phẩm & mặt nạ
-        { r: /비타\s*콜라겐/gi, v: 'Vita Collagen Trắng Da' },
-        { r: /포어\s*콜라겐/gi, v: 'Pore Collagen Se Khít Lỗ Chân Lông' },
-        { r: /카밍\s*콜라겐/gi, v: 'Calming Collagen Dịu Da' },
-        { r: /나노샷\s*마스크|나노샷/gi, v: 'Mặt Nạ Thạch Nanoshot' },
-        { r: /콜라겐\s*마스크/gi, v: 'Mặt Nạ Thạch Collagen' },
-        { r: /마스크팩|마스크/gi, v: 'Mặt Nạ Dưỡng Da' },
-        { r: /크림스킨/gi, v: 'Nước Hoa Hồng Dưỡng Ẩm Cream Skin' },
-        { r: /트리트먼트|헤어팩/gi, v: 'Ủ Tóc Phục Hồi' },
-        { r: /선크림|선블록/gi, v: 'Kem Chống Nắng' },
-        { r: /수딩크림|수딩\s*크림/gi, v: 'Kem Dưỡng Dịu Da Soothing Cream' },
-        { r: /세럼|앰플/gi, v: 'Tinh Chất Serum' },
-        // Quy cách số lượng
-        { r: /10\/10\+1매|10\+1매/gi, v: 'Hộp 10 Tặng 1 Miếng' },
-        { r: /7\+1매|7\+1\s*기획/gi, v: 'Hộp 7 Tặng 1 Miếng' },
-        { r: /100\+100매/gi, v: 'Set 2 Hộp (100+100 Miếng)' },
-        { r: /(\d+)\s*매(?:세트)?/gi, v: 'Hộp $1 Miếng' },
-        { r: /포어\/카밍\s*택1/gi, v: 'Tùy Chọn Pore hoặc Calming' },
-        { r: /(\d+)\s*종택1|택1/gi, v: 'Tùy Chọn Phân Loại' },
-        { r: /2종/gi, v: 'Set 2 Loại' },
-        { r: /기획세트|기획/gi, v: 'Set Quà Tặng' },
-        { r: /리미티드/gi, v: 'Bản Giới Hạn' }
-      ];
-      const HANGUL = /[ㄱ-ㅎㅏ-ㅣ가-힣]/;
-
-      async function translateFallback(text) {
-        try {
-          const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=ko&tl=vi&dt=t&q=${encodeURIComponent(text)}`);
-          const data = await res.json();
-          let out = '';
-          if (data && data[0]) data[0].forEach(item => { if (item[0]) out += item[0]; });
-          return out || text;
-        } catch (e) {
-          return text;
-        }
+    function trKey(s) { return String(s || '').replace(/\[[^\]]*\]/g, ' ').replace(/\s+/g, ' ').trim(); }
+    function trSource(p) {
+      if (p.titleKo) return { mode: 'ko', src: String(p.titleKo) };
+      const t = String(p.title || '');
+      if (HANGUL_RE.test(t) && !VI_LETTERS.test(t)) return { mode: 'ko', src: t };   // chưa dịch lần nào
+      return { mode: 'clean', src: t };                                               // chỉ còn tên tiếng Việt cũ
+    }
+    function optHangulValues(p) {
+      if (!hasOptions(p)) return [];
+      const map = p.optVi || {}, vals = new Set();
+      p.options.groups.forEach(g => { if (HANGUL_RE.test(g) && !(g in map)) vals.add(g); });
+      p.options.items.forEach(it => it.v.forEach(v => { if (HANGUL_RE.test(v) && !(v in map)) vals.add(v); }));
+      return [...vals].slice(0, 40);
+    }
+    // Món này cần dịch gì: 'ko' (dịch từ tên gốc), 'clean' (dọn tên tiếng Việt cũ), 'opts' (chỉ tên phân loại), '' (xong)
+    function trNeed(p) {
+      const s = trSource(p);
+      if (p.trBy !== 'tay' && s.src) {
+        if (s.mode === 'ko' && p.trSrc !== trKey(s.src)) return 'ko';
+        if (s.mode === 'clean' && !p.trAt) return 'clean';
       }
-
-      let done = 0;
-      for (const p of currentProductsList) {
-        done++;
-        if (btn) btn.textContent = `⏳ Đang dịch ${done}/${currentProductsList.length}...`;
-        let t = p.title || '';
-        let b = p.brand || '';
-        t = t.replace(/\[[^\]]*\]/g, ' ');   // dọn chữ quảng cáo trong [ ]
-        dictionary.forEach(rule => {
-          t = t.replace(rule.r, rule.v);
-          b = b.replace(rule.r, rule.v);
+      return optHangulValues(p).length ? 'opts' : '';
+    }
+    function applyOptVi(p) {
+      if (!hasOptions(p) || !p.optVi) return;
+      const m = p.optVi;
+      p.options.groups = p.options.groups.map(g => m[g] || g);
+      p.options.items.forEach(it => { it.v = it.v.map(v => m[v] || v); });
+    }
+    function mergeOptVi(p, asked, pairs) {
+      const m = Object.assign({}, p.optVi || {});
+      (pairs || []).forEach(o => { if (o && o.ko && o.vi && asked.includes(o.ko)) m[o.ko] = String(o.vi).slice(0, 80); });
+      asked.forEach(v => { if (!(v in m)) m[v] = v; });   // AI bỏ sót → giữ tiếng Hàn, không hỏi lại mãi
+      if (hasOptions(p)) {   // 2 phân loại khác nhau không được dịch ra cùng 1 tên
+        p.options.groups.forEach((g, i) => {
+          const byVi = new Map();
+          [...new Set(p.options.items.map(it => it.v[i]))].forEach(v => {
+            const k = String(m[v] || v).toLowerCase();
+            if (!byVi.has(k)) byVi.set(k, []);
+            byVi.get(k).push(v);
+          });
+          byVi.forEach(list => { if (list.length > 1) list.forEach(v => { m[v] = v; }); });
         });
-        if (HANGUL.test(t)) t = await translateFallback(t);
-        t = t.replace(/[ㄱ-ㅎㅏ-ㅣ가-힣]/g, '')
-             .replace(/[\+\,\/]\s*[\+\,\/]/g, ', ')
-             .replace(/^[\s\/\+\,\-]+/, '')
-             .replace(/[\s\/\+\,\-]+$/, '')
-             .replace(/\s+/g, ' ')
-             .trim();
-        if (b && t.toLowerCase().startsWith(b.toLowerCase())) t = t.substring(b.length).trim();
-        p.brand = b.trim() || 'Chính hãng';
-        p.title = `${p.brand} ${t}`.trim();
-        // Chỉ thay phân loại khi đang trống hoặc còn chữ Hàn (trước đây ghi đè mất phân loại đã cào)
-        if (!p.variant || p.variant === 'Chính hãng từ Hàn Quốc' || HANGUL.test(p.variant)) {
-          p.variant = 'Nguyên hộp / Nguyên set chính hãng';
-        }
       }
+      p.optVi = m;
+      applyOptVi(p);
+    }
+    function BAD_BRAND(b) { return !b || HANGUL_RE.test(b) || /^(olive ?young|올리브영|chính hãng|coupang|kream|musinsa)$/i.test(String(b).trim()); }
+    function trRequestItem(p, need) {
+      const s = trSource(p);
+      const it = { id: String(p.id), mode: s.mode, src: s.src };
+      if (p.brand && !/^(olive ?young|chính hãng)$/i.test(p.brand) && p.brand !== p.mall) it.brand = p.brand;
+      if (p.brandEn) it.brandEn = p.brandEn;
+      const type = [p.category, p.subCategory].filter(Boolean).join(' › ');
+      if (type) it.type = type;
+      const opts = optHangulValues(p);
+      if (opts.length) it.opts = opts;
+      return it;
+    }
+    function applyTranslation(p, r, need, req) {
+      if (need !== 'opts' && r.vi) {
+        const s = trSource(p), before = p.title;
+        if (s.mode === 'ko' && !p.titleKo) p.titleKo = s.src;
+        p.title = String(r.vi).slice(0, 160);
+        p.trSrc = trKey(s.src);
+        p.trAt = Date.now();
+        p.trBy = 'ai';
+        if (r.brand && (BAD_BRAND(p.brand) || p.brandEn)) p.brand = String(r.brand).slice(0, 60);
+        if (before !== p.title) trReview.push({ id: String(p.id), before, ko: p.titleKo || '' });
+      }
+      if (req.opts && req.opts.length) mergeOptVi(p, req.opts, r.opts);
+    }
 
+    function trSleep(ms) { return new Promise(res => setTimeout(res, ms)); }
+    async function runAiTranslate(opts = {}) {
+      if (!isAdminLoggedIn || !adminKey) { if (!opts.auto) alert('Chỉ quản trị viên mới dùng được chức năng này.'); return; }
+      if (trJob && trJob.running) { if (!opts.auto) showToast('AI đang dịch, chờ chút nhé…'); return; }
+      const order = { ko: 0, opts: 1, clean: 2, force: 0 };
+      let queue;
+      if (opts.ids) {
+        queue = currentProductsList.filter(p => opts.ids.has(String(p.id))).map(p => ({ id: String(p.id), need: 'force' }));
+      } else {
+        queue = currentProductsList.map(p => ({ id: String(p.id), need: trNeed(p) }))
+          .filter(q => q.need && (!opts.auto || q.need === 'ko' || q.need === 'opts'));
+      }
+      queue.sort((a, b) => order[a.need] - order[b.need]);
+      if (!queue.length) { if (!opts.auto) showToast('Không còn tên nào cần dịch ✓'); renderTrBox(); return; }
+
+      trJob = { running: true, stop: false, auto: !!opts.auto, total: queue.length, done: 0, changed: 0, missed: 0, errors: 0, waits: 0, msg: '', model: '' };
+      trReview = [];
+      renderTrBox();
+      let sinceUpload = 0;
+      for (let i = 0; i < queue.length && !trJob.stop;) {
+        const batch = queue.slice(i, i + TR_BATCH).filter(q => findProduct(q.id));
+        const reqs = batch.map(q => trRequestItem(findProduct(q.id), q.need));
+        let res;
+        try { res = await postToSheet({ action: 'translate_titles', adminKey, items: reqs }); }
+        catch (e) { res = { status: 'network', message: 'Mất kết nối' }; }
+        res = res || {};
+        if (res.status === 'unauthorized') {
+          trJob.msg = 'Mật khẩu quản trị không còn đúng – hãy đăng nhập lại.';
+          break;
+        }
+        if (res.status === 'no_key' || res.status === 'bad_key') { trJob.fatal = res.status; trJob.msg = res.message || ''; break; }
+        if (res.status === 'rate_limited') {
+          const wait = Math.min(Math.max(Number(res.retryAfter) || 30, 5), 900);
+          if (wait > 120 || ++trJob.waits > 8) { trJob.paused = true; break; }
+          for (let s = wait; s > 0 && !trJob.stop; s--) { trJob.msg = `Gemini bảo dịch chậm lại – tự chạy tiếp sau ${s} giây…`; renderTrStatus(); await trSleep(1000); }
+          trJob.msg = '';
+          continue;
+        }
+        if (res.status !== 'success') {
+          if (++trJob.errors >= 3) { trJob.msg = 'Lỗi khi gọi AI: ' + (res.message || res.status || 'không rõ'); break; }
+          trJob.msg = 'AI trả lời lỗi, đang thử lại…'; renderTrStatus();
+          await trSleep(5000);
+          continue;
+        }
+        trJob.errors = 0; trJob.msg = ''; trJob.model = res.model || trJob.model;
+        const byId = new Map((res.items || []).map(r => [String(r.id), r]));
+        batch.forEach((q, k) => {
+          const p = findProduct(q.id), r = byId.get(q.id);
+          if (!p) return;
+          if (!r) { trJob.missed++; return; }   // AI bỏ sót → lần bấm sau dịch lại
+          const n = trReview.length;
+          applyTranslation(p, r, q.need, reqs[k]);
+          if (trReview.length > n || (reqs[k].opts && reqs[k].opts.length)) trJob.changed++;
+        });
+        trJob.done += batch.length;
+        i += TR_BATCH;
+        saveProductsToStorage();
+        sinceUpload += batch.length;
+        if (sinceUpload >= 60) { sinceUpload = 0; uploadProductsToGoogleSheets(); }
+        renderTrStatus();
+        if (i < queue.length && !trJob.stop) await trSleep(TR_GAP_MS);
+      }
+      trJob.running = false;
+      searchIndexCache.list = null;
+      renderAllProductViews();
+      renderAdminManageList();
+      if (trJob.changed) { trJob.saving = true; renderTrBox(); trJob.synced = await uploadProductsToGoogleSheets(); trJob.saving = false; }
+      if (trJob.msg && /đăng nhập lại/.test(trJob.msg)) { alert(trJob.msg); logoutAdmin(); }
+      renderTrBox();
+      if (trJob.auto && trJob.changed) showToast(`AI đã dịch ${trJob.changed} tên mới ✓`);
+    }
+    function stopAiTranslate() { if (trJob && trJob.running) { trJob.stop = true; trJob.msg = 'Đang dừng sau lô hiện tại…'; renderTrStatus(); } }
+    function retranslateSelected() {
+      if (!selectedProductIds.size) { alert('Hãy tích chọn các món muốn AI dịch lại ở danh sách "Quản lý kho" bên dưới.'); return; }
+      if (!confirm(`AI sẽ dịch lại ${selectedProductIds.size} món đã chọn (kể cả tên bạn đã sửa tay). Tiếp tục?`)) return;
+      runAiTranslate({ ids: new Set(selectedProductIds) });
+    }
+    // Hàng mới hút về / vừa lấy được tên gốc → tự dịch (không cần bấm)
+    function scheduleAutoTranslate() {
+      if (!isAdminLoggedIn || (trJob && (trJob.running || trJob.fatal || trJob.paused))) return;
+      clearTimeout(trAutoTimer);
+      trAutoTimer = setTimeout(() => runAiTranslate({ auto: true }), 1500);
+    }
+
+    function trCounts() {
+      const c = { ko: 0, clean: 0, opts: 0, cleanOY: 0 };
+      currentProductsList.forEach(p => {
+        const n = trNeed(p);
+        if (n) c[n]++;
+        if (n === 'clean' && /oliveyoung/.test(siteOfLink(p.link) || '') && !(p.infoAt && (Number(p.infoV) || 1) >= INFO_VERSION)) c.cleanOY++;   // 🔄 sẽ lấy được tên gốc
+      });
+      return c;
+    }
+    function renderTrBox() {
+      const sum = document.getElementById('aiTranslateSummary');
+      if (!sum) return;
+      const c = trCounts(), total = c.ko + c.clean + c.opts;
+      const btn = document.getElementById('aiTranslateBtn');
+      const running = !!(trJob && trJob.running);
+      if (btn) { btn.disabled = running || !total; btn.textContent = running ? '⏳ AI đang dịch…' : (total ? `🌐 Dịch ${total} món chưa dịch` : '✓ Đã dịch hết'); }
+      const stop = document.getElementById('aiTranslateStop');
+      if (stop) stop.classList.toggle('hidden', !running);
+      const parts = [];
+      if (c.ko) parts.push(`<b>${c.ko}</b> món có tên gốc tiếng Hàn`);
+      if (c.clean) parts.push(`<b>${c.clean}</b> món chỉ còn tên tiếng Việt cũ (AI sẽ dọn lại cho gọn, đúng tên hãng)`);
+      if (c.opts) parts.push(`<b>${c.opts}</b> món chỉ cần dịch tên phân loại`);
+      sum.innerHTML = total
+        ? 'Chờ dịch: ' + parts.join(' · ') + '.' +
+          (c.cleanOY ? `<br><span class="text-sky-800">💡 Nên bấm <b>🔄 Olive Young</b> ở khung trên trước: web lấy lại tên gốc tiếng Hàn cho ${c.cleanOY} món Olive Young → AI dịch chuẩn hơn hẳn so với dọn tên cũ.</span>` : '')
+        : 'Tất cả tên sản phẩm đã được dịch ✓';
+      renderTrStatus();
+      renderTrReview();
+    }
+    function renderTrStatus() {
+      const el = document.getElementById('aiTranslateStatus');
+      if (!el) return;
+      const j = trJob;
+      if (!j) { el.classList.add('hidden'); return; }
+      el.classList.remove('hidden');
+      let h;
+      if (j.fatal === 'no_key') h = '⚠️ Chưa cài khoá Gemini trên Google Apps Script. Làm theo hướng dẫn hàm <b>CAI_KHOA_GEMINI</b> trong Apps Script (lấy khoá miễn phí ở aistudio.google.com/apikey), rồi Deploy bản mới.';
+      else if (j.fatal === 'bad_key') h = '⚠️ Khoá Gemini không dùng được: ' + escapeHtml(j.msg) + '<br>Hãy tạo khoá mới ở aistudio.google.com/apikey và chạy lại hàm CAI_KHOA_GEMINI.';
+      else if (j.running) h = `⏳ ${j.auto ? 'Tự dịch hàng mới' : 'AI đang dịch'}: <b>${j.done}/${j.total}</b> món` + (j.msg ? ` · ${escapeHtml(j.msg)}` : ' · có thể làm việc khác, đừng đóng trang này.');
+      else if (j.saving) h = '⏳ Đang lưu lên Google Sheets…';
+      else {
+        h = `✅ Xong: AI đã dịch <b>${j.changed}</b>/${j.total} món` + (j.model ? ` (${escapeHtml(j.model)})` : '') + '.';
+        if (j.missed) h += ` ${j.missed} món AI bỏ sót – bấm dịch lần nữa.`;
+        if (j.paused) h += ' ⏸ Gemini báo đã hết lượt miễn phí lúc này – để vài tiếng (hoặc mai) bấm tiếp, web nhớ chỗ đang dở.';
+        else if (j.stop) h += ' (Đã dừng theo yêu cầu – bấm dịch để làm tiếp.)';
+        if (j.msg) h += ' ' + escapeHtml(j.msg);
+        if (j.changed) h += j.synced === false ? ' ⚠️ Chưa lưu được lên Google Sheets, hãy bấm dịch lại để lưu.' : ' Đã lưu lên Google Sheets.';
+      }
+      el.innerHTML = h;
+    }
+    function renderTrReview() {
+      const box = document.getElementById('aiTranslateReview');
+      if (!box) return;
+      const rows = trReview.map(r => ({ r, p: findProduct(r.id) })).filter(x => x.p);
+      if (!rows.length || (trJob && trJob.running)) { box.classList.add('hidden'); box.innerHTML = ''; return; }
+      const typing = {};   // giữ chữ đang gõ dở khi danh sách được vẽ lại
+      box.querySelectorAll('[data-tr-input]').forEach(inp => { typing[inp.getAttribute('data-tr-input')] = inp.value; });
+      const focusId = document.activeElement && document.activeElement.getAttribute && document.activeElement.getAttribute('data-tr-input');
+      box.classList.remove('hidden');
+      const shown = rows.slice(0, 300);
+      box.innerHTML = `
+        <div class="flex items-center justify-between gap-2 pt-1">
+          <p class="text-xs font-black text-slate-900">Xem lại ${rows.length} tên vừa dịch – sửa trực tiếp trong ô nếu chưa ưng:</p>
+          <button type="button" onclick="trReview=[];renderTrReview()" class="text-[11px] text-slate-400 hover:text-slate-600 underline cursor-pointer">Ẩn</button>
+        </div>
+        <div class="max-h-[480px] overflow-y-auto space-y-2 pr-1 mt-2">` + shown.map(({ r, p }) => `
+          <div class="p-2.5 rounded-2xl bg-slate-50 border border-slate-200 flex gap-3 items-start" data-tr-row="${escapeHtml(r.id)}">
+            <img src="${escapeHtml(safeUrl(p.image, DEFAULT_IMAGE))}" alt="" loading="lazy" class="w-11 h-11 rounded-xl object-cover bg-white shrink-0 border border-slate-200" onerror="this.onerror=null;this.src='${escapeHtml(DEFAULT_IMAGE)}'" />
+            <div class="min-w-0 flex-1 space-y-1">
+              ${r.ko ? `<div class="text-[11px] text-slate-500 truncate" title="${escapeHtml(r.ko)}">🇰🇷 ${escapeHtml(r.ko)}</div>` : ''}
+              <div class="text-[11px] text-slate-400 line-through truncate" title="${escapeHtml(r.before)}">${escapeHtml(r.before)}</div>
+              <input type="text" data-tr-input="${escapeHtml(r.id)}" value="${escapeHtml(p.title)}" maxlength="160" class="w-full px-2.5 py-1.5 rounded-lg border border-slate-300 text-xs font-bold text-slate-900 bg-white outline-none focus:ring-2 focus:ring-amber-400" />
+            </div>
+            <button type="button" data-action="tr-undo" data-id="${escapeHtml(r.id)}" class="px-2 py-1 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-[11px] font-bold text-slate-600 shrink-0 cursor-pointer" title="Dùng lại tên cũ">↩️ Tên cũ</button>
+          </div>`).join('') + `
+        </div>
+        ${rows.length > shown.length ? `<p class="text-[11px] text-slate-400 mt-1">Hiện 300 món đầu, các món còn lại sửa bằng nút ✏️ Tên trong danh sách kho.</p>` : ''}
+        <button type="button" onclick="saveTrReviewEdits()" class="mt-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-700 text-white font-black text-xs cursor-pointer">💾 Lưu các tên đã sửa</button>`;
+      box.querySelectorAll('[data-tr-input]').forEach(inp => {
+        const k = inp.getAttribute('data-tr-input');
+        if (k in typing) inp.value = typing[k];
+        if (k === focusId) inp.focus();
+      });
+    }
+    function markManualTitle(p, title) {
+      p.title = String(title).replace(/\s+/g, ' ').trim().slice(0, 160);
+      p.trBy = 'tay';
+      p.trAt = Date.now();
+      p.trSrc = trKey(trSource(p).src);
+    }
+    async function saveTrReviewEdits() {
+      let n = 0;
+      document.querySelectorAll('[data-tr-input]').forEach(inp => {
+        const p = findProduct(inp.getAttribute('data-tr-input'));
+        const v = inp.value.replace(/\s+/g, ' ').trim();
+        if (p && v && v !== p.title) { markManualTitle(p, v); n++; }
+      });
+      if (!n) { showToast('Chưa sửa tên nào'); return; }
+      await saveTitleChanges(`Đã lưu ${n} tên đã sửa ✓`);
+    }
+    async function undoTranslation(id) {
+      const r = trReview.find(x => x.id === String(id)), p = findProduct(id);
+      if (!r || !p) return;
+      markManualTitle(p, r.before);
+      trReview = trReview.filter(x => x !== r);
+      await saveTitleChanges('Đã dùng lại tên cũ ✓');
+    }
+    async function renameProductByAdmin(id) {
+      if (!isAdminLoggedIn) return;
+      const p = findProduct(id);
+      if (!p) return;
+      const v = prompt((p.titleKo ? `Tên gốc: ${p.titleKo}\n\n` : '') + 'Tên tiếng Việt hiển thị trên web:', p.title);
+      if (v == null) return;
+      const t = v.replace(/\s+/g, ' ').trim();
+      if (!t || t === p.title) return;
+      markManualTitle(p, t);
+      await saveTitleChanges('Đã đổi tên ✓');
+    }
+    async function saveTitleChanges(msg) {
+      searchIndexCache.list = null;
       saveProductsToStorage();
       renderAllProductViews();
       renderAdminManageList();
-      if (btn) btn.textContent = '⏳ Đang đồng bộ Google Sheets...';
       const ok = await uploadProductsToGoogleSheets();
-      if (btn) { btn.disabled = false; btn.textContent = '🌐 Dịch tất cả tên SP sang Tiếng Việt'; }
-      alert(ok ? '🎉 Đã dịch xong toàn bộ tên sản phẩm sang tiếng Việt!' : 'Đã dịch trên web nhưng chưa đồng bộ được Google Sheets, hãy thử lại.');
+      showToast(ok ? msg : 'Đã sửa trên web nhưng chưa lưu được Google Sheets');
     }
 
     // ---------- 14. SỰ KIỆN CHUNG ----------
@@ -4079,6 +4314,8 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
         case 'vchip': handleVariantChip(el); break;
         case 'order-variant': orderSelectedVariant(); break;
         case 'admin-variants': openVariantEditor(id); break;
+        case 'admin-rename': renameProductByAdmin(id); break;
+        case 'tr-undo': undoTranslation(id); break;
         case 'auto-sync': startAutoSync(id); break;
         case 'search-empty': { const run = searchEmptyActions[Number(id)]; if (run) run(); break; }
       }
