@@ -1753,7 +1753,8 @@
     const INFO_VERSION = 4;
     // bản 4: Hút Sale đọc được size/màu của Nike, Musinsa, Crocs… → các sàn đó lấy lại 1 lần; Olive Young đủ từ bản 3
     const infoVersionFor = link => (/oliveyoung/.test(String(link || '')) ? 3 : INFO_VERSION);
-    const infoDone = p => !!(p.infoAt && (Number(p.infoV) || 1) >= infoVersionFor(p.link));
+    // Olive Young: phải đọc được dữ liệu gốc (exact) mới tính là xong – đọc kiểu đoán giao diện thì hay sót phân loại → lấy lại
+    const infoDone = p => !!(p.infoAt && (Number(p.infoV) || 1) >= infoVersionFor(p.link) && (p.exact || !/oliveyoung/.test(String(p.link || ''))));
     // Tên bị bản cũ đọc nhầm (lấy phải chữ của nút "Chia sẻ"/"Nhận coupon"...)
     const BROKEN_TITLE = /공유하기|쿠폰 ?받기|Chia sẻ|Nhận (mã|phiếu)? ?giảm giá|\bshare\b/i;
     function applyInfoUpdates(updates) {
