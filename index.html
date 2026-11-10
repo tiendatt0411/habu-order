@@ -1012,6 +1012,18 @@
         <div id="aiTranslateReview" class="hidden"></div>
       </div>
 
+      <div id="imgCheckBox" class="p-6 rounded-3xl bg-white border border-slate-200 space-y-3">
+        <div>
+          <p class="text-sm font-black text-slate-900 uppercase">🖼 Ảnh sản phẩm</p>
+          <p class="text-xs text-slate-500 mt-1 leading-relaxed">Mỗi lần nạp hàng từ Hút Sale, web tự mở thử ảnh từng món mới. Món nào ảnh không hiện (link hỏng, sàn chặn) sẽ hiện ở đây để bạn đổi ảnh.</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" id="imgCheckBtn" onclick="checkProductImages(currentProductsList)" class="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 font-bold text-xs transition cursor-pointer disabled:opacity-50">🖼 Kiểm tra ảnh cả kho</button>
+        </div>
+        <div id="imgCheckStatus" class="hidden text-xs font-semibold leading-relaxed rounded-2xl p-3 bg-slate-50 border border-slate-100 text-slate-800"></div>
+        <div id="imgCheckList" class="hidden max-h-[420px] overflow-y-auto space-y-2 pr-1"></div>
+      </div>
+
       <div class="bg-white p-6 rounded-3xl border border-slate-200 space-y-4">
         <div class="pb-2 border-b border-slate-100">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 w-full">
@@ -1417,6 +1429,12 @@
     }
 
     // ---------- 4. DỮ LIỆU SẢN PHẨM ----------
+    // Hút Sale bản cũ tách nhầm link ảnh Nike (link có dấu phẩy "c_limit,w_592,f_auto") → ra link hỏng
+    // dạng https://www.nike.com/kr/w/fl_layer_apply/<mã ảnh>/<tên>.png → dựng lại link ảnh thật trên static.nike.com
+    function fixImageUrl(u) {
+      const m = String(u || '').match(/^https?:\/\/(?:www\.)?nike\.com\/.*?\/fl_layer_apply\/([^/?#]+\/[^/?#]+)$/i);
+      return m ? 'https://static.nike.com/a/images/c_limit,w_592,f_auto/t_product_v1/' + m[1] : u;
+    }
     function sanitizeProductDetails(item) {
       item = item || {};
       let krw = parseKrw(item.krw);
@@ -1442,7 +1460,7 @@
         salesCount: Number(item.salesCount) || 0,
         variant: item.variant || 'Chính hãng từ Hàn Quốc',
         link: item.link || '',
-        image: item.image || DEFAULT_IMAGE,
+        image: fixImageUrl(item.image) || DEFAULT_IMAGE,
         benefit: item.benefit || 'Hàng chính hãng nội địa Hàn Quốc.',
         benefits: item.benefits || ['Sản phẩm nội địa Hàn Quốc chính hãng từ Olive Young/KREAM.'],
         targetAudience: item.targetAudience || 'Mọi loại da, phù hợp với thị hiếu người dùng châu Á.',
@@ -1622,6 +1640,7 @@
     function renderAdminManageList() {
       renderAutoSyncBox();
       renderTrBox();
+      renderImgCheck();
       const box = document.getElementById('adminProductManageList');
       if (!box) return;
       updateAdminCount();
@@ -1731,7 +1750,10 @@
     // Giữ nguyên tên đã dịch, giá, ảnh đã sửa trên web.
     // Phiên bản cách đọc: bản 2 đọc thẳng dữ liệu gốc của Olive Young → hàng đã lấy bằng bản cũ sẽ được lấy lại 1 lần
     // bản 3: lấy thêm tên gốc tiếng Hàn + tên hãng tiếng Anh (để AI dịch tên chuẩn)
-    const INFO_VERSION = 3;
+    const INFO_VERSION = 4;
+    // bản 4: Hút Sale đọc được size/màu của Nike, Musinsa, Crocs… → các sàn đó lấy lại 1 lần; Olive Young đủ từ bản 3
+    const infoVersionFor = link => (/oliveyoung/.test(String(link || '')) ? 3 : INFO_VERSION);
+    const infoDone = p => !!(p.infoAt && (Number(p.infoV) || 1) >= infoVersionFor(p.link));
     // Tên bị bản cũ đọc nhầm (lấy phải chữ của nút "Chia sẻ"/"Nhận coupon"...)
     const BROKEN_TITLE = /공유하기|쿠폰 ?받기|Chia sẻ|Nhận (mã|phiếu)? ?giảm giá|\bshare\b/i;
     function applyInfoUpdates(updates) {
@@ -1815,6 +1837,9 @@
       report.total = currentProductsList.length;
       if (!opts.skipUpload) report.synced = await uploadProductsToGoogleSheets();
       scheduleAutoTranslate();
+      // Thử mở ảnh của các món vừa nạp (chạy nền), món nào ảnh không hiện thì báo
+      const justKeys = new Set(products.map(getProductUniqueKey));
+      setTimeout(() => checkProductImages(currentProductsList.filter(p => justKeys.has(getProductUniqueKey(p))), { auto: true }), 300);
       return report;
     }
     function importReportText(r) {
@@ -1909,7 +1934,7 @@
     function pendingSyncGroups() {
       const groups = new Map();
       currentProductsList.forEach(p => {
-        if ((p.infoAt && (Number(p.infoV) || 1) >= INFO_VERSION) || !safeUrl(p.link)) return;
+        if (infoDone(p) || !safeUrl(p.link)) return;
         const site = siteOfLink(p.link);
         if (!site) return;
         if (!groups.has(site)) groups.set(site, { site, mall: p.mall || site, links: [] });
@@ -4177,7 +4202,7 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
       currentProductsList.forEach(p => {
         const n = trNeed(p);
         if (n) c[n]++;
-        if (n === 'clean' && /oliveyoung/.test(siteOfLink(p.link) || '') && !(p.infoAt && (Number(p.infoV) || 1) >= INFO_VERSION)) c.cleanOY++;   // 🔄 sẽ lấy được tên gốc
+        if (n === 'clean' && /oliveyoung/.test(siteOfLink(p.link) || '') && !infoDone(p)) c.cleanOY++;   // 🔄 sẽ lấy được tên gốc
       });
       return c;
     }
@@ -4299,6 +4324,91 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
       showToast(ok ? msg : 'Đã sửa trên web nhưng chưa lưu được Google Sheets');
     }
 
+    // ---------- 13b. KIỂM TRA ẢNH SẢN PHẨM (CHỈ ADMIN) ----------
+    // Mở thử ảnh như khách xem; ảnh hỏng / sàn chặn / quá nhỏ → đưa vào danh sách để admin đổi ảnh
+    var imgCheck = { running: false, done: 0, total: 0, bad: [], at: 0 };
+    function testImage(url) {
+      return new Promise(res => {
+        if (!url || url === DEFAULT_IMAGE || !/^https?:\/\//i.test(url)) return res(false);
+        const im = new Image();
+        const t = setTimeout(() => { im.onload = im.onerror = null; res(false); }, 15000);
+        im.onload = () => { clearTimeout(t); res(im.naturalWidth >= 40 && im.naturalHeight >= 40); };
+        im.onerror = () => { clearTimeout(t); res(false); };
+        im.src = url;
+      });
+    }
+    async function checkProductImages(list, opts = {}) {
+      if (!isAdminLoggedIn || imgCheck.running) return;
+      list = (list || []).filter(Boolean);
+      if (!list.length) return;
+      const ids = new Set(list.map(p => String(p.id)));
+      imgCheck = { running: true, done: 0, total: list.length, bad: imgCheck.bad.filter(id => !ids.has(id)), at: 0, auto: !!opts.auto };
+      renderImgCheck();
+      let k = 0;
+      const worker = async () => {
+        while (k < list.length) {
+          const p = list[k++];
+          const fixed = fixImageUrl(p.image);
+          if (fixed !== p.image) p.image = fixed;
+          const good = await testImage(p.image);
+          if (!good) imgCheck.bad.push(String(p.id));
+          imgCheck.done++;
+          if (imgCheck.done % 5 === 0) renderImgCheck();
+        }
+      };
+      await Promise.all(Array.from({ length: 6 }, worker));
+      imgCheck.running = false;
+      imgCheck.at = Date.now();
+      imgCheck.bad = [...new Set(imgCheck.bad)].filter(id => findProduct(id));
+      renderImgCheck();
+      const newBad = imgCheck.bad.filter(id => ids.has(id)).length;
+      if (opts.auto && newBad) showToast(`⚠️ ${newBad} món vừa nạp không hiện được ảnh – xem khung "🖼 Ảnh sản phẩm"`);
+      else if (!opts.auto) showToast(newBad ? `⚠️ ${newBad} món không hiện được ảnh` : `Ảnh của ${list.length} món đều hiện tốt ✓`);
+    }
+    function renderImgCheck() {
+      const st = document.getElementById('imgCheckStatus'), box = document.getElementById('imgCheckList'), btn = document.getElementById('imgCheckBtn');
+      if (!st || !box) return;
+      if (btn) { btn.disabled = imgCheck.running; btn.textContent = imgCheck.running ? '⏳ Đang kiểm tra ảnh…' : `🖼 Kiểm tra ảnh cả kho (${currentProductsList.length} món)`; }
+      const bad = imgCheck.bad.map(id => findProduct(id)).filter(Boolean);
+      if (!imgCheck.running && !imgCheck.at && !bad.length) { st.classList.add('hidden'); box.classList.add('hidden'); return; }
+      st.classList.remove('hidden');
+      st.innerHTML = imgCheck.running
+        ? `⏳ Đang mở thử ảnh ${imgCheck.done}/${imgCheck.total} món…`
+        : (bad.length ? `⚠️ <b>${bad.length}</b> món không hiện được ảnh. Bấm <b>📷 Đổi ảnh</b> rồi dán link ảnh khác (chuột phải vào ảnh trên trang sàn → "Sao chép địa chỉ hình ảnh"), hoặc hút lại món đó.`
+          : `✅ Đã mở thử ${imgCheck.total} món – ảnh đều hiện tốt.`);
+      if (!bad.length || imgCheck.running) { box.classList.add('hidden'); box.innerHTML = ''; return; }
+      box.classList.remove('hidden');
+      box.innerHTML = bad.map(p => `
+        <div class="p-2.5 rounded-2xl bg-rose-50/60 border border-rose-100 flex gap-3 items-center">
+          <img src="${escapeHtml(DEFAULT_IMAGE)}" alt="" class="w-11 h-11 rounded-xl object-cover bg-white shrink-0 border border-slate-200" />
+          <div class="min-w-0 flex-1">
+            <div class="text-xs font-bold text-slate-900 truncate">${escapeHtml(p.title)}</div>
+            <div class="text-[11px] text-slate-500 truncate" title="${escapeHtml(p.image || '')}">${escapeHtml(p.mall || '')} · ${escapeHtml((p.image || 'không có link ảnh').slice(0, 90))}</div>
+          </div>
+          ${safeUrl(p.link) ? `<a href="${escapeHtml(safeUrl(p.link))}" target="_blank" rel="noopener" class="px-2 py-1 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-[11px] font-bold text-slate-600 shrink-0">🔗 Trang sàn</a>` : ''}
+          <button type="button" data-action="img-change" data-id="${escapeHtml(String(p.id))}" class="px-2 py-1 rounded-lg bg-slate-900 hover:bg-slate-700 text-white text-[11px] font-bold shrink-0 cursor-pointer">📷 Đổi ảnh</button>
+        </div>`).join('');
+    }
+    async function changeProductImage(id) {
+      if (!isAdminLoggedIn) return;
+      const p = findProduct(id);
+      if (!p) return;
+      const v = prompt('Dán link ảnh mới cho "' + p.title + '"\n(trên trang sàn: chuột phải vào ảnh → Sao chép địa chỉ hình ảnh)', '');
+      if (v == null) return;
+      const url = v.trim();
+      if (!/^https?:\/\//i.test(url)) { alert('Link ảnh phải bắt đầu bằng http:// hoặc https://'); return; }
+      showToast('Đang thử mở ảnh…');
+      if (!(await testImage(url))) { alert('Không mở được ảnh từ link này. Hãy thử link ảnh khác.'); return; }
+      p.image = url;
+      imgCheck.bad = imgCheck.bad.filter(x => x !== String(p.id));
+      saveProductsToStorage();
+      renderAllProductViews();
+      renderAdminManageList();
+      renderImgCheck();
+      const ok = await uploadProductsToGoogleSheets();
+      showToast(ok ? 'Đã đổi ảnh ✓' : 'Đã đổi ảnh trên web nhưng chưa lưu được Google Sheets');
+    }
+
     // ---------- 14. SỰ KIỆN CHUNG ----------
     // Một bộ xử lý cho mọi nút trong thẻ sản phẩm / admin / form (an toàn với mọi kiểu ID)
     document.addEventListener('click', e => {
@@ -4316,6 +4426,7 @@ Sau đó điền tên, SĐT, địa chỉ và bấm <strong>Gửi đơn</strong>
         case 'admin-variants': openVariantEditor(id); break;
         case 'admin-rename': renameProductByAdmin(id); break;
         case 'tr-undo': undoTranslation(id); break;
+        case 'img-change': changeProductImage(id); break;
         case 'auto-sync': startAutoSync(id); break;
         case 'search-empty': { const run = searchEmptyActions[Number(id)]; if (run) run(); break; }
       }
